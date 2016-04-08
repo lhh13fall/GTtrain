@@ -92,3 +92,75 @@ class GTTrain:
         self.buildNewUserRegistrationWindow(self.newUserRegistrationWindow)
         self.loginWindow.withdraw()
         self.newUserRegistrationWindow.Toplevel()
+
+
+
+##New User Registration Window相关
+    def createNewUserRegistrationWindow(self):
+        #创建空白的newUserRegistrationWindow
+        self.newUserRegistrationWindow = Tk()
+        self.newUserRegistrationWindow.title("Train Sales System") 
+
+    def buildNewUserRegistrationWindow(self,newUserRegistrationWindow):
+        #为newUserRegistrationWindow添加组件
+
+        # New User Rigestration Label
+        newUserRegistrationLabel = Label(newUserRegistrationWindow, text="New User Registration")
+        newUserRegistrationLabel.grid(row=1, column=3, sticky=W)
+
+
+        # Username Label
+        usernameLabel = Label(newUserRegistrationWindow, text="Username")
+        usernameLabel.grid(row=2, column=2, sticky=W)
+
+
+        # Email Address Label
+        emailAddressLabel = Label(newUserRegistrationWindow, text="Email Address")
+        emailAddressLabel.grid(row=3, column=2, sticky=W)  
+
+        # Password Label
+        passwordLabel = Label(newUserRegistrationWindow, text="Password")
+        passwordLabel.grid(row=4, column=2, sticky=W)
+
+        # Confirm Password Label
+        confirmPasswordLabel = Label(newUserRegistrationWindow, text="Confirm Password")
+        confirmPasswordLabel.grid(row=5, column=2, sticky=W)
+
+
+        # Username Entry
+        self.username = StringVar()#这一行到底有没有问题啊……感觉有问题又不知道哪里有问题
+        usernameEntry = Entry(newUserRegistrationWindow, textvariable=self.username, width=20)
+        usernameEntry.grid(row=2, column=3, sticky=W + E)
+
+
+        # Email Address Entry
+        self.emailAddress = StringVar()
+        emailAddressEntry = Entry(newUserRegistrationWindow, textvariable=self.password,width=20)
+        emailAddressEntry.grid(row=3, column=3, sticky=W + E)
+
+        # Password Entry
+        self.password = StringVar()
+        passwordEntry = Entry(newUserRegistrationWindow, textvariable=self.username,show = '*',width=20)
+        passwordEntry.grid(row=4, column=3, sticky=W + E)
+
+        # Confirm Password Entry
+        self.confirmPassword = StringVar()
+        confirmPasswordEntry = Entry(newUserRegistrationWindow, textvariable=self.username,show = '*',width=20)
+        confirmPasswordEntry.grid(row=5, column=3, sticky=W + E)
+
+
+        # Button
+        createButton = Button(newUserRegistrationWindow, text="Create", command=self.newUserRegistrationWindowCreateButtonClicked)
+        createButton.grid(row=6, column=3)
+
+    
+    
+    def newUserRegistrationWindowCreateButtonClicked(self):
+        #点击New User Registration Window上的Create Button时：
+        #调用createChooseFunctionalityWindow；调用buildChooseFunctionalityWindow；
+        #隐藏New User Registration Window;把Choose Functionality Window置于顶层
+        
+        self.createChooseFunctionalityWindow()
+        self.buildChooseFunctionalityWindow(self.chooseFunctionalityWindow)
+        self.newUserRegistrationWindow.withdraw()
+        self.chooseFunctionalityWindow.Toplevel()
