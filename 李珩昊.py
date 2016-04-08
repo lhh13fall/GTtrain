@@ -127,7 +127,7 @@ class GTTrain:
         confirmPasswordLabel.grid(row=5, column=2, sticky=W)
 
 
-        # Username Entry
+        # Username Entry#
         self.username = StringVar()#这一行到底有没有问题啊……感觉有问题又不知道哪里有问题
         usernameEntry = Entry(newUserRegistrationWindow, textvariable=self.username, width=20)
         usernameEntry.grid(row=2, column=3, sticky=W + E)
