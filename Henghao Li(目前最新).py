@@ -135,7 +135,7 @@ class GTTrain:
 
 
         # Username Entry
-        self.username = StringVar()#这一行到底有没有问题啊……感觉有问题又不知道哪里有问题
+        self.username = StringVar()
         usernameEntry = Entry(newUserRegistrationWindow, textvariable=self.username, width=20)
         usernameEntry.grid(row=2, column=3, sticky=W + E)
 
@@ -206,16 +206,22 @@ class GTTrain:
         cancelAReservationLabel = Label(chooseFunctionalityWindow, text="Cancel a Reservation")
         cancelAReservationLabel.grid(row=5,column=1)
         cancelAReservationLabel.bind("<ButtonPress-1>", self.chooseFunctionalityWindowCancelAReservationLabelClicked)
-      
+
+
+        #View Review Label
+        viewReviewLabel = Label(chooseFunctionalityWindow, text="View Review")
+        viewReviewLabel.grid(row=6,column=1)
+        viewReviewLabel.bind("<ButtonPress-1>", self.chooseFunctionalityWindowViewReviewLabelClicked)
+       
         #Give Review Label
         giveReviewLabel = Label(chooseFunctionalityWindow, text="Give Review")
-        giveReviewLabel.grid(row=6,column=1)
+        giveReviewLabel.grid(row=7,column=1)
         giveReviewLabel.bind("<ButtonPress-1>", self.chooseFunctionalityWindowGiveReviewLabelClicked)
 
 
         #Add School Information (Student Discount) Label
         addSchoolInformationStudentDiscountLabel = Label(chooseFunctionalityWindow, text="Add School Information (Student Discount)")
-        addSchoolInformationStudentDiscountLabel.grid(row=7,column=1)
+        addSchoolInformationStudentDiscountLabel.grid(row=8,column=1)
         addSchoolInformationStudentDiscountLabel.bind("<ButtonPress-1>", self.chooseFunctionalityWindowAddSchoolInformationStudentDiscountLabelClicked)
    
         #Log Out Buttons
@@ -251,10 +257,15 @@ class GTTrain:
         #
         self.chooseFunctionalityWindow.withdraw()
 
-    def chooseFunctionalityWindowGiveReviewLabelClicked(self,event):
-        #
+    def chooseFunctionalityWindowViewReviewLabelClicked(self,event):
         self.chooseFunctionalityWindow.withdraw()
+        self.createViewReviewWindow()
+        self.buildViewReviewWindow(self.viewReviewWindow)
 
+    def chooseFunctionalityWindowGiveReviewLabelClicked(self,event):
+        self.chooseFunctionalityWindow.withdraw()
+        self.createGiveReviewWindow()
+        self.buildGiveReviewWindow(self.giveReviewWindow)
         
     def chooseFunctionalityWindowAddSchoolInformationStudentDiscountLabelClicked(self,event):
         #点击Choose Functionality Window上的Add School Information (下略) Label时：
@@ -775,6 +786,129 @@ class GTTrain:
 
 
 
+#==========View Review Window===============
+
+    def createViewReviewWindow(self):
+        self.viewReviewWindow = Toplevel();
+        self.viewReviewWindow.title("Train Sales System")
+
+    def buildViewReviewWindow(self,viewReviewWindow):
+
+        #View Review Label
+        viewReviewLabel = Label(viewReviewWindow,text="View Review")
+        viewReviewLabel.grid(row=1, column=2, sticky=W+E)
+
+        #Train Number Label
+        trainNumberLabel = Label(viewReviewWindow,text="Train Number")
+        trainNumberLabel.grid(row=2, column=1, sticky=W+E)        
+
+        #Train Number Entry
+        self.trainNumber = StringVar()
+        trainNumberEntry = Entry(viewReviewWindow, textvariable=self.trainNumber,width=10)
+        trainNumberEntry.grid(row=2, column=2, sticky=E)
+
+        #Back Button
+        backButton = Button(viewReviewWindow, text="Back", command = self.viewReviewWindowBackButtonClicked)
+        backButton.grid(row=3, column=1)
+
+        #Next Button
+        nextButton = Button(viewReviewWindow, text="Next", command = self.viewReviewWindowNextButtonClicked)
+        nextButton.grid(row=3, column=2)
+
+
+    def viewReviewWindowBackButtonClicked(self):
+        self.viewReviewWindow.destroy()
+        self.chooseFunctionalityWindow.deiconify()
+
+    def viewReviewWindowNextButtonClicked(self):
+        self.viewReviewWindow.destroy()
+        self.createViewReviewWindow2()
+        self.buildViewReviewWindow2(self.viewReviewWindow2)
+
+
+#=======View Review Window 2================
+
+    def createViewReviewWindow2(self):
+        self.viewReviewWindow2 = Toplevel();
+        self.viewReviewWindow2.title("Train Sales System")
+
+
+    def buildViewReviewWindow2(self,viewReviewWindow2):
+
+        #View Review Label
+        viewReviewLabel = Label(viewReviewWindow2,text="View Review")
+        viewReviewLabel.grid(row=1, column=2, sticky=W+E)
+        
+        #View Review Treeview
+        viewReviewTree = ttk.Treeview(viewReviewWindow2, column=("1", "2"),height=2)
+        viewReviewTree.column("1", width = 150, anchor = "center")
+        viewReviewTree.column("2", width = 150, anchor = "center")
+        viewReviewTree.heading("1", text = "Rating")
+        viewReviewTree.heading("2", text = "Comment")
+
+        for i in range(2):
+            viewReviewTree.insert('',i,values=('a'+str(i),'b'+str(i)))
+        
+        viewReviewTree.grid(row=2,column=1,columnspan=3)
+
+        #Back to Choose Functionality Button
+        backToChooseFunctionalityButton = Button(viewReviewWindow2, text="Back to Choose Functionality", command = self.viewReviewWindow2BackToChooseFunctionalityButtonClicked)
+        backToChooseFunctionalityButton.grid(row=3,column=2,sticky=W+E)
+
+    def viewReviewWindow2BackToChooseFunctionalityButtonClicked(self):
+        self.viewReviewWindow2.destroy()
+        self.chooseFunctionalityWindow.deiconify()
+
+
+#=========Give Review Window==========
+
+    def createGiveReviewWindow(self):
+        self.giveReviewWindow = Toplevel();
+        self.giveReviewWindow.title("Train Sales System")
+
+    
+
+    def buildGiveReviewWindow(self,giveReviewWindow):
+
+        #Give Review Label
+        giveReviewLabel = Label(giveReviewWindow,text="Give Review")
+        giveReviewLabel.grid(row=1, column=2, sticky=W+E)
+
+        #Train Number Label
+        trainNumberLabel = Label(giveReviewWindow, text="Train Number")
+        trainNumberLabel.grid(row=2,column=1,sticky=W)
+
+        #Train Number Entry
+        self.trainNumber = StringVar()
+        trainNumberEntry = Entry(giveReviewWindow, textvariable=self.trainNumber)
+        trainNumberEntry.grid(row=2, column=2, sticky=W+E)
+
+        #Rating Label
+        ratingLabel = Label(giveReviewWindow, text="Rating")
+        ratingLabel.grid(row=3,column=1, sticky=W)
+
+        #Rating Listbox
+        self.rating = StringVar()
+        self.rating.set("Very Good")
+        ratingListbox = OptionMenu(giveReviewWindow, self.rating, "Very Good","Good", "Neutral", "Bad", "Very Bad")
+        ratingListbox.grid(row=3,column=2)
+
+        #Comment Label
+        commentLabel = Label(giveReviewWindow,text="Comment")
+        commentLabel.grid(row=4,column=1)
+
+        #Comment Entry
+        self.comment=StringVar()
+        commentEntry=Entry(giveReviewWindow,textvariable=self.comment)
+        commentEntry.grid(row=4,column=2)
+
+        #Submit Button
+        submitButton = Button(giveReviewWindow, text="Submit", command = self.giveReviewWindowSubmitButtonClicked)
+        submitButton.grid(row=5,column=2,sticky=W+E)
+
+    def giveReviewWindowSubmitButtonClicked(self):
+        self.giveReviewWindow.destroy()
+        self.chooseFunctionalityWindow.deiconify()
 
 
 
