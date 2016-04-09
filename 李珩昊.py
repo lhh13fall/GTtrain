@@ -3,9 +3,6 @@ import pymysql
 from tkinter import messagebox
 
 class GTTrain:
-
-## Login Window相关
-
     def __init__(self):
         #调用createLoginWindow；调用buildLoginWindow；把loginWindow设为主循环
         #Connect to the database
@@ -15,6 +12,10 @@ class GTTrain:
         self.createLoginWindow()
         self.buildLoginWindow(self.loginWindow)
         self.loginWindow.mainloop()
+
+
+##  =======Login Window=======
+
 
     def createLoginWindow(self):
         #创建空白的Login Window
@@ -31,14 +32,16 @@ class GTTrain:
         usernameLabel = Label(loginWindow, text="Username")
         usernameLabel.grid(row=2, column=2, sticky=W)
 
+        # Password Label
+        passwordLabel = Label(loginWindow, text="Password")
+        passwordLabel.grid(row=4, column=2, sticky=W)
+
+
         # Username Entry
         self.username = StringVar()
         usernameEntry = Entry(loginWindow, textvariable=self.username, width=20)
         usernameEntry.grid(row=2, column=3, sticky=W + E)
 
-        # Password Label
-        passwordLabel = Label(loginWindow, text="Password")
-        passwordLabel.grid(row=4, column=2, sticky=W)
 
         # Password Entry
         self.password = StringVar()
@@ -46,12 +49,12 @@ class GTTrain:
         passwordEntry.grid(row=4, column=3, sticky=W + E)
 
         #Login Buttons
-        loginButton = Button(loginWindow, text="Login", command=self.loginClicked)
+        loginButton = Button(loginWindow, text="Login", command=self.loginWindowLoginButtonClicked)
         loginButton.grid(row=6, column=3)
 
         #Register Button
         
-        registerButton = Button(loginWindow, text="Register", command=self.registerClicked)
+        registerButton = Button(loginWindow, text="Register", command=self.loginWindowRegisterButtonClicked)
         registerButton.grid(row=6, column=4, sticky=E)
 
    
@@ -91,14 +94,11 @@ class GTTrain:
         self.createNewUserRegistrationWindow()
         self.buildNewUserRegistrationWindow(self.newUserRegistrationWindow)
         self.loginWindow.withdraw()
-        self.newUserRegistrationWindow.Toplevel()
 
 
-
-##New User Registration Window相关
     def createNewUserRegistrationWindow(self):
         #创建空白的newUserRegistrationWindow
-        self.newUserRegistrationWindow = Tk()
+        self.newUserRegistrationWindow = Toplevel()
         self.newUserRegistrationWindow.title("Train Sales System") 
 
     def buildNewUserRegistrationWindow(self,newUserRegistrationWindow):
@@ -127,7 +127,7 @@ class GTTrain:
         confirmPasswordLabel.grid(row=5, column=2, sticky=W)
 
 
-        # Username Entry#
+        # Username Entry
         self.username = StringVar()#这一行到底有没有问题啊……感觉有问题又不知道哪里有问题
         usernameEntry = Entry(newUserRegistrationWindow, textvariable=self.username, width=20)
         usernameEntry.grid(row=2, column=3, sticky=W + E)
@@ -158,9 +158,152 @@ class GTTrain:
     def newUserRegistrationWindowCreateButtonClicked(self):
         #点击New User Registration Window上的Create Button时：
         #调用createChooseFunctionalityWindow；调用buildChooseFunctionalityWindow；
-        #隐藏New User Registration Window;把Choose Functionality Window置于顶层
+        #隐藏New User Registration Window
         
         self.createChooseFunctionalityWindow()
         self.buildChooseFunctionalityWindow(self.chooseFunctionalityWindow)
         self.newUserRegistrationWindow.withdraw()
-        self.chooseFunctionalityWindow.Toplevel()
+
+##==========Choose Functionality Window================
+
+    def createChooseFunctionalityWindow(self):
+        #创建空白的chooseFunctionalityWindow
+        self.chooseFunctionalityWindow = Toplevel()
+        self.chooseFunctionalityWindow.title("Train Sales System") 
+        
+    
+    def buildChooseFunctionalityWindow(self,chooseFunctionalityWindow):
+        #为chooseFunctionalityWindow添加组件
+
+        #Choose Functionality Label
+        chooseFunctionalityLabel = Label(chooseFunctionalityWindow, text="Choose Functionality")
+        chooseFunctionalityLabel.grid(row=1, column=1, sticky=W+E)
+
+        #View Train Schedule Label
+        viewTrainScheduleLabel = Label(chooseFunctionalityWindow, text="View Train Schedule")
+        viewTrainScheduleLabel.grid(row=2, column=1)
+        viewTrainScheduleLabel.bind("<ButtonPress-1>", self.chooseFunctionalityWindowViewTrainScheduleLabelClicked)
+ 
+        #Make a New Reservation Label
+        makeANewReservationLabel = Label(chooseFunctionalityWindow, text="Make a New Reservation")
+        makeANewReservationLabel.grid(row=3, column=1)
+        makeANewReservationLabel.bind("<ButtonPress-1>", self.chooseFunctionalityWindowMakeANewReservationLabelClicked)
+
+
+        #Update a Reservation Label
+        updateAReservationLabel = Label(chooseFunctionalityWindow, text="Update a Reservation")
+        updateAReservationLabel.grid(row=4,column=1)
+        updateAReservationLabel.bind("<ButtonPress-1>", self.chooseFunctionalityWindowUpdateAReservationLabelClicked)
+
+        #Cancel a Reservation Label
+        cancelAReservationLabel = Label(chooseFunctionalityWindow, text="cancel a Reservation")
+        cancelAReservationLabel.grid(row=5,column=1)
+        cancelAReservationLabel.bind("<ButtonPress-1>", self.chooseFunctionalityWindowCancelAReservationLabelClicked)
+      
+        #Give Review Label
+        giveReviewLabel = Label(chooseFunctionalityWindow, text="Give Review")
+        giveReviewLabel.grid(row=6,column=1)
+        giveReviewLabel.bind("<ButtonPress-1>", self.chooseFunctionalityWindowGiveReviewLabelClicked)
+
+
+        #Add School Information (Student Discount) Label
+        addSchoolInformationStudentDiscountLabel = Label(chooseFunctionalityWindow, text="Add School Information (Student Discount)")
+        addSchoolInformationStudentDiscountLabel.grid(row=7,column=1)
+        addSchoolInformationStudentDiscountLabel.bind("<ButtonPress-1>", self.chooseFunctionalityWindowAddSchoolInformationStudentDiscountLabelClicked)
+   
+        #Log Out Buttons
+
+        logOutButton = Button(chooseFunctionalityWindow, text="Log out", command=self.chooseFunctionalityWindowLogOutButtonClicked)
+        logOutButton.grid(row=8, column=2,sticky=E)
+
+    def chooseFunctionalityWindowViewTrainScheduleLabelClicked(self,event):
+        #
+        self.chooseFunctionalityWindow.withdraw()
+    
+    def chooseFunctionalityWindowMakeANewReservationLabelClicked(self,event):
+        #
+        self.chooseFunctionalityWindow.withdraw()
+
+    def chooseFunctionalityWindowUpdateAReservationLabelClicked(self,event):
+        #
+        self.chooseFunctionalityWindow.withdraw()
+
+    def chooseFunctionalityWindowCancelAReservationLabelClicked(self,event):
+        #
+        self.chooseFunctionalityWindow.withdraw()
+
+    def chooseFunctionalityWindowGiveReviewLabelClicked(self,event):
+        #
+        self.chooseFunctionalityWindow.withdraw()
+
+        
+    def chooseFunctionalityWindowAddSchoolInformationStudentDiscountLabelClicked(self,event):
+        #点击Choose Functionality Window上的Add School Information (下略) Label时：
+        #调用createAddSchoolInfoWindow()；调用buildAddSchoolWindow()；
+        #隐藏Choose Functionality Window
+        self.createAddSchoolInfoWindow()
+        self.buildAddSchoolInfoWindow(self.addSchoolInfoWindow)
+        self.chooseFunctionalityWindow.withdraw()
+
+    def chooseFunctionalityWindowLogOutButtonClicked(self):
+        #点击Choose Functionality Window上的Log Out Button时：
+        #隐藏Choose Functionality Window
+        #显示Login Window
+        self.chooseFunctionalityWindow.withdraw()
+        self.loginWindow.deiconify()
+
+
+#=========Add School Info Window============
+
+    def createAddSchoolInfoWindow(self):
+        #创建空白的Add School Info Window
+        self.addSchoolInfoWindow = Toplevel()
+        self.addSchoolInfoWindow.title("Train Sales System")
+
+    def buildAddSchoolInfoWindow(self,addSchoolInfoWindow):
+        #给Add School Info Window添加组件
+
+        #Add School Info Label
+        addSchoolInfoLabel = Label(addSchoolInfoWindow, text="Add School Info")
+        addSchoolInfoLabel.grid(row=1, column=1, sticky=W+E)
+
+        #School Email Address
+        schoolEmailAddressLabel = Label(addSchoolInfoWindow, text="School Email Address")
+        schoolEmailAddressLabel.grid(row=2, column=1, sticky=W)
+
+        #Your School Label
+        yourSchoolLabel =  Label(addSchoolInfoWindow,text=" Your school email address ends with edu.")
+        yourSchoolLabel.grid(row=3, column=1, sticky=W)
+
+        #School Email Entry
+        self.schoolEmailAddress = StringVar()
+        schoolEmailAddressEntry = Entry(addSchoolInfoWindow, textvariable=self.schoolEmailAddress, width=20)
+        schoolEmailAddressEntry.grid(row=2, column=2, sticky=E)
+
+        #Back Button
+        backButton = Button(addSchoolInfoWindow, text="Back", command=self.addSchoolInfoWindowBackButtonClicked)
+        backButton.grid(row=4, column=1)
+
+        #Submit Button
+        submitButton = Button(addSchoolInfoWindow, text="Submit", command=self.addSchoolInfoWindowSubmitButtonClicked)
+        submitButton.grid(row=4, column=2,sticky=E)
+
+
+    def addSchoolInfoWindowBackButtonClicked(self):
+        #点击Add School Info Window上的Back Button时：
+        #隐藏Add School Info Window
+        #显示Choose Functionality Window
+        self.addSchoolInfoWindow.withdraw()
+        self.chooseFunctionalityWindow.deiconify()
+        
+
+    def addSchoolInfoWindowSubmitButtonClicked(self):
+        #点击Add School Info Window上的Submit Button时：
+        #隐藏Add School Info Window
+        #显示Choose Functionality Window
+        self.addSchoolInfoWindow.withdraw()
+        self.chooseFunctionalityWindow.deiconify()
+     
+        
+        
+a=GTTrain()
