@@ -186,4 +186,4 @@ class Manager(object):
             messagebox.showwarning('Error!','Cannot connect. Please check your internet connection.')
             return False
 
-a = Manager('test')
+a = Manager('test11')
