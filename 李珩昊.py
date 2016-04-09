@@ -149,7 +149,7 @@ class GTTrain:
         confirmPasswordEntry.grid(row=5, column=3, sticky=W + E)
 
 
-        # Button
+        # Create Button
         createButton = Button(newUserRegistrationWindow, text="Create", command=self.newUserRegistrationWindowCreateButtonClicked)
         createButton.grid(row=6, column=3)
 
