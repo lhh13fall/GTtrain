@@ -248,13 +248,13 @@ class GTTrain:
         
 
     def chooseFunctionalityWindowUpdateAReservationLabelClicked(self,event):
-        #
         self.chooseFunctionalityWindow.withdraw()
         self.createUpdateReservationWindow()
         self.buildUpdateReservationWindow(self.updateReservationWindow)
 
     def chooseFunctionalityWindowCancelAReservationLabelClicked(self,event):
-        #
+        self.createCancelReservationWindow1()
+        self.buildCancelReservationWindow1(self.cancelReservationWindow1)
         self.chooseFunctionalityWindow.withdraw()
 
     def chooseFunctionalityWindowViewReviewLabelClicked(self,event):
@@ -1028,7 +1028,130 @@ class GTTrain:
         self.updateReservationWindow3.destroy()
         self.chooseFunctionalityWindow.deiconify()
 
+#======Cancel Reservation Window 1===========
 
+
+    def createCancelReservationWindow1(self):
+        self.cancelReservationWindow1 = Toplevel()
+        self.cancelReservationWindow1.title("Train Sales System")
+
+    def buildCancelReservationWindow1(self,cancelReservationWindow1):
+
+        # Add Components To Window
+
+        # Cancel Reservation Label
+        cancelReservationLabel = Label(cancelReservationWindow1,text="Cancel Reservation")
+        cancelReservationLabel.grid(row=1, column=1, sticky=W+E)
+
+        # Reservation ID Label
+        reservationIDLabel = Label(cancelReservationWindow1,text="Reservation ID")
+        reservationIDLabel.grid(row=1, column=1, sticky=W+E)
+
+        # Reservation ID Entry
+        self.reservationID = StringVar()
+        reservationIDEntry = Entry(cancelReservationWindow1, textvariable=self.reservationID, width=10)
+        reservationIDEntry.grid(row=1, column=2, sticky=W+E)
+
+        # Search Button
+        searchButton = Button(cancelReservationWindow1, text="Search", command=self.cancelReservationWindow1SearchButtonClicked)
+        searchButton.grid(row=1, column=3)
+
+        # Back Button
+        backButton = Button(cancelReservationWindow1, text="Back", command=self.cancelReservationWindow1BackButtonClicked)
+        backButton.grid(row=2, column=2)
+
+    def cancelReservationWindow1SearchButtonClicked(self):
+        self.cancelReservationWindow1.destroy()
+        self.createCancelReservationWindow2()
+        self.buildCancelReservationWindow2(self.cancelReservationWindow2)
+
+    def cancelReservationWindow1BackButtonClicked(self):
+        self.cancelReservationWindow1.destroy()
+        self.createChooseFunctionalityWindow()
+        self.buildChooseFunctionalityWindow(self.chooseFunctionalityWindow)
+
+#======Cancel Reservation Window 2===========
+
+
+    def createCancelReservationWindow2(self):
+        self.cancelReservationWindow2 = Toplevel()
+        self.cancelReservationWindow2.title("Train Sales System")
+
+    def buildCancelReservationWindow2(self,cancelReservationWindow2):
+        # Add Components To Window
+
+        # Cancel Reservation Label
+        cancelReservationLabel = Label(cancelReservationWindow2,text="Cancel Reservation")
+        cancelReservationLabel.grid(row=1, column=2, sticky=W+E)
+
+        # Cancel Reservation Treeview
+        cancelReservationTree = ttk.Treeview(cancelReservationWindow2, column=("1", "2", "3", "4","5","6","7","8"), height=2)
+        cancelReservationTree.column("1", width = 150, anchor = "center")
+        cancelReservationTree.column("2", width = 150, anchor = "center")
+        cancelReservationTree.column("3", width = 150, anchor = "center")
+        cancelReservationTree.column("4", width = 150, anchor = "center")
+        cancelReservationTree.column("5", width = 150, anchor = "center")
+        cancelReservationTree.column("6", width = 150, anchor = "center")
+        cancelReservationTree.column("7", width = 150, anchor = "center")
+        cancelReservationTree.column("8", width = 150, anchor = "center")
+        cancelReservationTree.heading("1", text = "Train(Train Number)")
+        cancelReservationTree.heading("2", text = "Time(Duration)")
+        cancelReservationTree.heading("3", text = "Departs From")
+        cancelReservationTree.heading("4", text = "Arrives At")
+        cancelReservationTree.heading("5", text = "Class")
+        cancelReservationTree.heading("6", text = "Price")
+        cancelReservationTree.heading("7", text = "# of Baggage")
+        cancelReservationTree.heading("8", text = "Passenger Name")
+
+        for i in range(2):
+            cancelReservationTree.insert('',i,values=('a'+str(i),'b'+str(i),'c'+str(i),'d'+str(i),'e'+str(i),'f'+str(i),'g'+str(i),'h'+str(i)))
+
+        cancelReservationTree.grid(row=2,column=1,columnspan=3)
+
+        # Total Cost of Reservation Label
+        totalCostOfReservationLabel = Label(cancelReservationWindow2,text="Total Cost of Reservation")
+        totalCostOfReservationLabel.grid(row=3, column=1, sticky=W+E)
+
+        # Date Of Cancellation Label
+        dateOfCancellationLabel = Label(cancelReservationWindow2,text="Dare of Cancellation")
+        dateOfCancellationLabel.grid(row=4, column=1, sticky=W+E)
+
+        # Amount to be Refunded Label
+        amountToBeRefundedLabel = Label(cancelReservationWindow2,text="Amount to be Refunded")
+        amountToBeRefundedLabel.grid(row=5, column=1, sticky=W+E)
+
+        # Total Cost of Reservation Entry
+        self.totalCostOfReservation = StringVar()
+        totalCostOfReservationEntry = Entry(cancelReservationWindow2, textvariable=self.totalCostOfReservation, state="readonly", width=10)
+        totalCostOfReservationEntry.grid(row=3, column=2, sticky=W+E)
+
+        # Date of Cancellation Entry
+        self.dateOfCancellation =StringVar()
+        dateOfCancellationEntry = Entry(cancelReservationWindow2, textvariable=self.dateOfCancellation, state="readonly", width=10)
+        dateOfCancellationEntry.grid(row=4, column=2, sticky=W+E)
+
+        # Amount to be Refunded Entry
+        self.amountToBeRefunded = StringVar()
+        amountToBeRefundedEntry = Entry(cancelReservationWindow2, textvariable=self.amountToBeRefunded, state="readonly",width=10)
+        amountToBeRefundedEntry.grid(row=5, column=2, sticky=W+E)
+
+        # Back Button
+        backButton = Button(cancelReservationWindow2, text="Back", command=self.cancelReservationWindow2BackButtonClicked)
+        backButton.grid(row=6, column=1)
+
+        # Submit Button
+        submitButton = Button(cancelReservationWindow2, text="Submit", command=self.cancelReservationWindow2SubmitButtonClicked)
+        submitButton.grid(row=6, column=2)
+
+    def cancelReservationWindow2BackButtonClicked(self):
+        self.cancelReservationWindow2.destroy()
+        self.createCancelReservationWindow1()
+        self.buildCancelReservationWindow1(self.cancelReservationWindow1)
+
+    def cancelReservationWindow2SubmitButtonClicked(self):
+        self.cancelReservationWindow2.destroy()
+        self.createChooseFunctionalityWindow()
+        self.buildChooseFunctionalityWindow(self.chooseFunctionalityWindow)
 
 #==========View Review Window===============
 
