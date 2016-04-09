@@ -858,7 +858,7 @@ class GTTrain:
 
 
         #Update Reservation Tree view
-        updateReservationTree = ttk.Treeview(updateReservationWindow2, column=("1", "2", "3", "4","5","6","7","8"))
+        updateReservationTree = ttk.Treeview(updateReservationWindow2, column=("1", "2", "3", "4","5","6","7","8","9"))
         updateReservationTree.column("1", width = 150, anchor = "center")
         updateReservationTree.column("2", width = 150, anchor = "center")
         updateReservationTree.column("3", width = 150, anchor = "center")
@@ -867,19 +867,21 @@ class GTTrain:
         updateReservationTree.column("6", width = 150, anchor = "center")
         updateReservationTree.column("7", width = 150, anchor = "center")
         updateReservationTree.column("8", width = 150, anchor = "center")
+        updateReservationTree.column("9", width = 150, anchor = "center")
         updateReservationTree.heading("1", text = "Select")
         updateReservationTree.heading("2", text = "Train(Train Number)")
         updateReservationTree.heading("3", text = "Time(Duration)")
-        updateReservationTree.heading("4", text = "Arrives At")
-        updateReservationTree.heading("5", text = "Class")
-        updateReservationTree.heading("6", text = "Price")
-        updateReservationTree.heading("7", text = "# of Baggage")
-        updateReservationTree.heading("8", text = "Passenger Name")
+        updateReservationTree.heading("4", text = "Departs From")
+        updateReservationTree.heading("5", text = "Arrives At")
+        updateReservationTree.heading("6", text = "Class")
+        updateReservationTree.heading("7", text = "Price")
+        updateReservationTree.heading("8", text = "# of Baggage")
+        updateReservationTree.heading("9", text = "Passenger Name")
 
         #insert data into the form
         for i in range(10):
-            updateReservationTree.insert('',i,values=('a'+str(i),'b'+str(i),'c'+str(i),'d'+str(i),'e'+str(i),'f'+str(i),'g'+str(i),'h'+str(i)))
-        
+            updateReservationTree.insert('',i,values=('a'+str(i),'b'+str(i),'c'+str(i),'d'+str(i),'e'+str(i),'f'+str(i),'g'+str(i),'h'+str(i),'j'+str(i)))
+
         updateReservationTree.grid(row=2,column=1,columnspan=3)
 
         #Next Button
@@ -928,17 +930,19 @@ class GTTrain:
         currentTrainTicketTree.column("5", width = 150, anchor = "center")
         currentTrainTicketTree.column("6", width = 150, anchor = "center")
         currentTrainTicketTree.column("7", width = 150, anchor = "center")
+        currentTrainTicketTree.column("8", width = 150, anchor = "center")
         currentTrainTicketTree.heading("1", text = "Train(Train Number)")
         currentTrainTicketTree.heading("2", text = "Time(Duration)")
-        currentTrainTicketTree.heading("3", text = "Arrives At")
-        currentTrainTicketTree.heading("4", text = "Class")
-        currentTrainTicketTree.heading("5", text = "Price")
-        currentTrainTicketTree.heading("6", text = "# of Baggage")
-        currentTrainTicketTree.heading("7", text = "Passenger Name")
+        currentTrainTicketTree.heading("3", text = "Departs From")
+        currentTrainTicketTree.heading("4", text = "Arrives At")
+        currentTrainTicketTree.heading("5", text = "Class")
+        currentTrainTicketTree.heading("6", text = "Price")
+        currentTrainTicketTree.heading("7", text = "# of Baggage")
+        currentTrainTicketTree.heading("8", text = "Passenger Name")
 
         for i in range(2):
             currentTrainTicketTree.insert('',i,values=('a'+str(i),'b'+str(i),'c'+str(i),'d'+str(i),'e'+str(i),'f'+str(i),'g'+str(i),'h'+str(i)))
-        
+
         currentTrainTicketTree.grid(row=2,column=1,columnspan=3)
 
         #New Departure Date Label
@@ -958,21 +962,29 @@ class GTTrain:
         updatedTrainTicketLabel.grid(row=4, column=1, sticky=W+E)
 
         #Updated Train Ticket Treeview
-        updatedtTrainTicketTree = ttk.Treeview(updateReservationWindow3, column=("1", "2", "3", "4","5","6","7","8"),height=2)
-        updatedtTrainTicketTree.column("1", width = 150, anchor = "center")
-        updatedtTrainTicketTree.column("2", width = 150, anchor = "center")
-        updatedtTrainTicketTree.column("3", width = 150, anchor = "center")
-        updatedtTrainTicketTree.column("4", width = 150, anchor = "center")
-        updatedtTrainTicketTree.column("5", width = 150, anchor = "center")
-        updatedtTrainTicketTree.column("6", width = 150, anchor = "center")
-        updatedtTrainTicketTree.column("7", width = 150, anchor = "center")
-        updatedtTrainTicketTree.heading("1", text = "Train(Train Number)")
-        updatedtTrainTicketTree.heading("2", text = "Time(Duration)")
-        updatedtTrainTicketTree.heading("3", text = "Arrives At")
-        updatedtTrainTicketTree.heading("4", text = "Class")
-        updatedtTrainTicketTree.heading("5", text = "Price")
-        updatedtTrainTicketTree.heading("6", text = "# of Baggage")
-        updatedtTrainTicketTree.heading("7", text = "Passenger Name")
+        updatedTrainTicketTree = ttk.Treeview(updateReservationWindow3, column=("1", "2", "3", "4","5","6","7","8"), height=2)
+        updatedTrainTicketTree.column("1", width = 150, anchor = "center")
+        updatedTrainTicketTree.column("2", width = 150, anchor = "center")
+        updatedTrainTicketTree.column("3", width = 150, anchor = "center")
+        updatedTrainTicketTree.column("4", width = 150, anchor = "center")
+        updatedTrainTicketTree.column("5", width = 150, anchor = "center")
+        updatedTrainTicketTree.column("6", width = 150, anchor = "center")
+        updatedTrainTicketTree.column("7", width = 150, anchor = "center")
+        updatedTrainTicketTree.column("8", width = 150, anchor = "center")
+        updatedTrainTicketTree.heading("1", text = "Train(Train Number)")
+        updatedTrainTicketTree.heading("2", text = "Time(Duration)")
+        updatedTrainTicketTree.heading("3", text = "Departs From")
+        updatedTrainTicketTree.heading("4", text = "Arrives At")
+        updatedTrainTicketTree.heading("5", text = "Class")
+        updatedTrainTicketTree.heading("6", text = "Price")
+        updatedTrainTicketTree.heading("7", text = "# of Baggage")
+        updatedTrainTicketTree.heading("8", text = "Passenger Name")
+
+
+        for i in range(2):
+            updatedTrainTicketTree.insert('',i,values=('a'+str(i),'b'+str(i),'c'+str(i),'d'+str(i),'e'+str(i),'f'+str(i),'g'+str(i),'h'+str(i)))
+
+        updatedTrainTicketTree.grid(row=5,column=1,columnspan=3)
 
         for i in range(2):
             updatedtTrainTicketTree.insert('',i,values=('a'+str(i),'b'+str(i),'c'+str(i),'d'+str(i),'e'+str(i),'f'+str(i),'g'+str(i),'h'+str(i)))
