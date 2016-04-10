@@ -1437,7 +1437,7 @@ class GTTrain:
     def connect(self):
         try:
             db = pymysql.connect(host = 'academic-mysql.cc.gatech.edu',
-                                 db = 'cs4400_Group_24', user = 'cs4400_Group_24', passwd = 'jGZgXJfO')
+                                 db = 'cs4400_Group_20', user = 'cs4400_Group_20', passwd = 'rWL22HuB')
             return db
         except:
             messagebox.showwarning('Error!','Cannot connect. Please check your internet connection.')
