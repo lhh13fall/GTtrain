@@ -73,22 +73,22 @@ class GTTrain:
         if not password:
             messagebox.showwarning("Password input is empty", "Please enter password")
             return False
-##        isAnInspectorUsername = self.cursor.execute("SELECT * FROM customer WHERE username = %s", username)
-##        if not isAnInspectorUsername:
-##            messagebox.showwarning("Username is not an inspector\'s username",
-##                                   "The username you entered is not an inspector\'s username.")
-##            return False
-##        usernameAndPasswordMatch = self.cursor.execute(
-##            "SELECT * FROM customer WHERE (username = %s AND password = %s)", (username, password))
-##        if not usernameAndPasswordMatch:
-##            messagebox.showwarning("Username and password don\'t match", "Sorry, the username and password you entered"
-##                                                                         + " do not match.")
-##            return False
+        isUsername = self.cursor.execute("SELECT * FROM User WHERE Username = %s", username)
+        if not isUsername:
+           messagebox.showwarning("Username is not an user\'s username",
+                                  "The username you entered is not an user\'s username.")
+           return False
+        usernameAndPasswordMatch = self.cursor.execute(
+           "SELECT * FROM User WHERE (Username = %s AND Password = %s)", (username, password))
+        if not usernameAndPasswordMatch:
+           messagebox.showwarning("Username and password don\'t match", "Sorry, the username and password you entered"
+                                                                        + " do not match.")
+           return False
 
         self.loginWindow.withdraw()
         self.createChooseFunctionalityWindowManager()
         self.buildChooseFunctionalityWindowManager(self.chooseFunctionalityWindowManager)
-
+        return True
 
     def loginWindowRegisterButtonClicked(self):
         #点击Login Window上的Register Button时：
