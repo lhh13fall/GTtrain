@@ -7,8 +7,8 @@ class GTTrain:
     def __init__(self):
         #调用createLoginWindow；调用buildLoginWindow；把loginWindow设为主循环
         #Connect to the database
-        #self.db = self.connect()
-        #self.cursor = self.db.cursor()
+        self.db = self.connect()
+        self.cursor = self.db.cursor()
         # Login Window
         self.createLoginWindow()
         self.buildLoginWindow(self.loginWindow)
@@ -54,8 +54,10 @@ class GTTrain:
         loginButton.grid(row=6, column=3)
 
         #Register Button
+
         registerButton = Button(loginWindow, text="Register", command=self.loginWindowRegisterButtonClicked)
         registerButton.grid(row=6, column=4, sticky=E)
+
 
     def loginWindowLoginButtonClicked(self):
         #点击Login Window上的Login Button时：
@@ -104,6 +106,8 @@ class GTTrain:
         self.newUserRegistrationWindow = Toplevel()
         self.newUserRegistrationWindow.title("Train Sales System")
 
+
+
     def buildNewUserRegistrationWindow(self,newUserRegistrationWindow):
         #为newUserRegistrationWindow添加组件
 
@@ -131,7 +135,7 @@ class GTTrain:
 
 
         # Username Entry
-        self.username = StringVar()#这一行到底有没有问题啊……感觉有问题又不知道哪里有问题
+        self.username = StringVar()
         usernameEntry = Entry(newUserRegistrationWindow, textvariable=self.username, width=20)
         usernameEntry.grid(row=2, column=3, sticky=W + E)
 
@@ -200,15 +204,21 @@ class GTTrain:
         cancelAReservationLabel.grid(row=5,column=1)
         cancelAReservationLabel.bind("<ButtonPress-1>", self.chooseFunctionalityWindowCancelAReservationLabelClicked)
 
+
+        #View Review Label
+        viewReviewLabel = Label(chooseFunctionalityWindow, text="View Review")
+        viewReviewLabel.grid(row=6,column=1)
+        viewReviewLabel.bind("<ButtonPress-1>", self.chooseFunctionalityWindowViewReviewLabelClicked)
+
         #Give Review Label
         giveReviewLabel = Label(chooseFunctionalityWindow, text="Give Review")
-        giveReviewLabel.grid(row=6,column=1)
+        giveReviewLabel.grid(row=7,column=1)
         giveReviewLabel.bind("<ButtonPress-1>", self.chooseFunctionalityWindowGiveReviewLabelClicked)
 
 
         #Add School Information (Student Discount) Label
         addSchoolInformationStudentDiscountLabel = Label(chooseFunctionalityWindow, text="Add School Information (Student Discount)")
-        addSchoolInformationStudentDiscountLabel.grid(row=7,column=1)
+        addSchoolInformationStudentDiscountLabel.grid(row=8,column=1)
         addSchoolInformationStudentDiscountLabel.bind("<ButtonPress-1>", self.chooseFunctionalityWindowAddSchoolInformationStudentDiscountLabelClicked)
 
         #Log Out Buttons
@@ -224,6 +234,7 @@ class GTTrain:
         self.buildViewTrainScheduleWindow(self.viewTrainScheduleWindow)
         self.chooseFunctionalityWindow.withdraw()
 
+
     def chooseFunctionalityWindowMakeANewReservationLabelClicked(self,event):
         #点击Choose Functionality Window上的MakeANewReservation Label时：
         #调用createSearchTrainWindow()；调用buildSearchTrainWindow()；
@@ -233,7 +244,6 @@ class GTTrain:
         self.chooseFunctionalityWindow.withdraw()
 
     def chooseFunctionalityWindowUpdateAReservationLabelClicked(self,event):
-        #
         self.chooseFunctionalityWindow.withdraw()
         self.createUpdateReservationWindow()
         self.buildUpdateReservationWindow(self.updateReservationWindow)
@@ -243,12 +253,15 @@ class GTTrain:
         self.buildCancelReservationWindow1(self.cancelReservationWindow1)
         self.chooseFunctionalityWindow.withdraw()
 
-
+    def chooseFunctionalityWindowViewReviewLabelClicked(self,event):
+        self.chooseFunctionalityWindow.withdraw()
+        self.createViewReviewWindow()
+        self.buildViewReviewWindow(self.viewReviewWindow)
 
     def chooseFunctionalityWindowGiveReviewLabelClicked(self,event):
-        #
         self.chooseFunctionalityWindow.withdraw()
-
+        self.createGiveReviewWindow()
+        self.buildGiveReviewWindow(self.giveReviewWindow)
 
     def chooseFunctionalityWindowAddSchoolInformationStudentDiscountLabelClicked(self,event):
         #点击Choose Functionality Window上的Add School Information (下略) Label时：
@@ -379,12 +392,14 @@ class GTTrain:
         self.addSchoolInfoWindow.destroy()
         self.chooseFunctionalityWindow.deiconify()
 
+
     def addSchoolInfoWindowSubmitButtonClicked(self):
         #点击Add School Info Window上的Submit Button时：
         #消灭Add School Info Window
         #显示Choose Functionality Window
         self.addSchoolInfoWindow.destroy()
         self.chooseFunctionalityWindow.deiconify()
+
 
 #=========Search Train Window============
 
@@ -444,7 +459,6 @@ class GTTrain:
         self.selectDepartureWindow.title("Train Sales System")
 
 
-
     def buildSelectDepartureWindow(self,selectDepartureWindow):
         #Label
         departureLabel = Label(selectDepartureWindow, text = "Select Departure")
@@ -487,7 +501,7 @@ class GTTrain:
 
 
     def selectDepartureNextButtonClicked(self):
-        self.selectDepartureWindow.withdraw()
+        self.selectDepartureWindow.destroy()
         self.createTravelExtrasPassengerInfoWindow()
         self.buildTravelExtrasPassengerInfoWindow(self.travelExtrasPassengerInfoWindow)
 
@@ -497,7 +511,6 @@ class GTTrain:
     def createTravelExtrasPassengerInfoWindow(self):
         self.travelExtrasPassengerInfoWindow =Toplevel()
         self.travelExtrasPassengerInfoWindow.title("Train Sales System")
-
 
     def buildTravelExtrasPassengerInfoWindow(self,travelExtrasPassengerInfoWindow):
         #Title Label
@@ -532,19 +545,244 @@ class GTTrain:
 
     def travelExtrasPassengerInfoWindowBackButtonClicked(self):
         self.travelExtrasPassengerInfoWindow.destroy()
-        self.selectDepartureWindow.deiconify()
+        self.createSelectDepartureWindow()
+        self.buildSelectDepartureWindow(self.selectDepartureWindow)
 
     def travelExtrasPassengerInfoWindowNextButtonClicked(self):
-        self.travelExtrasPassengerInfoWindow.withdraw()
+        self.travelExtrasPassengerInfoWindow.destroy()
+        self.createMakeReservationWindow()
+        self.buildMakeReservationWindow(self.makeReservationWindow)
+
+ #=========Make Reservation Window============
+
+    def createMakeReservationWindow(self):
+
+        self.makeReservationWindow =Toplevel()
+        self.makeReservationWindow.title("Train Sales System")
 
 
-#=======Make Reservation Window=========
+    def buildMakeReservationWindow(self, makeReservationWindow):
+        #Title Label
+        makeReservationLabel= Label(makeReservationWindow,text = "Make Reservation")
+        makeReservationLabel.grid(row=1,column=1,sticky=W+E)
+
+        #Labels
+        currentlySelectedLabel= Label(makeReservationWindow,text = "Currently Selected")
+        currentlySelectedLabel.grid(row=2,column=1,sticky=W)
 
 
-#=======Payment Information Window======
+        #build the form
+
+        tree = ttk.Treeview(makeReservationWindow, column=("First", "Second", "Third", "Fourth", "5th", "6th" ,"7th", "8th","9th"))
+        tree.column("First", width = 100, anchor = "center")
+        tree.column("Second", width = 100, anchor = "center")
+        tree.column("Third", width = 100, anchor = "center")
+        tree.column("Fourth", width = 100, anchor = "center")
+        tree.column("5th", width = 100, anchor = "center")
+        tree.column("6th", width = 100, anchor = "center")
+        tree.column("7th", width = 100, anchor = "center")
+        tree.column("8th", width = 100, anchor = "center")
+        tree.column("9th", width = 100, anchor = "center")
 
 
-#=======Confirmation Window=======
+        tree.heading("First", text = "Train (Train Number)")
+        tree.heading("Second", text = "Time (Duration)")
+        tree.heading("Third", text = "Departs From")
+        tree.heading("Fourth", text = "Arrive At")
+        tree.heading("5th", text = "Class")
+        tree.heading("6th", text = "Price")
+        tree.heading("7th", text = "# of Baggages")
+        tree.heading("8th", text = "Passenger Name")
+        tree.heading("9th", text = "Remove")
+
+
+        #insert data into the form
+        for i in range(10):
+            tree.insert('',i, values=('a'+str(i),'b'+str(i),'c'+str(i),'d'+str(i),'e'+str(i),'f'+str(i),'g'+str(i),'h'+str(i),'i'+str(i)))
+
+        tree.grid(row = 3,column =1,columnspan=3)
+
+        #Labels
+        studentDiscountAppliedLabel= Label(makeReservationWindow,text = "Student Discount Applied")
+        studentDiscountAppliedLabel.grid(row=4, column=1,sticky=W)
+
+        totalCostLabel= Label(makeReservationWindow,text = "Total Cost")
+        totalCostLabel.grid(row=5, column=1,sticky=W)
+
+        #Cost display Entry
+        self.totalCost = StringVar()
+        totalCostEntry = Entry(makeReservationWindow, textvariable = self.totalCost, width=10)
+        totalCostEntry.grid(row=5, column=2,sticky=W)
+
+        #Use Card Label
+        useCardLabel= Label(makeReservationWindow,text = "Use Card")
+        useCardLabel.grid(row=6, column=1,sticky=W)
+
+
+        #drop down menu
+        lastDigitOfCard = StringVar(makeReservationWindow)
+        lastDigitOfCard.set("1111")
+        lastDigitOfCard  = OptionMenu(makeReservationWindow, lastDigitOfCard, "2222", "3333", "4444")
+        lastDigitOfCard.grid(row = 6, column = 2,sticky=W)
+
+        #Add Card Label
+        addCardLabel = Label(makeReservationWindow, text="Add Card")
+        addCardLabel.grid(row = 6, column = 3,sticky=W)
+        addCardLabel.bind("<ButtonPress-1>", self.makeReservationWindowAddCardLabelClicked)
+
+
+        #Continue adding a train Label
+        continueAddingATrainLabel = Label(makeReservationWindow, text="Continue adding a train")
+        continueAddingATrainLabel.grid(row = 7, column = 1,sticky=W)
+        continueAddingATrainLabel.bind("<ButtonPress-1>", self.makeReservationWindowContinueAddingATrainLabelClicked)
+
+
+        #Buttons
+        makeReservationWindowBackButton = Button(makeReservationWindow, text="Back", command=self.makeReservationWindowBackButtonClicked)
+        makeReservationWindowBackButton.grid(row=8, column=1,sticky=W)
+
+        makeReservationWindowSumbitButton = Button(makeReservationWindow, text="Submit", command=self.makeReservationWindowSubmitButtonClicked)
+        makeReservationWindowSumbitButton.grid(row=8, column=2,sticky=W)
+
+
+    def makeReservationWindowAddCardLabelClicked(self,event):
+        self.createPaymentInfoWindow()
+        self.buildPaymentInfoWindow(self.paymentInfoWindow)
+        self.makeReservationWindow.destroy()
+
+    def makeReservationWindowContinueAddingATrainLabelClicked(self,event):
+        self.makeReservationWindow.withdraw()
+
+        self.createSearchTrainWindow()
+        self.buildSearchTrainWindow(self.searchTrainWindow)
+
+    def makeReservationWindowBackButtonClicked(self):
+        self.makeReservationWindow.destroy()
+        self.createTravelExtrasPassengerInfoWindow()
+        self.buildTravelExtrasPassengerInfoWindow(self.travelExtrasPassengerInfoWindow)
+
+    def makeReservationWindowSubmitButtonClicked(self):
+        self.makeReservationWindow.withdraw()
+        self.createConfirmationWindow()
+        self.buildConfirmationWindow(self.confirmationWindow)
+
+
+
+ #=========Payment Infomation Window============
+
+    def createPaymentInfoWindow(self):
+        self.paymentInfoWindow =Toplevel()
+        self.paymentInfoWindow.title("Train Sales System")
+
+
+    def buildPaymentInfoWindow(self, paymentInfoWindow):
+
+        # Labels
+        paymentInfoLabel = Label(paymentInfoWindow, text = "Payment Information")
+        paymentInfoLabel.grid(row=1, column=1, sticky = W + E)
+
+        addCardLabel = Label(paymentInfoWindow, text = "Add Card")
+        addCardLabel.grid(row=2, column=1, sticky = W)
+        deleteCardLabel = Label(paymentInfoWindow, text = "Delete Card")
+        deleteCardLabel.grid(row=2, column=4, sticky= E)
+        nameOnCardLabel = Label(paymentInfoWindow, text = "Name on Card")
+        nameOnCardLabel.grid(row=3,column = 1, sticky=W)
+
+        #Entrys
+        self.nameOnCard = StringVar()
+        nameOnCardEntry = Entry(paymentInfoWindow, textvariable=self.nameOnCard,width=10)
+        nameOnCardEntry.grid(row=3, column=2)
+
+
+
+        #delete card Labels
+        deleteCardNumberLabel = Label(paymentInfoWindow, text = "Card Number")
+        deleteCardNumberLabel.grid(row=3,column = 3, sticky=E)
+
+        #drop down menu
+        deleteLastDigitOfCard= StringVar(paymentInfoWindow)
+        deleteLastDigitOfCard.set("1111")
+        deleteLastDigitOfCard = OptionMenu(paymentInfoWindow, deleteLastDigitOfCard, "2222", "3333", "4444")
+        deleteLastDigitOfCard.grid(row = 3, column = 4,sticky=E)
+
+        #add card number Labels
+        addCardNumberLabel = Label(paymentInfoWindow, text = "Card Number")
+        addCardNumberLabel.grid(row=4,column = 1, sticky = W)
+
+        #Entrys
+        self.addCardNumber = StringVar()
+        addCardNumberEntry = Entry(paymentInfoWindow, textvariable=self.addCardNumber,width=10)
+        addCardNumberEntry.grid(row=4, column=2,sticky=W)
+
+        #CVV Labels
+        cvvLabel = Label(paymentInfoWindow, text = "CVV")
+        cvvLabel.grid(row=5,column = 1, sticky=W)
+
+        #CVV Entrys
+        self.cvv = StringVar()
+        cvvEntry = Entry(paymentInfoWindow, textvariable=self.cvv,width=20)
+        cvvEntry.grid(row=5, column=2,sticky=W)
+
+        #Expiration Date Label
+        expirationDateLabel = Label(paymentInfoWindow, text = "Expiration Date")
+        expirationDateLabel.grid(row=6,column = 1, sticky=W)
+
+        #Expiration Date Entrys
+        self.expirationDate = StringVar()
+        expirationDateEntry = Entry(paymentInfoWindow, textvariable=self.expirationDate,width=20)
+        expirationDateEntry.grid(row=6, column=2,sticky=W)
+
+
+        #sumbit buttons
+        paymentInfoWindowAddSubmitButton = Button(paymentInfoWindow, text="Submit", command=self.paymentInfoWindowAddSumbitButtonClicked)
+        paymentInfoWindowAddSubmitButton.grid(row=7, column=1)
+        paymentInfoWindowDeleteSubmitButton = Button(paymentInfoWindow, text="Sumbit", command=self.paymentInfoWindowDeleteSumbitButtonClicked)
+        paymentInfoWindowDeleteSubmitButton.grid(row=7, column=3)
+
+
+    def paymentInfoWindowAddSumbitButtonClicked(self):
+        self.paymentInfoWindow.destroy()
+        self.createMakeReservationWindow()
+        self.buildMakeReservationWindow(self.makeReservationWindow)
+
+
+    def paymentInfoWindowDeleteSumbitButtonClicked(self):
+        self.paymentInfoWindow.destroy()
+        self.createMakeReservationWindow()
+        self.buildMakeReservationWindow(self.makeReservationWindow)
+
+
+ #=========Confirmation Window============
+
+    def createConfirmationWindow(self):
+
+        self.confirmationWindow =Toplevel()
+        self.confirmationWindow.title("Train Sales System")
+
+    def buildConfirmationWindow(self, confirmationWindow):
+
+         # Labels
+        confirmationLabel = Label(confirmationWindow, text = "Confirmation")
+        confirmationLabel.grid(row=1, column=1, sticky = W + E)
+
+        reservationIDLabel = Label(confirmationWindow, text = "Reservation ID")
+        reservationIDLabel.grid(row=2, column=1, sticky = W)
+
+        #Reservation ID Entrys
+        self.reservationId = StringVar()
+        reservationIdEntry = Entry(confirmationWindow, textvariable=self.reservationId,width=20)
+        reservationIdEntry.grid(row=2, column=2,sticky=W)
+
+        # Thank you Labels
+        thankYouLabel = Label(confirmationWindow, text = "Thank you for your purchase! Please save Reservation ID for your records.")
+        thankYouLabel.grid(row=3, column=1, sticky = W + E)
+        #back to choose functionality buttons
+        confirmationWindowBackButton = Button(confirmationWindow, text="Go back to choose functionality", command=self.confirmationWindowBackButtonClicked)
+        confirmationWindowBackButton.grid(row=4, column=1)
+
+    def confirmationWindowBackButtonClicked(self):
+        self.confirmationWindow.destroy()
+        self.chooseFunctionalityWindow.deiconify()
 
 
 
@@ -730,6 +968,11 @@ class GTTrain:
 
         updatedTrainTicketTree.grid(row=5,column=1,columnspan=3)
 
+        for i in range(2):
+            updatedtTrainTicketTree.insert('',i,values=('a'+str(i),'b'+str(i),'c'+str(i),'d'+str(i),'e'+str(i),'f'+str(i),'g'+str(i),'h'+str(i)))
+
+        updatedtTrainTicketTree.grid(row=5,column=1,columnspan=3)
+
         #Change Fee Label
         changeFeeLabel = Label(updateReservationWindow3,text="Change Fee")
         changeFeeLabel.grid(row=6, column=1, sticky=W+E)
@@ -892,6 +1135,131 @@ class GTTrain:
         self.createChooseFunctionalityWindow()
         self.buildChooseFunctionalityWindow(self.chooseFunctionalityWindow)
 
+#==========View Review Window===============
+
+    def createViewReviewWindow(self):
+        self.viewReviewWindow = Toplevel();
+        self.viewReviewWindow.title("Train Sales System")
+
+    def buildViewReviewWindow(self,viewReviewWindow):
+
+        #View Review Label
+        viewReviewLabel = Label(viewReviewWindow,text="View Review")
+        viewReviewLabel.grid(row=1, column=2, sticky=W+E)
+
+        #Train Number Label
+        trainNumberLabel = Label(viewReviewWindow,text="Train Number")
+        trainNumberLabel.grid(row=2, column=1, sticky=W+E)
+
+        #Train Number Entry
+        self.trainNumber = StringVar()
+        trainNumberEntry = Entry(viewReviewWindow, textvariable=self.trainNumber,width=10)
+        trainNumberEntry.grid(row=2, column=2, sticky=E)
+
+        #Back Button
+        backButton = Button(viewReviewWindow, text="Back", command = self.viewReviewWindowBackButtonClicked)
+        backButton.grid(row=3, column=1)
+
+        #Next Button
+        nextButton = Button(viewReviewWindow, text="Next", command = self.viewReviewWindowNextButtonClicked)
+        nextButton.grid(row=3, column=2)
+
+
+    def viewReviewWindowBackButtonClicked(self):
+        self.viewReviewWindow.destroy()
+        self.chooseFunctionalityWindow.deiconify()
+
+    def viewReviewWindowNextButtonClicked(self):
+        self.viewReviewWindow.destroy()
+        self.createViewReviewWindow2()
+        self.buildViewReviewWindow2(self.viewReviewWindow2)
+
+
+#=======View Review Window 2================
+
+    def createViewReviewWindow2(self):
+        self.viewReviewWindow2 = Toplevel();
+        self.viewReviewWindow2.title("Train Sales System")
+
+
+    def buildViewReviewWindow2(self,viewReviewWindow2):
+
+        #View Review Label
+        viewReviewLabel = Label(viewReviewWindow2,text="View Review")
+        viewReviewLabel.grid(row=1, column=2, sticky=W+E)
+
+        #View Review Treeview
+        viewReviewTree = ttk.Treeview(viewReviewWindow2, column=("1", "2"),height=2)
+        viewReviewTree.column("1", width = 150, anchor = "center")
+        viewReviewTree.column("2", width = 150, anchor = "center")
+        viewReviewTree.heading("1", text = "Rating")
+        viewReviewTree.heading("2", text = "Comment")
+
+        for i in range(2):
+            viewReviewTree.insert('',i,values=('a'+str(i),'b'+str(i)))
+
+        viewReviewTree.grid(row=2,column=1,columnspan=3)
+
+        #Back to Choose Functionality Button
+        backToChooseFunctionalityButton = Button(viewReviewWindow2, text="Back to Choose Functionality", command = self.viewReviewWindow2BackToChooseFunctionalityButtonClicked)
+        backToChooseFunctionalityButton.grid(row=3,column=2,sticky=W+E)
+
+    def viewReviewWindow2BackToChooseFunctionalityButtonClicked(self):
+        self.viewReviewWindow2.destroy()
+        self.chooseFunctionalityWindow.deiconify()
+
+
+#=========Give Review Window==========
+
+    def createGiveReviewWindow(self):
+        self.giveReviewWindow = Toplevel();
+        self.giveReviewWindow.title("Train Sales System")
+
+
+    def buildGiveReviewWindow(self,giveReviewWindow):
+
+        #Give Review Label
+        giveReviewLabel = Label(giveReviewWindow,text="Give Review")
+        giveReviewLabel.grid(row=1, column=2, sticky=W+E)
+
+        #Train Number Label
+        trainNumberLabel = Label(giveReviewWindow, text="Train Number")
+        trainNumberLabel.grid(row=2,column=1,sticky=W)
+
+        #Train Number Entry
+        self.trainNumber = StringVar()
+        trainNumberEntry = Entry(giveReviewWindow, textvariable=self.trainNumber)
+        trainNumberEntry.grid(row=2, column=2, sticky=W+E)
+
+        #Rating Label
+        ratingLabel = Label(giveReviewWindow, text="Rating")
+        ratingLabel.grid(row=3,column=1, sticky=W)
+
+        #Rating Listbox
+        self.rating = StringVar()
+        self.rating.set("Very Good")
+        ratingListbox = OptionMenu(giveReviewWindow, self.rating, "Very Good","Good", "Neutral", "Bad", "Very Bad")
+        ratingListbox.grid(row=3,column=2)
+
+        #Comment Label
+        commentLabel = Label(giveReviewWindow,text="Comment")
+        commentLabel.grid(row=4,column=1)
+
+        #Comment Entry
+        self.comment=StringVar()
+        commentEntry=Entry(giveReviewWindow,textvariable=self.comment)
+        commentEntry.grid(row=4,column=2)
+
+        #Submit Button
+        submitButton = Button(giveReviewWindow, text="Submit", command = self.giveReviewWindowSubmitButtonClicked)
+        submitButton.grid(row=5,column=2,sticky=W+E)
+
+    def giveReviewWindowSubmitButtonClicked(self):
+        self.giveReviewWindow.destroy()
+        self.chooseFunctionalityWindow.deiconify()
+
+
+
 #========Manager starting from here===========
 ##            def __init__(self, username):
 ##        # self.username = username
@@ -910,7 +1278,7 @@ class GTTrain:
 ##  =======Choose Functionality Window=======
 
     def createChooseFunctionalityWindowManager(self):
-        self.chooseFunctionalityWindowManager = Toplevel()
+        self.chooseFunctionalityWindowManager = Tk()
         self.chooseFunctionalityWindowManager.title("Train Sales System")
 
     def buildChooseFunctionalityWindowManager(self, chooseFunctionalityWindowManager):
@@ -1035,5 +1403,44 @@ class GTTrain:
         self.viewPopularRouteReportWindow.destroy()
         self.chooseFunctionalityWindowManager.deiconify()
 
+
+
+
+#---------------------------------BACK BUTTON ASSOCIATED METHODS------------------------
+    def backFromDisplayReportWindowToManagerMenu(self):
+        self.displayReportWindow.withdraw()
+        self.ManagerMenuWindow.deiconify()
+
+    def backToSearchCriteriaWindow(self):
+        self.generateReportWindow.withdraw()
+        self.displayReportWindow.deiconify()
+
+#------------------------HELPER METHODS----------------------------------------------
+
+    def restaurantNameSelected(self, event):
+        self.restaurantNameChoice.get()
+
+    def generateRestaurantID(self):
+        restaurantID = random.getrandbits(9);
+        result = self.cursor.execute("SELECT rid FROM restaurant WHERE rid = %s", restaurantID)
+
+        while result:
+            restaurantID = random.getrandbits(9);
+        return restaurantID
+
+    def createAnEntry(self, rowNumber, columnNumber, widthNumber, window):
+        aStringVar = StringVar()
+        anEntry = Entry(window, textvariable = aStringVar, width = widthNumber)
+        anEntry.grid(row = rowNumber, column = columnNumber, sticky = W + E)
+        return aStringVar, anEntry
+
+    def connect(self):
+        try:
+            db = pymysql.connect(host = 'academic-mysql.cc.gatech.edu',
+                                 db = 'cs4400_Team_20', user = 'cs4400_Team_20', passwd = 'rWL22HuB')
+            return db
+        except:
+            messagebox.showwarning('Error!','Cannot connect. Please check your internet connection.')
+            return False
 
 a=GTTrain()
