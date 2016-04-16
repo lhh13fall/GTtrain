@@ -60,11 +60,11 @@ class GTTrain:
 
 
     def loginWindowLoginButtonClicked(self):
-        #点击Login Window上的Login Button时：
-        #获取输入的username和password；
-        #调用
-        #调用
-        #隐藏Login Window；
+        # Click the button on Login Window:
+        # Obtain the username and password from keypress;
+        # Invoke;
+        # Invoke;
+        # Withdraw Login Window;
         username = self.username.get()
         password = self.password.get()
         if not username:
@@ -80,6 +80,7 @@ class GTTrain:
            return False
         usernameAndPasswordMatch = self.cursor.execute(
            "SELECT * FROM User WHERE (Username = %s AND Password = %s)", (username, password))
+        print(usernameAndPasswordMatch)
         if not usernameAndPasswordMatch:
            messagebox.showwarning("Username and password don\'t match", "Sorry, the username and password you entered"
                                                                         + " do not match.")
