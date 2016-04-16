@@ -80,15 +80,20 @@ class GTTrain:
            return False
         usernameAndPasswordMatch = self.cursor.execute(
            "SELECT * FROM User WHERE (Username = %s AND Password = %s)", (username, password))
-        print(usernameAndPasswordMatch)
         if not usernameAndPasswordMatch:
            messagebox.showwarning("Username and password don\'t match", "Sorry, the username and password you entered"
                                                                         + " do not match.")
            return False
 
-        self.loginWindow.withdraw()
-        self.createChooseFunctionalityWindowManager()
-        self.buildChooseFunctionalityWindowManager(self.chooseFunctionalityWindowManager)
+        isManagerName = self.cursor.execute("SELECT * FROM Manager WHERE Username = %s", (username))
+        if isManagerName:
+            self.loginWindow.withdraw()
+            self.createChooseFunctionalityWindowManager()
+            self.buildChooseFunctionalityWindowManager(self.chooseFunctionalityWindowManager)
+        else:
+            self.loginWindow.withdraw()
+            self.createChooseFunctionalityWindow()
+            self.buildChooseFunctionalityWindow(self.chooseFunctionalityWindow)
         return True
 
     def loginWindowRegisterButtonClicked(self):
@@ -103,14 +108,14 @@ class GTTrain:
 
 
     def createNewUserRegistrationWindow(self):
-        #创建空白的newUserRegistrationWindow
+        # Create blank newUserRegistrationWindow
         self.newUserRegistrationWindow = Toplevel()
         self.newUserRegistrationWindow.title("Train Sales System")
 
 
 
     def buildNewUserRegistrationWindow(self,newUserRegistrationWindow):
-        #为newUserRegistrationWindow添加组件
+        # Add components for newUserRegistrationWindow
 
         # New User Rigestration Label
         newUserRegistrationLabel = Label(newUserRegistrationWindow, text="New User Registration")
