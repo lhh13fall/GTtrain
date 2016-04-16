@@ -333,8 +333,8 @@ class GTTrain:
         trainNumberLabel.grid(row=2, column=1, sticky=W)
 
         # Train Number Entry
-        self.trainNumber = StringVar()
-        trainNumberEntry = Entry(viewTrainScheduleWindow, textvariable = self.trainNumber, width=20)
+        self.viewTrainScheduleTrainNumberSV = StringVar()
+        trainNumberEntry = Entry(viewTrainScheduleWindow, textvariable = self.viewTrainScheduleTrainNumberSV, width=20)
         trainNumberEntry.grid(row=2, column=2, sticky=E)
 
         # Buttons
@@ -344,6 +344,14 @@ class GTTrain:
 
     def viewTrainScheduleSearchButtonClicked(self):
         # Click Search Button and create View Train Schedule Window 2, destroy current window
+        self.viewTrainScheduleTrainNumber = self.viewTrainScheduleTrainNumberSV.get()
+        if not self.viewTrainScheduleTrainNumber:
+            messagebox.showwarning("Error", "Train number input is empty. Please enter train number.")
+            return False
+        isTrainNumber = self.cursor.execute("SELECT TrainNum FROM TrainRoute WHERE TrainNum = %s", self.viewTrainScheduleTrainNumber)
+        if not isTrainNumber:
+            messagebox.showwarning("Error", "The train number is not valid.")
+            return False
         self.createViewTrainScheduleWindow2()
         self.bulidViewTrainScheduleWindow2(self.viewTrainScheduleWindow2)
         self.viewTrainScheduleWindow.destroy()
@@ -1140,7 +1148,7 @@ class GTTrain:
         backButton.grid(row=2, column=2)
 
     def cancelReservationWindow1SearchButtonClicked(self):
-        reservationID = self.reservationID.get()
+        self.reservationID = self.reservationID.get()
         if not reservationID:
             messagebox.showwarning("Error", "Reservation ID input is empty. Please enter reservation ID.")
         isReservationID = self.cursor.execute("SELECT ReserveID FROM Reservation WHERE ReserveID = %s", reservationID)
