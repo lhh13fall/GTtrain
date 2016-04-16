@@ -39,14 +39,14 @@ class GTTrain:
 
 
         # Username Entry
-        self.username = StringVar()
-        usernameEntry = Entry(loginWindow, textvariable=self.username, width=20)
+        self.loginUsername = StringVar()
+        usernameEntry = Entry(loginWindow, textvariable=self.loginUsername, width=20)
         usernameEntry.grid(row=2, column=3, sticky=W + E)
 
 
         # Password Entry
-        self.password = StringVar()
-        passwordEntry = Entry(loginWindow, textvariable=self.password, show = '*', width=20)
+        self.loginPassword = StringVar()
+        passwordEntry = Entry(loginWindow, textvariable=self.loginPassword, show = '*', width=20)
         passwordEntry.grid(row=4, column=3, sticky=W + E)
 
         #Login Buttons
@@ -65,27 +65,27 @@ class GTTrain:
         # Invoke;
         # Invoke;
         # Withdraw Login Window;
-        username = self.username.get()
-        password = self.password.get()
-        if not username:
+        self.username = self.loginUsername.get()
+        self.password = self.loginPassword.get()
+        if not self.username:
             messagebox.showwarning("Username input is empty", "Please enter username.")
             return False
-        if not password:
+        if not self.password:
             messagebox.showwarning("Password input is empty", "Please enter password")
             return False
-        isUsername = self.cursor.execute("SELECT * FROM User WHERE Username = %s", username)
+        isUsername = self.cursor.execute("SELECT * FROM User WHERE Username = %s", self.username)
         if not isUsername:
            messagebox.showwarning("Username is not an user\'s username",
                                   "The username you entered is not an user\'s username.")
            return False
         usernameAndPasswordMatch = self.cursor.execute(
-           "SELECT * FROM User WHERE (Username = %s AND Password = %s)", (username, password))
+           "SELECT * FROM User WHERE (Username = %s AND Password = %s)", (self.username, self.password))
         if not usernameAndPasswordMatch:
            messagebox.showwarning("Username and password don\'t match", "Sorry, the username and password you entered"
                                                                         + " do not match.")
            return False
 
-        isManagerName = self.cursor.execute("SELECT * FROM Manager WHERE Username = %s", (username))
+        isManagerName = self.cursor.execute("SELECT * FROM Manager WHERE Username = %s", (self.username))
         if isManagerName:
             self.loginWindow.withdraw()
             self.createChooseFunctionalityWindowManager()
@@ -141,24 +141,24 @@ class GTTrain:
 
 
         # Username Entry
-        self.username = StringVar()
-        usernameEntry = Entry(newUserRegistrationWindow, textvariable=self.username, width=20)
+        self.registrationUsername = StringVar()
+        usernameEntry = Entry(newUserRegistrationWindow, textvariable=self.registrationUsername, width=20)
         usernameEntry.grid(row=2, column=3, sticky=W + E)
 
 
         # Email Address Entry
-        self.emailAddress = StringVar()
-        emailAddressEntry = Entry(newUserRegistrationWindow, textvariable=self.emailAddress,width=20)
+        self.registrationEmailAddress = StringVar()
+        emailAddressEntry = Entry(newUserRegistrationWindow, textvariable=self.registrationEmailAddress,width=20)
         emailAddressEntry.grid(row=3, column=3, sticky=W + E)
 
         # Password Entry
-        self.password = StringVar()
-        passwordEntry = Entry(newUserRegistrationWindow, textvariable=self.password,show = '*',width=20)
+        self.registrationPassword = StringVar()
+        passwordEntry = Entry(newUserRegistrationWindow, textvariable=self.registrationPassword,show = '*',width=20)
         passwordEntry.grid(row=4, column=3, sticky=W + E)
 
         # Confirm Password Entry
-        self.confirmPassword = StringVar()
-        confirmPasswordEntry = Entry(newUserRegistrationWindow, textvariable=self.confirmPassword,show = '*',width=20)
+        self.registrationConfirmPassword = StringVar()
+        confirmPasswordEntry = Entry(newUserRegistrationWindow, textvariable=self.registrationConfirmPassword,show = '*',width=20)
         confirmPasswordEntry.grid(row=5, column=3, sticky=W + E)
 
 
@@ -170,39 +170,39 @@ class GTTrain:
         # Click the Create Button on New User Registration Window:
         # Invoke createChooseFunctionalityWindow; Invoke buildChooseFunctionalityWindow;
         # Destroy New User Registration Window
-        username = self.username.get()
-        emailAddress = self.emailAddress.get()
-        password = self.password.get()
-        confirmPassword = self.confirmPassword.get()
-        if not username:
+        self.username = self.registrationUsername.get()
+        self.emailAddress = self.registrationEmailAddress.get()
+        self.password = self.registrationPassword.get()
+        self.confirmPassword = self.registrationConfirmPassword.get()
+        if not self.username:
             messagebox.showwarning("Username input is empty", "Please enter username.")
             return False
-        if not emailAddress:
+        if not self.emailAddress:
             messagebox.showwarning("E-mail input is empty", "Please enter E-mail.")
             return False
-        if not password:
+        if not self.password:
             messagebox.showwarning("Password input is empty", "Please enter password")
             return False
-        if not confirmPassword:
+        if not self.confirmPassword:
             messagebox.showwarning("Confirm password input is empty", "Please enter confirm password")
             return False
 
-        isUsername = self.cursor.execute("SELECT * FROM User WHERE Username = %s", username)
+        isUsername = self.cursor.execute("SELECT * FROM User WHERE Username = %s", self.username)
         if isUsername:
            messagebox.showwarning("This username has been used.",
                                   "Please input another username.")
            return False
-        isEmail = self.cursor.execute("SELECT * FROM Customer WHERE Email = %s", emailAddress)
+        isEmail = self.cursor.execute("SELECT * FROM Customer WHERE Email = %s", self.emailAddress)
         if isEmail:
            messagebox.showwarning("This E-mail address has been used.",
                                   "Please input another E-mail address.")
            return False
-        if not (password == confirmPassword):
+        if not (self.password == self.confirmPassword):
            messagebox.showwarning("Password does not match the confirm password.",
                                   "Please reconfirm the password.")
 
-        self.cursor.execute("INSERT INTO Customer VALUES (%s, %s, 0)", (username, emailAddress))
-        self.cursor.execute("INSERT INTO User VALUES (%s, %s)", (username, password))
+        self.cursor.execute("INSERT INTO Customer VALUES (%s, %s, 0)", (self.username, self.emailAddress))
+        self.cursor.execute("INSERT INTO User VALUES (%s, %s)", (self.username, self.password))
         self.createChooseFunctionalityWindow()
         self.buildChooseFunctionalityWindow(self.chooseFunctionalityWindow)
         self.newUserRegistrationWindow.destroy()
@@ -210,12 +210,12 @@ class GTTrain:
 ##==========Choose Functionality Window================
 
     def createChooseFunctionalityWindow(self):
-        #创建空白的chooseFunctionalityWindow
+        # Create blank chooseFunctionalityWindow
         self.chooseFunctionalityWindow = Toplevel()
         self.chooseFunctionalityWindow.title("Train Sales System")
 
     def buildChooseFunctionalityWindow(self,chooseFunctionalityWindow):
-        #为chooseFunctionalityWindow添加组件
+        # Add component to chooseFunctionalityWindow
 
         #Choose Functionality Label
         chooseFunctionalityLabel = Label(chooseFunctionalityWindow, text="Choose Functionality")
@@ -265,9 +265,9 @@ class GTTrain:
         logOutButton.grid(row=8, column=2,sticky=E)
 
     def chooseFunctionalityWindowViewTrainScheduleLabelClicked(self,event):
-        #点击Choose Functionality Window上的ViewTrainSchedule Label时：
-        #调用createViewTrainScheduleWindow()；调用buildViewTrainScheduleWindow()；
-        #隐藏Choose Functionality Window
+        # Click ViewTrainSchedule Label on Choose Functionality Window:
+        # Invoke createViewTrainScheduleWindow(); Invoke buildViewTrainScheduleWindow();
+        # Hide Choose Functionality Window.
         self.createViewTrainScheduleWindow()
         self.buildViewTrainScheduleWindow(self.viewTrainScheduleWindow)
         self.chooseFunctionalityWindow.withdraw()
@@ -333,8 +333,8 @@ class GTTrain:
         trainNumberLabel.grid(row=2, column=1, sticky=W)
 
         #Train Number Entry
-        self.TrainNumer = StringVar()
-        trainNumberEntry = Entry(viewTrainScheduleWindow, textvariable = self.password, width=20)
+        self.trainNumber = StringVar()
+        trainNumberEntry = Entry(viewTrainScheduleWindow, textvariable = self.trainNumber, width=20)
         trainNumberEntry.grid(row=2, column=2, sticky=E)
 
         # Buttons
@@ -410,8 +410,8 @@ class GTTrain:
         yourSchoolLabel.grid(row=3, column=1, sticky=W)
 
         #School Email Entry
-        self.schoolEmailAddress = StringVar()
-        schoolEmailAddressEntry = Entry(addSchoolInfoWindow, textvariable=self.schoolEmailAddress, width=20)
+        self.addSchoolInfoSchoolEmailAddress = StringVar()
+        schoolEmailAddressEntry = Entry(addSchoolInfoWindow, textvariable=self.addSchoolInfoSchoolEmailAddress, width=20)
         schoolEmailAddressEntry.grid(row=2, column=2, sticky=E)
 
         #Back Button
@@ -432,11 +432,20 @@ class GTTrain:
 
 
     def addSchoolInfoWindowSubmitButtonClicked(self):
-        #点击Add School Info Window上的Submit Button时：
-        #消灭Add School Info Window
-        #显示Choose Functionality Window
+        # Click Submit Button on Add School Info Window:
+        # Destroy Add School Info Window
+        # Display Choose Functionality Window
+        self.schoolEmailAddress = self.addSchoolInfoSchoolEmailAddress.get()
+        if not self.schoolEmailAddress:
+            messagebox.showwarning("Error", "School E-mail address input is empty. Please enter school E-mail address.")
+            return False
+        if self.schoolEmailAddress[-4:] != ".edu":
+            messagebox.showwarning("Error", "This is not a school E-mail address.")
+            return False
+        self.cursor.execute("Update Customer SET isStudent = 1 WHERE Username = %s", self.username)
         self.addSchoolInfoWindow.destroy()
         self.chooseFunctionalityWindow.deiconify()
+        return True
 
 
 #=========Search Train Window============
