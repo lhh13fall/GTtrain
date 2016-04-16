@@ -493,28 +493,53 @@ class GTTrain:
         findTrainsButton = Button(searchTrainWindow, text="Find Trains", command=self.searchTrainWindowFindTrainsButtonClicked)
         findTrainsButton.grid(row=5,column=3)
 
-        # Drop down menu
-        departsFromDate=StringVar(searchTrainWindow)
-
         # Get stops informatin from the database. Below names are for demos only.
 
-        departsFromDate.set("Boston(BBY)")
-        departsFrom = OptionMenu(searchTrainWindow, departsFromDate, "Boston(BBY)","New York", "Atlanta", "LA")
-        departsFrom.grid(row=2,column=2)
-        arrivesAtDate=StringVar(searchTrainWindow)
-        arrivesAtDate.set("New York(Penn Station)")
-        arrivesAt = OptionMenu(searchTrainWindow, arrivesAtDate, "New York(Penn Station)","Boston(BBY)", "Atlanta", "LA")
-        arrivesAt.grid(row=3,column=2)
+        self.cursor.execute("SELECT StationName From Stop GROUP BY StationName")
+        stationNameTuple = self.cursor.fetchall()
 
-        # Save a space for the calender
-        calenderLabel= Label(searchTrainWindow,text = "Deperature Date")
-        calenderLabel.grid(row=4,column=2)
+        stationNameList = []
+        for i in stationNameTuple:
+            stationNameList.append(i[0])
+        # Drop down menu
+        self.departsFromSV=StringVar()
+        self.departsFromSV.set(stationNameList[0])
+
+        departsFromOptionMenu = OptionMenu(searchTrainWindow, self.departsFromSV, *stationNameList)
+        departsFromOptionMenu.grid(row=2,column=2)
+
+        self.arrivesAtSV=StringVar()
+        self.arrivesAtSV.set(stationNameList[0])
+
+        arrivesAtOptionMenu = OptionMenu(searchTrainWindow, self.arrivesAtSV, *stationNameList)
+        arrivesAtOptionMenu.grid(row=3,column=2)
+
+
+        self.departureDateSV = StringVar()
+        self.departureDateSV.set("yyyy-mm-dd")
+        departureDateEntry = Entry(searchTrainWindow, textvariable=self.departureDateSV,width=20)
+        departureDateEntry.grid(row=4, column=2,sticky=W)
 
     def searchTrainWindowFindTrainsButtonClicked(self):
 
         # Click Find Train Button on Search Train Window:
         # Destroy Search Train Window
         # Display Select Departure Window
+
+        self.departsFrom = self.departsFromSV.get()
+        self.arrivesAt = self.arrivesAtSV.get()
+        self.departureDate = self.departureDateSV.get()
+
+        if self.departsFrom == self.arrivesAt:
+            messagebox.showwarning("Error", "Your departure station and destination are the same.")
+            return False
+
+        try:
+            datetime.datetime.strptime(self.departureDate, '%Y-%m-%d')
+        except ValueError:
+            messagebox.showwarning("Error", "Departure date is not valid. (yyyy-mm-dd)")
+            return False
+
         self.searchTrainWindow.destroy()
         self.createSelectDepartureWindow()
         self.buildSelectDepartureWindow(self.selectDepartureWindow)
@@ -592,7 +617,7 @@ class GTTrain:
         passergenNameLabel.grid(row=4,column=1)
 
         # Entry
-        self.passengerName = StringVar()
+        self.passengerNameSV = StringVar()
         passengerNameEntry = Entry(travelExtrasPassengerInfoWindow, textvariable=self.passengerName,width=20)
         passengerNameEntry.grid(row=4, column=2)
 
@@ -615,6 +640,17 @@ class GTTrain:
         self.buildSelectDepartureWindow(self.selectDepartureWindow)
 
     def travelExtrasPassengerInfoWindowNextButtonClicked(self):
+        # numberOfBaggage = self.numberOfBaggage.get()
+        # passengerName = self.passengerNameSV.get()
+
+        # if not passengerName:
+        #     messagebox.showwarning("Error", "Passenger name input is empty. Please enter passenger name.")
+        #     return False
+
+        # isTrainNumber = self.cursor.execute("SELECT * FROM Reserve WHERE TrainNum = %s", (self.))
+        # self.cursor.execute("INSERT INTO PaymentInfo VALUES(%s, %s, %s, %s, %s)", (addCardNumber, cvv, expirationDate, nameOnCard, self.username))
+
+
         self.travelExtrasPassengerInfoWindow.destroy()
         self.createMakeReservationWindow()
         self.buildMakeReservationWindow(self.makeReservationWindow)
