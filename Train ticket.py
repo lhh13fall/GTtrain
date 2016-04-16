@@ -5,7 +5,7 @@ from tkinter import ttk
 
 class GTTrain:
     def __init__(self):
-        #调用createLoginWindow；调用buildLoginWindow；把loginWindow设为主循环
+        # Invoke createLoginWindow; Invoke buildLoginWindow, Set loginWindow as mainloop
         #Connect to the database
         self.db = self.connect()
         self.cursor = self.db.cursor()
@@ -19,12 +19,12 @@ class GTTrain:
 
 
     def createLoginWindow(self):
-        #创建空白的Login Window
+        # Create blank Login Window
         self.loginWindow = Tk()
         self.loginWindow.title("Train Sales System")
 
     def buildLoginWindow(self, loginWindow):
-        #为Login Window添加组件
+        # Add component for Login Window
         # Login Label
         loginLabel = Label(loginWindow, text="Login")
         loginLabel.grid(row=1, column=3, sticky=W)
@@ -97,9 +97,9 @@ class GTTrain:
         return True
 
     def loginWindowRegisterButtonClicked(self):
-        #点击Login Window上的Register Button时：
-        #调用createNewUserRegistrationWindow；调用buildNewUserRegistrationWindow；
-        #隐藏Login Window；把newUserRegistrationWindow置于顶层
+        # Click button on Login Window:
+        # Invoke createNewUserRegistrationWindow; Invoke buildNewUserRegistrationWindow;
+        # Hide Login Window; Set newUserRegistrationWindow on the top
         self.createNewUserRegistrationWindow()
         self.buildNewUserRegistrationWindow(self.newUserRegistrationWindow)
         self.loginWindow.withdraw()
@@ -148,17 +148,17 @@ class GTTrain:
 
         # Email Address Entry
         self.emailAddress = StringVar()
-        emailAddressEntry = Entry(newUserRegistrationWindow, textvariable=self.password,width=20)
+        emailAddressEntry = Entry(newUserRegistrationWindow, textvariable=self.emailAddress,width=20)
         emailAddressEntry.grid(row=3, column=3, sticky=W + E)
 
         # Password Entry
         self.password = StringVar()
-        passwordEntry = Entry(newUserRegistrationWindow, textvariable=self.username,show = '*',width=20)
+        passwordEntry = Entry(newUserRegistrationWindow, textvariable=self.password,show = '*',width=20)
         passwordEntry.grid(row=4, column=3, sticky=W + E)
 
         # Confirm Password Entry
         self.confirmPassword = StringVar()
-        confirmPasswordEntry = Entry(newUserRegistrationWindow, textvariable=self.username,show = '*',width=20)
+        confirmPasswordEntry = Entry(newUserRegistrationWindow, textvariable=self.confirmPassword,show = '*',width=20)
         confirmPasswordEntry.grid(row=5, column=3, sticky=W + E)
 
 
@@ -167,10 +167,42 @@ class GTTrain:
         createButton.grid(row=6, column=3)
 
     def newUserRegistrationWindowCreateButtonClicked(self):
-        #点击New User Registration Window上的Create Button时：
-        #调用createChooseFunctionalityWindow；调用buildChooseFunctionalityWindow；
-        #消灭New User Registration Window（因为不会再用了）
+        # Click the Create Button on New User Registration Window:
+        # Invoke createChooseFunctionalityWindow; Invoke buildChooseFunctionalityWindow;
+        # Destroy New User Registration Window
+        username = self.username.get()
+        emailAddress = self.emailAddress.get()
+        password = self.password.get()
+        confirmPassword = self.confirmPassword.get()
+        if not username:
+            messagebox.showwarning("Username input is empty", "Please enter username.")
+            return False
+        if not emailAddress:
+            messagebox.showwarning("E-mail input is empty", "Please enter E-mail.")
+            return False
+        if not password:
+            messagebox.showwarning("Password input is empty", "Please enter password")
+            return False
+        if not confirmPassword:
+            messagebox.showwarning("Confirm password input is empty", "Please enter confirm password")
+            return False
 
+        isUsername = self.cursor.execute("SELECT * FROM User WHERE Username = %s", username)
+        if isUsername:
+           messagebox.showwarning("This username has been used.",
+                                  "Please input another username.")
+           return False
+        isEmail = self.cursor.execute("SELECT * FROM Customer WHERE Email = %s", emailAddress)
+        if isEmail:
+           messagebox.showwarning("This E-mail address has been used.",
+                                  "Please input another E-mail address.")
+           return False
+        if not (password == confirmPassword):
+           messagebox.showwarning("Password does not match the confirm password.",
+                                  "Please reconfirm the password.")
+
+        self.cursor.execute("INSERT INTO Customer VALUES (%s, %s, 0)", (username, emailAddress))
+        self.cursor.execute("INSERT INTO User VALUES (%s, %s)", (username, password))
         self.createChooseFunctionalityWindow()
         self.buildChooseFunctionalityWindow(self.chooseFunctionalityWindow)
         self.newUserRegistrationWindow.destroy()
