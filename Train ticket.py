@@ -2,7 +2,7 @@ from tkinter import *
 import pymysql
 from tkinter import messagebox
 from tkinter import ttk
-
+import datetime
 class GTTrain:
     def __init__(self):
         # Invoke createLoginWindow; Invoke buildLoginWindow, Set loginWindow as mainloop
@@ -748,10 +748,14 @@ class GTTrain:
         deleteCardNumberLabel.grid(row=3,column = 3, sticky=E)
 
         #drop down menu
-        deleteLastDigitOfCard= StringVar(paymentInfoWindow)
-        deleteLastDigitOfCard.set("1111")
-        deleteLastDigitOfCard = OptionMenu(paymentInfoWindow, deleteLastDigitOfCard, "2222", "3333", "4444")
-        deleteLastDigitOfCard.grid(row = 3, column = 4,sticky=E)
+        self.deleteLastDigitOfCard= StringVar()
+        self.cardNumberList = []
+        self.cursor.execute("SELECT CardNum FROM PaymentInfo WHERE Username = %s", self.username)
+        cardNumberTuple = self.cursor.fetchall()
+        for i in cardNumberTuple:
+            self.cardNumberList.append(i[0])
+        deleteLastDigitOfCardOptionMenu = OptionMenu(paymentInfoWindow, self.deleteLastDigitOfCard, *self.cardNumberList)
+        deleteLastDigitOfCardOptionMenu.grid(row = 3, column = 4,sticky=E)
 
         # Add card number Labels
         addCardNumberLabel = Label(paymentInfoWindow, text = "Card Number")
@@ -760,7 +764,7 @@ class GTTrain:
         # Entrys
         self.addCardNumber = StringVar()
         addCardNumberEntry = Entry(paymentInfoWindow, textvariable=self.addCardNumber,width=10)
-        addCardNumberEntry.grid(row=4, column=2,sticky=W)
+        addCardNumberEntry.grid(row=4, column=2, sticky=W)
 
         # CVV Labels
         cvvLabel = Label(paymentInfoWindow, text = "CVV")
@@ -769,7 +773,7 @@ class GTTrain:
         # CVV Entrys
         self.cvv = StringVar()
         cvvEntry = Entry(paymentInfoWindow, textvariable=self.cvv,width=20)
-        cvvEntry.grid(row=5, column=2,sticky=W)
+        cvvEntry.grid(row=5, column=2, sticky=W)
 
         # Expiration Date Label
         expirationDateLabel = Label(paymentInfoWindow, text = "Expiration Date")
@@ -777,6 +781,7 @@ class GTTrain:
 
         # Expiration Date Entrys
         self.expirationDate = StringVar()
+        self.expirationDate.set("yyyy-mm-dd")
         expirationDateEntry = Entry(paymentInfoWindow, textvariable=self.expirationDate,width=20)
         expirationDateEntry.grid(row=6, column=2,sticky=W)
 
@@ -808,6 +813,18 @@ class GTTrain:
         if not expirationDate:
             messagebox.showwarning("Error", "Expiration date input is empty. Please enter expiration date.")
             return False
+        if len(addCardNumber) != 16:
+            messagebox.showwarning("Error", "Card number is not valid.")
+            return False
+        if len(cvv) != 3:
+            messagebox.showwarning("Error", "CVV number is not valid.")
+            return False
+        # Verify if expiration date valid or not
+        try:
+            datetime.datetime.strptime(expirationDate, '%Y-%m-%d')
+        except ValueError:
+            messagebox.showwarning("Error", "Expiration date is not valid. (yyyy-mm-dd)")
+            return False
 
         isCardNumber = self.cursor.execute("SELECT * FROM PaymentInfo WHERE CardNum = %s", (addCardNumber))
         if isCardNumber:
@@ -820,6 +837,10 @@ class GTTrain:
         self.buildMakeReservationWindow(self.makeReservationWindow)
 
     def paymentInfoWindowDeleteSumbitButtonClicked(self):
+        deleteCardNumber = self.deleteLastDigitOfCard.get()
+        print(deleteCardNumber[0])
+        print(deleteCardNumber[1])
+        self.cursor.execute("DELETE FROM PaymentInfo WHERE CardNum = %s", deleteCardNumber)
         self.paymentInfoWindow.destroy()
         self.createMakeReservationWindow()
         self.buildMakeReservationWindow(self.makeReservationWindow)
