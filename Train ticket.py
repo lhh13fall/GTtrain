@@ -313,7 +313,6 @@ class GTTrain:
         # Click Log Out Buttion on Choose Functionality Window:
         # Destroy Choose Functionality Window
         # Display Login Window
-        self.db.close()
         self.chooseFunctionalityWindow.destroy()
         self.loginWindow.deiconify()
 
@@ -1142,6 +1141,8 @@ class GTTrain:
 
     def cancelReservationWindow1SearchButtonClicked(self):
         reservationID = self.reservationID.get()
+        if not reservationID:
+            messagebox.showwarning("Error", "Reservation ID input is empty. Please enter reservation ID.")
         isReservationID = self.cursor.execute("SELECT ReserveID FROM Reservation WHERE ReserveID = %s", reservationID)
         if not isReservationID:
             messagebox.showwarning("Error", "The reservation ID is not valid.")
@@ -1297,10 +1298,28 @@ class GTTrain:
 
         #View Review Label
         viewReviewLabel = Label(viewReviewWindow2,text="View Review")
-        viewReviewLabel.grid(row=1, column=2, sticky=W+E)
+        viewReviewLabel.grid(row=1, column=1, sticky=W+E, columnspan=3)
 
         self.cursor.execute("SELECT Rating, Comment FROM Review WHERE TrainNum = %s", self.viewReviewTrainNumber)
         reviewTuple = self.cursor.fetchall()
+
+        ratingLabel = Label(viewReviewWindow2, text = "Rate")
+        ratingLabel.grid(row=2, column=1, sticky=W)
+        commentLabel = Label(viewReviewWindow2, text = "Comment")
+        commentLabel.grid(row=2, column=2, sticky=W)
+        i = 2
+
+        for review in reviewTuple:
+            print(review)
+            print(review[0])
+            print(review[1])
+            i = i+1
+            rating = Label(viewReviewWindow2, text = review[0])
+            rating.grid(row=i, column=1)
+            comment = Label(viewReviewWindow2, text = review[1])
+            comment.grid(row=i, column=2)
+
+
         # #View Review Treeview
         # viewReviewTree = ttk.Treeview(viewReviewWindow2, column=("1", "2"),height=2)
         # viewReviewTree.column("1", width = 150, anchor = "center")
@@ -1313,9 +1332,9 @@ class GTTrain:
 
         # viewReviewTree.grid(row=2,column=1,columnspan=3)
 
-        # #Back to Choose Functionality Button
-        # backToChooseFunctionalityButton = Button(viewReviewWindow2, text="Back to Choose Functionality", command = self.viewReviewWindow2BackToChooseFunctionalityButtonClicked)
-        # backToChooseFunctionalityButton.grid(row=3,column=2,sticky=W+E)
+        #Back to Choose Functionality Button
+        backToChooseFunctionalityButton = Button(viewReviewWindow2, text="Back to Choose Functionality", command = self.viewReviewWindow2BackToChooseFunctionalityButtonClicked)
+        backToChooseFunctionalityButton.grid(row=i+1,column=1,columnspan=2,sticky=W+E)
 
     def viewReviewWindow2BackToChooseFunctionalityButtonClicked(self):
         self.viewReviewWindow2.destroy()
@@ -1436,7 +1455,6 @@ class GTTrain:
     def chooseFunctionalityWindowManagerLogOutButtonClicked(self):
         # When click logOutButton in chooseFunctionalityWindow,
         # it will destroy chooseFunctionalityWindow and display Login Window
-        self.db.close()
         self.chooseFunctionalityWindowManager.destroy()
         self.loginWindow.deiconify()
 
