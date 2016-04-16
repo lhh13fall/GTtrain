@@ -366,11 +366,12 @@ class GTTrain:
         # Label
         viewTrainScheduleLabel = Label(viewTrainScheduleWindow2, text= "View Train Schedule")
         viewTrainScheduleLabel.grid(row=1, column=1, sticky=W+E)
-        scheduleTableLabel = Label(viewTrainScheduleWindow2, text="Schedule TABLE")
-        scheduleTableLabel.grid(row=2, column=1, sticky=W+E)
 
         # Build the form
         tree = ttk.Treeview(viewTrainScheduleWindow2, column=("First", "Second", "Third", "Fourth"))
+        # Hide the first blank column
+        tree['show'] = 'headings'
+
         tree.column("First", width = 150, anchor = "center")
         tree.column("Second", width = 100, anchor = "center")
         tree.column("Third", width = 100, anchor = "center")
@@ -380,9 +381,20 @@ class GTTrain:
         tree.heading("Third", text = "Departure Time")
         tree.heading("Fourth", text = "Station")
 
-        # Insert data into the form
-        for i in range(10):
-            tree.insert('',i,values=('a'+str(i),'b'+str(i),'c'+str(i),'d'+str(i)))
+        self.cursor.execute("SELECT * FROM Stop WHERE TrainNum = %s ORDER BY ArrivalTime", self.viewTrainScheduleTrainNumber)
+        trainScheduleTuple = self.cursor.fetchall()
+        trainScheduleTrainNumberList = [self.viewTrainScheduleTrainNumber]
+        trainScheduleArrivalTimeList = []
+        trainscheduleDepartureTimeList = []
+        trainscheduleStationList = []
+        for i in trainScheduleTuple:
+            trainScheduleTrainNumberList.append('')
+            trainscheduleStationList.append(i[1])
+            trainScheduleArrivalTimeList.append(i[2])
+            trainscheduleDepartureTimeList.append(i[3])
+
+        for row in range(len(trainscheduleStationList)):
+            tree.insert('',row, values=(trainScheduleTrainNumberList[row],trainScheduleArrivalTimeList[row],trainscheduleDepartureTimeList[row],trainscheduleStationList[row]))
 
         tree.grid(row=3,column=1)
 
@@ -524,9 +536,8 @@ class GTTrain:
         # Need to add radio button
         #价格从高到低排列
 
-
-        #...不知道为啥多出一列空的
         tree = ttk.Treeview(selectDepartureWindow, column=("First", "Second", "Third", "Fourth"))
+        tree['show'] = "headings"
         tree.column("First", width = 150, anchor = "center")
         tree.column("Second", width = 150, anchor = "center")
         tree.column("Third", width = 150, anchor = "center")
@@ -1009,7 +1020,7 @@ class GTTrain:
         currentTrainTicketLabel.grid(row=2, column=1, sticky=W+E)
 
         # Current Train Ticket Treeview
-        currentTrainTicketTree = ttk.Treeview(updateReservationWindow3, column=("1", "2", "3", "4","5","6","7","8"),height=2)
+        currentTrainTicketTree = ttk.Treeview(updateReservationWindow3, column=("1", "2", "3", "4","5","6","7","8"))
         currentTrainTicketTree.column("1", width = 150, anchor = "center")
         currentTrainTicketTree.column("2", width = 150, anchor = "center")
         currentTrainTicketTree.column("3", width = 150, anchor = "center")
@@ -1049,7 +1060,7 @@ class GTTrain:
         updatedTrainTicketLabel.grid(row=4, column=1, sticky=W+E)
 
         # Updated Train Ticket Treeview
-        updatedTrainTicketTree = ttk.Treeview(updateReservationWindow3, column=("1", "2", "3", "4","5","6","7","8"), height=2)
+        updatedTrainTicketTree = ttk.Treeview(updateReservationWindow3, column=("1", "2", "3", "4","5","6","7","8"))
         updatedTrainTicketTree.column("1", width = 150, anchor = "center")
         updatedTrainTicketTree.column("2", width = 150, anchor = "center")
         updatedTrainTicketTree.column("3", width = 150, anchor = "center")
@@ -1179,7 +1190,7 @@ class GTTrain:
         cancelReservationLabel.grid(row=1, column=2, sticky=W+E)
 
         # Cancel Reservation Treeview
-        cancelReservationTree = ttk.Treeview(cancelReservationWindow2, column=("1", "2", "3", "4","5","6","7","8"), height=2)
+        cancelReservationTree = ttk.Treeview(cancelReservationWindow2, column=("1", "2", "3", "4","5","6","7","8"))
         cancelReservationTree.column("1", width = 150, anchor = "center")
         cancelReservationTree.column("2", width = 150, anchor = "center")
         cancelReservationTree.column("3", width = 150, anchor = "center")
@@ -1308,41 +1319,51 @@ class GTTrain:
         viewReviewLabel = Label(viewReviewWindow2,text="View Review")
         viewReviewLabel.grid(row=1, column=1, sticky=W+E, columnspan=3)
 
-        self.cursor.execute("SELECT Rating, Comment FROM Review WHERE TrainNum = %s", self.viewReviewTrainNumber)
-        reviewTuple = self.cursor.fetchall()
+        # self.cursor.execute("SELECT Rating, Comment FROM Review WHERE TrainNum = %s", self.viewReviewTrainNumber)
+        # reviewTuple = self.cursor.fetchall()
 
-        ratingLabel = Label(viewReviewWindow2, text = "Rate")
-        ratingLabel.grid(row=2, column=1, sticky=W)
-        commentLabel = Label(viewReviewWindow2, text = "Comment")
-        commentLabel.grid(row=2, column=2, sticky=W)
-        i = 2
+        # ratingLabel = Label(viewReviewWindow2, text = "Rate")
+        # ratingLabel.grid(row=2, column=1, sticky=W)
+        # commentLabel = Label(viewReviewWindow2, text = "Comment")
+        # commentLabel.grid(row=2, column=2, sticky=W)
+        # i = 2
 
-        for review in reviewTuple:
-            print(review)
-            print(review[0])
-            print(review[1])
-            i = i+1
-            rating = Label(viewReviewWindow2, text = review[0])
-            rating.grid(row=i, column=1)
-            comment = Label(viewReviewWindow2, text = review[1])
-            comment.grid(row=i, column=2)
+        # for review in reviewTuple:
+        #     print(review)
+        #     print(review[0])
+        #     print(review[1])
+        #     i = i+1
+        #     rating = Label(viewReviewWindow2, text = review[0])
+        #     rating.grid(row=i, column=1)
+        #     comment = Label(viewReviewWindow2, text = review[1])
+        #     comment.grid(row=i, column=2)
 
 
         # #View Review Treeview
-        # viewReviewTree = ttk.Treeview(viewReviewWindow2, column=("1", "2"),height=2)
-        # viewReviewTree.column("1", width = 150, anchor = "center")
-        # viewReviewTree.column("2", width = 150, anchor = "center")
-        # viewReviewTree.heading("1", text = "Rating")
-        # viewReviewTree.heading("2", text = "Comment")
+        viewReviewTree = ttk.Treeview(viewReviewWindow2, column=("1", "2"))
+        viewReviewTree['show'] = 'headings'
+        viewReviewTree.column("1", width = 150, anchor = "center")
+        viewReviewTree.column("2", width = 150, anchor = "center")
+        viewReviewTree.heading("1", text = "Rating")
+        viewReviewTree.heading("2", text = "Comment")
 
-        # for i in range(2):
-        #     viewReviewTree.insert('',i,values=('a'+str(i),'b'+str(i)))
+        self.cursor.execute("SELECT Comment, Rating FROM Review WHERE TrainNum = %s", self.viewReviewTrainNumber)
+        reviewTuple = self.cursor.fetchall()
+        reviewRatingList = []
+        reviewCommentList = []
 
-        # viewReviewTree.grid(row=2,column=1,columnspan=3)
+        for i in reviewTuple:
+            reviewRatingList.append(i[1])
+            reviewCommentList.append(i[0])
+
+        for row in range(len(reviewRatingList)):
+            viewReviewTree.insert('',row, values=(reviewRatingList[row],reviewCommentList[row]))
+
+        viewReviewTree.grid(row=2,column=1,columnspan=3)
 
         #Back to Choose Functionality Button
         backToChooseFunctionalityButton = Button(viewReviewWindow2, text="Back to Choose Functionality", command = self.viewReviewWindow2BackToChooseFunctionalityButtonClicked)
-        backToChooseFunctionalityButton.grid(row=i+1,column=1,columnspan=2,sticky=W+E)
+        backToChooseFunctionalityButton.grid(row=3,column=1,columnspan=2,sticky=W+E)
 
     def viewReviewWindow2BackToChooseFunctionalityButtonClicked(self):
         self.viewReviewWindow2.destroy()
@@ -1367,8 +1388,8 @@ class GTTrain:
         trainNumberLabel.grid(row=2,column=1,sticky=W)
 
         #Train Number Entry
-        self.trainNumber = StringVar()
-        trainNumberEntry = Entry(giveReviewWindow, textvariable=self.trainNumber)
+        self.giveReviewTrainNumberSV = StringVar()
+        trainNumberEntry = Entry(giveReviewWindow, textvariable=self.giveReviewTrainNumberSV)
         trainNumberEntry.grid(row=2, column=2, sticky=W+E)
 
         #Rating Label
@@ -1376,9 +1397,9 @@ class GTTrain:
         ratingLabel.grid(row=3,column=1, sticky=W)
 
         #Rating Listbox
-        self.rating = StringVar()
-        self.rating.set("Very Good")
-        ratingListbox = OptionMenu(giveReviewWindow, self.rating, "Very Good","Good", "Neutral", "Bad", "Very Bad")
+        self.giveReviewRatingSV = StringVar()
+        self.giveReviewRatingSV.set("Very Good")
+        ratingListbox = OptionMenu(giveReviewWindow, self.giveReviewRatingSV, "Very Good","Good", "Neutral", "Bad", "Very Bad")
         ratingListbox.grid(row=3,column=2)
 
         #Comment Label
@@ -1386,8 +1407,8 @@ class GTTrain:
         commentLabel.grid(row=4,column=1)
 
         #Comment Entry
-        self.comment=StringVar()
-        commentEntry=Entry(giveReviewWindow,textvariable=self.comment)
+        self.giveReviewCommentSV=StringVar()
+        commentEntry=Entry(giveReviewWindow,textvariable=self.giveReviewCommentSV)
         commentEntry.grid(row=4,column=2)
 
         #Submit Button
@@ -1395,6 +1416,19 @@ class GTTrain:
         submitButton.grid(row=5,column=2,sticky=W+E)
 
     def giveReviewWindowSubmitButtonClicked(self):
+        self.giveReviewTrainNumber = self.giveReviewTrainNumberSV.get()
+        self.giveReviewComment = self.giveReviewCommentSV.get()
+        self.giveReviewRating = self.giveReviewRatingSV.get()
+
+        if not self.giveReviewTrainNumber:
+            messagebox.showwarning("Error", "Train number input is empty. Please enter train number.")
+            return False
+        isTrainNumber = self.cursor.execute("SELECT TrainNum From TrainRoute WHERE TrainNum = %s", self.giveReviewTrainNumber)
+        if not isTrainNumber:
+            messagebox.showwarning("Error", "Train number is not valid. Please enter train number.")
+            return False
+
+        self.cursor.execute("INSERT INTO Review(Comment, Rating, Username, TrainNum) VALUES (%s, %s, %s, %s)", (self.giveReviewComment, self.giveReviewRating, self.username, self.giveReviewTrainNumber))
         self.giveReviewWindow.destroy()
         self.chooseFunctionalityWindow.deiconify()
 
@@ -1480,7 +1514,7 @@ class GTTrain:
         viewRevenueReportLabel.grid(row=1, column=1, sticky=W+E)
 
         # Build the form
-        viewRevenueReportTree = ttk.Treeview(viewRevenueReportWindow, column=("1", "2"), height=2)
+        viewRevenueReportTree = ttk.Treeview(viewRevenueReportWindow, column=("1", "2"))
         viewRevenueReportTree.column("1", width=150, anchor="center")
         viewRevenueReportTree.column("2", width=150, anchor="center")
         viewRevenueReportTree.heading("1", text="Month")
@@ -1516,7 +1550,7 @@ class GTTrain:
         viewPopularRouteReportLabel.grid(row=1, column=1, sticky=W+E)
 
         # Build the form
-        viewPopularRouteReportTree = ttk.Treeview(viewPopularRouteReportWindow, column=("1", "2", "3"), height=2)
+        viewPopularRouteReportTree = ttk.Treeview(viewPopularRouteReportWindow, column=("1", "2", "3"))
         viewPopularRouteReportTree.column("1", width=150, anchor="center")
         viewPopularRouteReportTree.column("2", width=150, anchor="center")
         viewPopularRouteReportTree.column("3", width=150, anchor="center")
