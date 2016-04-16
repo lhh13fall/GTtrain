@@ -1268,6 +1268,14 @@ class GTTrain:
         self.chooseFunctionalityWindow.deiconify()
 
     def viewReviewWindowNextButtonClicked(self):
+        self.viewReviewTrainNumber = self.trainNumber.get()
+        if not self.viewReviewTrainNumber:
+            messagebox.showwarning("Error", "Train number input is empty. Please enter train number.")
+            return False
+        isTrainNumber = self.cursor.execute("SELECT * FROM TrainRoute WHERE TrainNum = %s", self.viewReviewTrainNumber)
+        if not isTrainNumber:
+            messagebox.showwarning("Error", "Train number is not valid.")
+            return False
         self.viewReviewWindow.destroy()
         self.createViewReviewWindow2()
         self.buildViewReviewWindow2(self.viewReviewWindow2)
@@ -1286,21 +1294,22 @@ class GTTrain:
         viewReviewLabel = Label(viewReviewWindow2,text="View Review")
         viewReviewLabel.grid(row=1, column=2, sticky=W+E)
 
-        #View Review Treeview
-        viewReviewTree = ttk.Treeview(viewReviewWindow2, column=("1", "2"),height=2)
-        viewReviewTree.column("1", width = 150, anchor = "center")
-        viewReviewTree.column("2", width = 150, anchor = "center")
-        viewReviewTree.heading("1", text = "Rating")
-        viewReviewTree.heading("2", text = "Comment")
+        reviewTuple = self.cursor.execute("SELECT Rating, Comment FROM Review WHERE TrainNum = %s", self.viewReviewTrainNumber)
+        # #View Review Treeview
+        # viewReviewTree = ttk.Treeview(viewReviewWindow2, column=("1", "2"),height=2)
+        # viewReviewTree.column("1", width = 150, anchor = "center")
+        # viewReviewTree.column("2", width = 150, anchor = "center")
+        # viewReviewTree.heading("1", text = "Rating")
+        # viewReviewTree.heading("2", text = "Comment")
 
-        for i in range(2):
-            viewReviewTree.insert('',i,values=('a'+str(i),'b'+str(i)))
+        # for i in range(2):
+        #     viewReviewTree.insert('',i,values=('a'+str(i),'b'+str(i)))
 
-        viewReviewTree.grid(row=2,column=1,columnspan=3)
+        # viewReviewTree.grid(row=2,column=1,columnspan=3)
 
-        #Back to Choose Functionality Button
-        backToChooseFunctionalityButton = Button(viewReviewWindow2, text="Back to Choose Functionality", command = self.viewReviewWindow2BackToChooseFunctionalityButtonClicked)
-        backToChooseFunctionalityButton.grid(row=3,column=2,sticky=W+E)
+        # #Back to Choose Functionality Button
+        # backToChooseFunctionalityButton = Button(viewReviewWindow2, text="Back to Choose Functionality", command = self.viewReviewWindow2BackToChooseFunctionalityButtonClicked)
+        # backToChooseFunctionalityButton.grid(row=3,column=2,sticky=W+E)
 
     def viewReviewWindow2BackToChooseFunctionalityButtonClicked(self):
         self.viewReviewWindow2.destroy()
