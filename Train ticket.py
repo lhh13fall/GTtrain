@@ -1141,6 +1141,11 @@ class GTTrain:
         backButton.grid(row=2, column=2)
 
     def cancelReservationWindow1SearchButtonClicked(self):
+        reservationID = self.reservationID.get()
+        isReservationID = self.cursor.execute("SELECT ReserveID FROM Reservation WHERE ReserveID = %s", reservationID)
+        if not isReservationID:
+            messagebox.showwarning("Error", "The reservation ID is not valid.")
+            return False
         self.cancelReservationWindow1.destroy()
         self.createCancelReservationWindow2()
         self.buildCancelReservationWindow2(self.cancelReservationWindow2)
@@ -1294,7 +1299,8 @@ class GTTrain:
         viewReviewLabel = Label(viewReviewWindow2,text="View Review")
         viewReviewLabel.grid(row=1, column=2, sticky=W+E)
 
-        reviewTuple = self.cursor.execute("SELECT Rating, Comment FROM Review WHERE TrainNum = %s", self.viewReviewTrainNumber)
+        self.cursor.execute("SELECT Rating, Comment FROM Review WHERE TrainNum = %s", self.viewReviewTrainNumber)
+        reviewTuple = self.cursor.fetchall()
         # #View Review Treeview
         # viewReviewTree = ttk.Treeview(viewReviewWindow2, column=("1", "2"),height=2)
         # viewReviewTree.column("1", width = 150, anchor = "center")
