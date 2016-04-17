@@ -648,7 +648,7 @@ class GTTrain:
         if not self.trainClassIV.get():
             messagebox.showwarning("Error","You haven't selected any class.")
             return False
-
+        
         treeIndexString = self.selectDepartureTree.focus()
         treeIndex = int(treeIndexString[1:])
         self.selectedTrainNum = self.trainNumList[treeIndex-1]
@@ -662,7 +662,7 @@ class GTTrain:
         elif self.trainClassIV.get() == 2:
             self.selectedClass = "2nd Class"
             self.selectedPrice = self.sndClassPriceList[treeIndex-1]
-
+    
 
 
         self.selectDepartureWindow.destroy()
@@ -722,20 +722,9 @@ class GTTrain:
 
         self.selectedNumberOfBaggage = self.numberOfBaggageIV.get()
         self.passengerName = self.passengerNameSV.get()
-
         self.selectedPrice = self.selectedPrice + max(0,(self.selectedNumberOfBaggage - 2)*30)
+        self.informationList.append((self.selectedTrainNum,self.departureDate, self.selectedDepartureTime,self.selectedArrivalTime, self.selectedDuration,self.departsFrom,self.arrivesAt,self.selectedClass,self.selectedPrice,self.selectedNumberOfBaggage,self.passengerName))
 
-        # print(self.selectedTrainNum)
-        # print(self.departureDate)
-        # print(self.selectedDepartureTime)
-        # print(self.selectedArrivalTime)
-        # print(self.selectedDuration)
-        # print(self.departsFrom)
-        # print(self.arrivesAt)
-        # print(self.selectedClass)
-        # print(self.selectedPrice)
-        # print(self.selectedNumberOfBaggage)
-        # print(self.passengerName)
 
         self.travelExtrasPassengerInfoWindow.destroy()
         self.createMakeReservationWindow()
