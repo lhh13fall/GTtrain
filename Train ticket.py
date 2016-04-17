@@ -865,7 +865,30 @@ class GTTrain:
 
         makeReservationWindowSumbitButton = Button(makeReservationWindow, text="Submit", command=self.makeReservationWindowSubmitButtonClicked)
         makeReservationWindowSumbitButton.grid(row=8, column=2,sticky=W)
-
+     
+        makeReservationWindowRemoveButton = Button(makeReservationWindow, text="Remove", command=self.makeReservationWindowRemoveButtonClicked)
+        makeReservationWindowRemoveButton.grid(row=5, column=3,sticky=W)
+        
+    def makeReservationWindowRemoveButtonClicked(self):
+        if not self.currentlySelectedTree.focus():
+            messagebox.showwarning("Error","You haven't selected any train.")
+            return False
+        
+        #remove button 有个bug
+        #只能从下往上删除，不然就说del self.informationList[treeIndex-1] 的index out of range.
+        
+        
+        treeIndexString = self.currentlySelectedTree.focus()
+        treeIndex = int(treeIndexString[1:])
+        selected_reservation = self.currentlySelectedTree.selection()[0]
+        self.currentlySelectedTree.delete(selected_reservation)
+        #print(self.informationList)
+        del self.informationList[treeIndex-1]
+        #print("deleted")
+           
+        
+        
+        
 
     def makeReservationWindowAddCardLabelClicked(self,event):
         self.createPaymentInfoWindow()
