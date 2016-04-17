@@ -750,44 +750,67 @@ class GTTrain:
 
         # Build the form
 
-        tree = ttk.Treeview(makeReservationWindow, column=("First", "Second", "Third", "Fourth", "5th", "6th" ,"7th", "8th","9th"))
-        tree.column("First", width = 100, anchor = "center")
-        tree.column("Second", width = 100, anchor = "center")
-        tree.column("Third", width = 100, anchor = "center")
-        tree.column("Fourth", width = 100, anchor = "center")
-        tree.column("5th", width = 100, anchor = "center")
-        tree.column("6th", width = 100, anchor = "center")
-        tree.column("7th", width = 100, anchor = "center")
-        tree.column("8th", width = 100, anchor = "center")
-        tree.column("9th", width = 100, anchor = "center")
+        self.currentlySelectedTree = ttk.Treeview(makeReservationWindow, column=("1", "2", "3", "4", "5", "6" ,"7", "8","9","10","11"))
+        self.currentlySelectedTree['show'] = "headings"
+        self.currentlySelectedTree.column("1", width = 100, anchor = "center")
+        self.currentlySelectedTree.column("2", width = 100, anchor = "center")
+        self.currentlySelectedTree.column("3", width = 100, anchor = "center")
+        self.currentlySelectedTree.column("4", width = 100, anchor = "center")
+        self.currentlySelectedTree.column("5", width = 100, anchor = "center")
+        self.currentlySelectedTree.column("6", width = 100, anchor = "center")
+        self.currentlySelectedTree.column("7", width = 100, anchor = "center")
+        self.currentlySelectedTree.column("8", width = 100, anchor = "center")
+        self.currentlySelectedTree.column("9", width = 100, anchor = "center")
+        self.currentlySelectedTree.column("10", width = 100, anchor = "center")
+        self.currentlySelectedTree.column("11", width = 100, anchor = "center")
 
-
-        tree.heading("First", text = "Train (Train Number)")
-        tree.heading("Second", text = "Time (Duration)")
-        tree.heading("Third", text = "Departs From")
-        tree.heading("Fourth", text = "Arrive At")
-        tree.heading("5th", text = "Class")
-        tree.heading("6th", text = "Price")
-        tree.heading("7th", text = "# of Baggages")
-        tree.heading("8th", text = "Passenger Name")
-        tree.heading("9th", text = "Remove")
+        self.currentlySelectedTree.heading("1", text = "Train (Train Number)")
+        self.currentlySelectedTree.heading("2", text = "Departure Date")
+        self.currentlySelectedTree.heading("3", text = "Departure Time")
+        self.currentlySelectedTree.heading("4", text = "Arrival Time")
+        self.currentlySelectedTree.heading("5", text = "Duration")
+        self.currentlySelectedTree.heading("6", text = "Departs From")
+        self.currentlySelectedTree.heading("7", text = "Arrives At")
+        self.currentlySelectedTree.heading("8", text = "Class")
+        self.currentlySelectedTree.heading("9", text = "Price")
+        self.currentlySelectedTree.heading("10", text = "Number of Baggages")
+        self.currentlySelectedTree.heading("11", text = "Passenger Name")
 
 
         # Insert data into the form
-        for i in range(10):
-            tree.insert('',i, values=('a'+str(i),'b'+str(i),'c'+str(i),'d'+str(i),'e'+str(i),'f'+str(i),'g'+str(i),'h'+str(i),'i'+str(i)))
+        for i in range(len(self.informationList)):
+            self.currentlySelectedTree.insert('',i, values=self.informationList[i])
 
-        tree.grid(row = 3,column =1,columnspan=3)
+        self.currentlySelectedTree.grid(row = 3,column =1,columnspan=3)
 
         # Labels
-        studentDiscountAppliedLabel= Label(makeReservationWindow,text = "Student Discount Applied")
+        
+        
+
+        self.cursor.execute("SELECT IsStudent FROM Customer WHERE Username = %s",self.username)
+        studentStatus = self.cursor.fetchall()
+
+        if studentStatus[0][0]:
+            studentDiscountAppliedLabel= Label(makeReservationWindow,text = "Student Discount Applied")
+        else:
+            studentDiscountAppliedLabel= Label(makeReservationWindow,text = "Student Discount Not Applied")
         studentDiscountAppliedLabel.grid(row=4, column=1,sticky=W)
 
         totalCostLabel= Label(makeReservationWindow,text = "Total Cost")
         totalCostLabel.grid(row=5, column=1,sticky=W)
 
+        totalCost = 0
+        for i in self.informationList:
+            totalCost = totalCost + i[8]
+
+        totalCost = float(totalCost)
+
+        if studentStatus[0][0]:
+            totalCost = totalCost * 0.8
+
         # Cost display Entry
-        self.totalCost = StringVar()
+        self.totalCost = DoubleVar()
+        self.totalCost.set(totalCost)
         totalCostEntry = Entry(makeReservationWindow, textvariable = self.totalCost, width=10)
         totalCostEntry.grid(row=5, column=2,sticky=W)
 
@@ -796,12 +819,30 @@ class GTTrain:
         useCardLabel.grid(row=6, column=1,sticky=W)
 
 
-        # Drop down menu
-        lastDigitOfCard = StringVar(makeReservationWindow)
-        lastDigitOfCard.set("1111")
-        lastDigitOfCard  = OptionMenu(makeReservationWindow, lastDigitOfCard, "2222", "3333", "4444")
-        lastDigitOfCard.grid(row = 6, column = 2,sticky=W)
+        #OptionMenu
+        
+        self.cursor.execute("SELECT CardNum FROM PaymentInfo WHERE Username = %s",self.username)
+        cardNumTuple = self.cursor.fetchall()
+        print(cardNumTuple)
 
+        self.cardNumList = []
+        
+        if cardNumTuple:
+            for i in cardNumTuple:
+                self.cardNumList.append(i[0])
+
+        print(self.cardNumList)
+        
+        self.usingCardSV = StringVar()
+        if self.cardNumList:
+            self.usingCardSV.set(self.cardNumList[0])
+            usingCardOptionMenu = OptionMenu(makeReservationWindow, self.usingCardSV, *self.cardNumList)
+        else:
+            usingCardOptionMenu = OptionMenu(makeReservationWindow, self.usingCardSV, [])
+        usingCardOptionMenu.grid(row = 6, column = 2,sticky=W)
+
+
+        
         # Add Card Label
         addCardLabel = Label(makeReservationWindow, text="Add Card")
         addCardLabel.grid(row = 6, column = 3,sticky=W)
@@ -828,8 +869,7 @@ class GTTrain:
         self.makeReservationWindow.destroy()
 
     def makeReservationWindowContinueAddingATrainLabelClicked(self,event):
-        self.makeReservationWindow.withdraw()
-
+        self.makeReservationWindow.destroy()
         self.createSearchTrainWindow()
         self.buildSearchTrainWindow(self.searchTrainWindow)
 
@@ -839,7 +879,12 @@ class GTTrain:
         self.buildTravelExtrasPassengerInfoWindow(self.travelExtrasPassengerInfoWindow)
 
     def makeReservationWindowSubmitButtonClicked(self):
-        self.makeReservationWindow.withdraw()
+        self.usingCard = self.usingCardSV.get()
+        if not self.usingCard:
+            messagebox.showwarning("Error","You must have a card for payment.")
+            return False        
+        
+        self.makeReservationWindow.destroy()
         self.createConfirmationWindow()
         self.buildConfirmationWindow(self.confirmationWindow)
 
@@ -870,8 +915,6 @@ class GTTrain:
         nameOnCardEntry = Entry(paymentInfoWindow, textvariable=self.nameOnCard,width=10)
         nameOnCardEntry.grid(row=3, column=2)
 
-
-
         #delete card Labels
         deleteCardNumberLabel = Label(paymentInfoWindow, text = "Card Number")
         deleteCardNumberLabel.grid(row=3,column = 3, sticky=E)
@@ -881,9 +924,13 @@ class GTTrain:
         self.cardNumberList = []
         self.cursor.execute("SELECT CardNum FROM PaymentInfo WHERE Username = %s", self.username)
         cardNumberTuple = self.cursor.fetchall()
-        for i in cardNumberTuple:
-            self.cardNumberList.append(i[0])
-        deleteLastDigitOfCardOptionMenu = OptionMenu(paymentInfoWindow, self.deleteLastDigitOfCard, *self.cardNumberList)
+        if cardNumberTuple:
+            for i in cardNumberTuple:
+                self.cardNumberList.append(i[0])
+            deleteLastDigitOfCardOptionMenu = OptionMenu(paymentInfoWindow, self.deleteLastDigitOfCard, *self.cardNumberList)
+            self.deleteLastDigitOfCard.set(i[0])
+        else:
+            deleteLastDigitOfCardOptionMenu = OptionMenu(paymentInfoWindow, self.deleteLastDigitOfCard, [])
         deleteLastDigitOfCardOptionMenu.grid(row = 3, column = 4,sticky=E)
 
         # Add card number Labels
@@ -916,9 +963,9 @@ class GTTrain:
 
 
         # Sumbit buttons
-        paymentInfoWindowAddSubmitButton = Button(paymentInfoWindow, text="Submit", command=self.paymentInfoWindowAddSumbitButtonClicked)
+        paymentInfoWindowAddSubmitButton = Button(paymentInfoWindow, text="Submit Add", command=self.paymentInfoWindowAddSumbitButtonClicked)
         paymentInfoWindowAddSubmitButton.grid(row=7, column=1)
-        paymentInfoWindowDeleteSubmitButton = Button(paymentInfoWindow, text="Sumbit", command=self.paymentInfoWindowDeleteSumbitButtonClicked)
+        paymentInfoWindowDeleteSubmitButton = Button(paymentInfoWindow, text="Sumbit Delete", command=self.paymentInfoWindowDeleteSumbitButtonClicked)
         paymentInfoWindowDeleteSubmitButton.grid(row=7, column=3)
 
         # Back button
@@ -967,8 +1014,10 @@ class GTTrain:
 
     def paymentInfoWindowDeleteSumbitButtonClicked(self):
         deleteCardNumber = self.deleteLastDigitOfCard.get()
-        # print(deleteCardNumber[0])
-        # print(deleteCardNumber[1])
+        if not deleteCardNumber:
+            messagebox.showwarning("Error","You don't have any card to delete.")
+            return False
+        
         self.cursor.execute("DELETE FROM PaymentInfo WHERE CardNum = %s", deleteCardNumber)
         self.paymentInfoWindow.destroy()
         self.createMakeReservationWindow()
