@@ -724,17 +724,17 @@ class GTTrain:
 
         self.selectedPrice = self.selectedPrice + max(0,(self.selectedNumberOfBaggage - 2)*30)
 
-        print(self.selectedTrainNum)
-        print(self.departureDate)
-        print(self.selectedDepartureTime)
-        print(self.selectedArrivalTime)
-        print(self.selectedDuration)
-        print(self.departsFrom)
-        print(self.arrivesAt)
-        print(self.selectedClass)
-        print(self.selectedPrice)
-        print(self.selectedNumberOfBaggage)
-        print(self.passengerName)
+        # print(self.selectedTrainNum)
+        # print(self.departureDate)
+        # print(self.selectedDepartureTime)
+        # print(self.selectedArrivalTime)
+        # print(self.selectedDuration)
+        # print(self.departsFrom)
+        # print(self.arrivesAt)
+        # print(self.selectedClass)
+        # print(self.selectedPrice)
+        # print(self.selectedNumberOfBaggage)
+        # print(self.passengerName)
 
         self.travelExtrasPassengerInfoWindow.destroy()
         self.createMakeReservationWindow()
@@ -977,8 +977,8 @@ class GTTrain:
 
     def paymentInfoWindowDeleteSumbitButtonClicked(self):
         deleteCardNumber = self.deleteLastDigitOfCard.get()
-        print(deleteCardNumber[0])
-        print(deleteCardNumber[1])
+        # print(deleteCardNumber[0])
+        # print(deleteCardNumber[1])
         self.cursor.execute("DELETE FROM PaymentInfo WHERE CardNum = %s", deleteCardNumber)
         self.paymentInfoWindow.destroy()
         self.createMakeReservationWindow()
@@ -1672,6 +1672,7 @@ class GTTrain:
 
         # Build the form
         viewPopularRouteReportTree = ttk.Treeview(viewPopularRouteReportWindow, column=("1", "2", "3"))
+        viewPopularRouteReportTree['show'] = 'headings'
         viewPopularRouteReportTree.column("1", width=150, anchor="center")
         viewPopularRouteReportTree.column("2", width=150, anchor="center")
         viewPopularRouteReportTree.column("3", width=150, anchor="center")
@@ -1682,48 +1683,46 @@ class GTTrain:
         self.cursor.execute("SELECT MONTH(DepartureDate) AS Month, TrainNum, COUNT(ReserveID) AS ReserveNum FROM Reservation NATURAL JOIN Reserve WHERE isCancelled = 0 GROUP BY TrainNum, Month ORDER BY Month ASC, ReserveNum DESC")
         viewPopularRouteReportTuple = self.cursor.fetchall()
 
-        temp = []
         viewPopularRouteReportMonthList = []
         viewPopularRouteReportTrainNumberList = []
         viewPopularRouteReportNumberOfReservationList = []
         for i in viewPopularRouteReportTuple:
-            temp.append(i[0])
+            viewPopularRouteReportMonthList.append(i[0])
             viewPopularRouteReportTrainNumberList.append(i[1])
             viewPopularRouteReportNumberOfReservationList.append(i[2])
 
 
-        monthList = ["January", "February","March", "April", "May", "June", "July",
-                          "August", "September", "October", "November", "December"]
+        # monthList = ["January", "February","March", "April", "May", "June", "July",
+        #                   "August", "September", "October", "November", "December"]
 
-        # Change month from number to name, e.g 3 => March
-        for month in temp:
-            i = int(month)
-            viewPopularRouteReportMonthList.append(monthList[i-1])
+        # # Change month from number to name, e.g 3 => March
+        # for month in temp:
+        #     i = int(month)
+        #     viewPopularRouteReportMonthList.append(monthList[i-1])
 
-        # Limit 3 records will be displayed only
-        monthCol = []
-        trainNumCol = []
-        reserveNumCol = []
-        uniqueMonth = list(set(viewPopularRouteReportMonthList))
-        for month in uniqueMonth:
-            for i in range(3):
-                if viewPopularRouteReportMonthList[i] is month:
-                    monthCol.append(viewPopularRouteReportMonthList[i])
-                    trainNumCol.append(viewPopularRouteReportTrainNumberList[i])
-                    reserveNumCol.append(viewPopularRouteReportNumberOfReservationList[i])
-            print(monthCol)
-            print(trainNumCol)
-            print(reserveNumCol)
+        # # Limit 3 records will be displayed only
+        # monthCol = []
+        # trainNumCol = []
+        # reserveNumCol = []
+        # uniqueMonth = list(set(viewPopularRouteReportMonthList))
 
-        print(uniqueMonth)
+        # for i in range(1):
+        #     for count in range(3):
+        #     # if any(viewPopularRouteReportMonthList[i] in s for s in monthList):
+        #         if viewPopularRouteReportMonthList[i] in monthList:
+        #             # print(viewPopularRouteReportMonthList[0])
+        #             monthCol.append(viewPopularRouteReportMonthList[i])
+        #             trainNumCol.append(viewPopularRouteReportTrainNumberList[i])
+        #             reserveNumCol.append(viewPopularRouteReportNumberOfReservationList[i])
+        # print(monthCol)
+        # print(trainNumCol)
+        # print(reserveNumCol)
+        # # print(uniqueMonth)
 
-        # for row in range(len(viewPopularRouteReportMonthList)):
-        #      viewPopularRouteReportTree.insert('',row, values=(monthCol[row], trainNumCol[row], reserveNumCol[row]))
+        for row in range(len(viewPopularRouteReportMonthList)):
+             viewPopularRouteReportTree.insert('',row, values=(viewPopularRouteReportMonthList[row], viewPopularRouteReportTrainNumberList[row], viewPopularRouteReportNumberOfReservationList[row]))
 
         viewPopularRouteReportTree.grid(row=2, column=1, columnspan=3)
-
-
-
 
         # Back Button
         backButton = Button(viewPopularRouteReportWindow, text="Back", command=self.viewPopularRouteReportWindowBackButtonClicked)
