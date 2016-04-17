@@ -1093,8 +1093,8 @@ class GTTrain:
         reservationIDLabel.grid(row=2, column=1, sticky=W)
 
         # Reservation ID Entry
-        self.reservationID = StringVar()
-        reservationIDEntry = Entry(updateReservationWindow, textvariable=self.reservationID, width=10)
+        self.updateReservationIDSV = StringVar()
+        reservationIDEntry = Entry(updateReservationWindow, textvariable=self.updateReservationIDSV, width=10)
         reservationIDEntry.grid(row=2, column=2, sticky=W+E)
 
         # Search Button
@@ -1106,6 +1106,17 @@ class GTTrain:
         backButton.grid(row=3, column=2, sticky=W)
 
     def updateReservationWindowSearchButtonClicked(self):
+        self.updateReservationID = self.updateReservationIDSV.get()
+        if not self.updateReservationID:
+            messagebox.showwarning("Error","Please type in the reserationID you want to update.")
+            return False
+
+        haveSuchID = self.cursor.execute("SELECT ReserveID FROM Reservation WHERE ReserveID = %s and Username = %s",(self.updateReservationID,self.username))
+        if not haveSuchID:
+            messagebox.showwarning("Error","There is no such reservationID or this reservation is not created by you.")
+            return False
+        
+
         self.updateReservationWindow.destroy()
         self.createUpdateReservationWindow2()
         self.buildUpdateReservationWindow2(self.updateReservationWindow2)
