@@ -679,13 +679,13 @@ class GTTrain:
 
         # Entry
         self.passengerNameSV = StringVar()
-        passengerNameEntry = Entry(travelExtrasPassengerInfoWindow, textvariable=self.passengerName,width=20)
+        passengerNameEntry = Entry(travelExtrasPassengerInfoWindow, textvariable=self.passengerNameSV,width=20)
         passengerNameEntry.grid(row=4, column=2)
 
         # Drop down menu
         numberOfBaggage=StringVar(travelExtrasPassengerInfoWindow)
         numberOfBaggage.set("1")
-        numberOfBaggage = OptionMenu(travelExtrasPassengerInfoWindow, numberOfBaggage, "1","2", "3", "4")
+        numberOfBaggage = OptionMenu(travelExtrasPassengerInfoWindow, numberOfBaggage, "0","1","2", "3", "4")
         numberOfBaggage.grid(row=2,column=2)
 
         # Buttons
