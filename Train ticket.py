@@ -620,10 +620,10 @@ class GTTrain:
 
 
         #Radio button
-        self.trainClassSV = IntVar()
-        fstClassRadioButton = Radiobutton(selectDepartureWindow, text="Choose First Class", variable=self.trainClassSV, value=1)
+        self.trainClassIV = IntVar()
+        fstClassRadioButton = Radiobutton(selectDepartureWindow, text="Choose First Class", variable=self.trainClassIV, value=1)
         fstClassRadioButton.grid(row=3, column=3)
-        sndClassRadioButton = Radiobutton(selectDepartureWindow, text="Choose Second Class", variable=self.trainClassSV, value=2)
+        sndClassRadioButton = Radiobutton(selectDepartureWindow, text="Choose Second Class", variable=self.trainClassIV, value=2)
         sndClassRadioButton.grid(row=3, column=4)
         
         # Buttons
@@ -644,18 +644,30 @@ class GTTrain:
             messagebox.showwarning("Error","You haven't selected any train.")
             return False
 
-        if not self.trainClassSV.get():
+        if not self.trainClassIV.get():
             messagebox.showwarning("Error","You haven't selected any class.")
             return False
         
         treeIndexString = self.selectDepartureTree.focus()
         treeIndex = int(treeIndexString[1:])
         self.selectedTrainNum = self.trainNumList[treeIndex-1]
-        self.selectedClass = self.trainClassSV.get()
-                
+        self.selectedDepartureTime = self.departureTimeList[treeIndex-1]
+        self.selectedArrivalTime = self.arrivalTimeList[treeIndex-1]
+        self.selectedDuration = self.durationList[treeIndex-1]
+        self.selectedClass = self.trainClassIV.get()
+        if self.trainClassIV.get() == 1:
+            self.selectedClass = "1st Class"
+            self.selectedPrice = self.fstClassPriceList[treeIndex-1]
+        elif self.trainClassIV.get() == 2:
+            self.selectedClass = "2nd Class"
+            self.selectedPrice = self.sndClassPriceList[treeIndex-1]
+    
+
+
         self.selectDepartureWindow.destroy()
         self.createTravelExtrasPassengerInfoWindow()
         self.buildTravelExtrasPassengerInfoWindow(self.travelExtrasPassengerInfoWindow)
+
 
  #=========Travel Extras & Passenger Window============
 
@@ -674,7 +686,7 @@ class GTTrain:
         numberOfBaggageLabel.grid(row=2,column=1)
         textLabel=Label(travelExtrasPassengerInfoWindow,text = "Every passenger can bring up to 4 baggage 2 free of charge, 2 for $30 per bag.")
         textLabel.grid(row=3,column=1)
-        passergenNameLabel= Label(travelExtrasPassengerInfoWindow,text = "passergen Name")
+        passergenNameLabel= Label(travelExtrasPassengerInfoWindow,text = "Passergen Name")
         passergenNameLabel.grid(row=4,column=1)
 
         # Entry
@@ -683,10 +695,10 @@ class GTTrain:
         passengerNameEntry.grid(row=4, column=2)
 
         # Drop down menu
-        numberOfBaggage=StringVar(travelExtrasPassengerInfoWindow)
-        numberOfBaggage.set("1")
-        numberOfBaggage = OptionMenu(travelExtrasPassengerInfoWindow, numberOfBaggage, "0","1","2", "3", "4")
-        numberOfBaggage.grid(row=2,column=2)
+        self.numberOfBaggageIV=IntVar()
+        self.numberOfBaggageIV.set(0)
+        numberOfBaggageOptionMenu = OptionMenu(travelExtrasPassengerInfoWindow, self.numberOfBaggageIV,0,1,2,3,4)
+        numberOfBaggageOptionMenu.grid(row=2,column=2)
 
         # Buttons
         travelExtrasPassengerInfoWindowBackButton = Button(travelExtrasPassengerInfoWindow, text="Back", command=self.travelExtrasPassengerInfoWindowBackButtonClicked)
@@ -701,16 +713,28 @@ class GTTrain:
         self.buildSelectDepartureWindow(self.selectDepartureWindow)
 
     def travelExtrasPassengerInfoWindowNextButtonClicked(self):
-        # numberOfBaggage = self.numberOfBaggage.get()
-        # passengerName = self.passengerNameSV.get()
 
-        # if not passengerName:
-        #     messagebox.showwarning("Error", "Passenger name input is empty. Please enter passenger name.")
-        #     return False
 
-        # isTrainNumber = self.cursor.execute("SELECT * FROM Reserve WHERE TrainNum = %s", (self.))
-        # self.cursor.execute("INSERT INTO PaymentInfo VALUES(%s, %s, %s, %s, %s)", (addCardNumber, cvv, expirationDate, nameOnCard, self.username))
+        if not self.passengerNameSV.get():
+            messagebox.showwarning("Error", "Passenger name input is empty. Please enter passenger name.")
+            return False
 
+        self.selectedNumberOfBaggage = self.numberOfBaggageIV.get()
+        self.passengerName = self.passengerNameSV.get()
+
+        self.selectedPrice = self.selectedPrice + max(0,(self.selectedNumberOfBaggage - 2)*30)
+
+        print(self.selectedTrainNum)
+        print(self.departureDate)
+        print(self.selectedDepartureTime)
+        print(self.selectedArrivalTime)
+        print(self.selectedDuration)
+        print(self.departsFrom)
+        print(self.arrivesAt)
+        print(self.selectedClass)
+        print(self.selectedPrice)
+        print(self.selectedNumberOfBaggage)
+        print(self.passengerName)
 
         self.travelExtrasPassengerInfoWindow.destroy()
         self.createMakeReservationWindow()
