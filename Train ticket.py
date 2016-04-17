@@ -648,7 +648,7 @@ class GTTrain:
         if not self.trainClassIV.get():
             messagebox.showwarning("Error","You haven't selected any class.")
             return False
-        
+
         treeIndexString = self.selectDepartureTree.focus()
         treeIndex = int(treeIndexString[1:])
         self.selectedTrainNum = self.trainNumList[treeIndex-1]
@@ -662,7 +662,6 @@ class GTTrain:
         elif self.trainClassIV.get() == 2:
             self.selectedClass = "2nd Class"
             self.selectedPrice = self.sndClassPriceList[treeIndex-1]
-    
 
 
         self.selectDepartureWindow.destroy()
@@ -820,19 +819,19 @@ class GTTrain:
 
 
         #OptionMenu
-        
+
         self.cursor.execute("SELECT CardNum FROM PaymentInfo WHERE Username = %s",self.username)
         cardNumTuple = self.cursor.fetchall()
         print(cardNumTuple)
 
         self.cardNumList = []
-        
+
         if cardNumTuple:
             for i in cardNumTuple:
                 self.cardNumList.append(i[0])
 
         print(self.cardNumList)
-        
+
         self.usingCardSV = StringVar()
         if self.cardNumList:
             self.usingCardSV.set(self.cardNumList[0])
@@ -842,7 +841,6 @@ class GTTrain:
         usingCardOptionMenu.grid(row = 6, column = 2,sticky=W)
 
 
-        
         # Add Card Label
         addCardLabel = Label(makeReservationWindow, text="Add Card")
         addCardLabel.grid(row = 6, column = 3,sticky=W)
@@ -882,8 +880,8 @@ class GTTrain:
         self.usingCard = self.usingCardSV.get()
         if not self.usingCard:
             messagebox.showwarning("Error","You must have a card for payment.")
-            return False        
-        
+            return False
+
         self.makeReservationWindow.destroy()
         self.createConfirmationWindow()
         self.buildConfirmationWindow(self.confirmationWindow)
@@ -1017,7 +1015,7 @@ class GTTrain:
         if not deleteCardNumber:
             messagebox.showwarning("Error","You don't have any card to delete.")
             return False
-        
+
         self.cursor.execute("DELETE FROM PaymentInfo WHERE CardNum = %s", deleteCardNumber)
         self.paymentInfoWindow.destroy()
         self.createMakeReservationWindow()
