@@ -783,8 +783,7 @@ class GTTrain:
         self.currentlySelectedTree.grid(row = 3,column =1,columnspan=3)
 
         # Labels
-        
-        
+
 
         self.cursor.execute("SELECT IsStudent FROM Customer WHERE Username = %s",self.username)
         studentStatus = self.cursor.fetchall()
@@ -1037,22 +1036,26 @@ class GTTrain:
 
         # Labels
         confirmationLabel = Label(confirmationWindow, text = "Confirmation")
-        confirmationLabel.grid(row=1, column=1, sticky = W + E)
+        confirmationLabel.grid(row=1,column=1,sticky=W+E)
 
         reservationIDLabel = Label(confirmationWindow, text = "Reservation ID")
-        reservationIDLabel.grid(row=2, column=1, sticky = W)
+        reservationIDLabel.grid(row=2,column=1,sticky=W)
 
         # Reservation ID Entrys
-        self.reservationId = StringVar()
-        reservationIdEntry = Entry(confirmationWindow, textvariable=self.reservationId,width=20)
-        reservationIdEntry.grid(row=2, column=2,sticky=W)
+        # self.reservationIdVS = StringVar()
+        self.cursor.execute("SELECT ReserveID FROM Reservation ORDER BY ReserveID DESC LIMIT 1")
+        self.reservationId = self.cursor.fetchone()[0] + 1
+
+        reservationIdEntry = Label(confirmationWindow, text = self.reservationId)
+        # reservationIdEntry = Entry(confirmationWindow, textvariable=self.reservationId,width=20)
+        reservationIdEntry.grid(row=2,column=2,sticky=W)
 
         # Thank you Labels
         thankYouLabel = Label(confirmationWindow, text = "Thank you for your purchase! Please save Reservation ID for your records.")
-        thankYouLabel.grid(row=3, column=1, sticky = W + E)
+        thankYouLabel.grid(row=3,column=1,sticky=W+E)
         # back to choose functionality buttons
         confirmationWindowBackButton = Button(confirmationWindow, text="Go back to choose functionality", command=self.confirmationWindowBackButtonClicked)
-        confirmationWindowBackButton.grid(row=4, column=1)
+        confirmationWindowBackButton.grid(row=4,column=1)
 
     def confirmationWindowBackButtonClicked(self):
         self.confirmationWindow.destroy()
