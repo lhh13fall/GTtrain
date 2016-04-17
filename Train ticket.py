@@ -200,7 +200,8 @@ class GTTrain:
         if not (self.password == self.confirmPassword):
            messagebox.showwarning("Password does not match the confirm password.",
                                   "Please reconfirm the password.")
-
+           return False
+        messagebox.showinfo("info","Register successfully!")      
         self.cursor.execute("INSERT INTO Customer VALUES (%s, %s, 0)", (self.username, self.emailAddress))
         self.cursor.execute("INSERT INTO User VALUES (%s, %s)", (self.username, self.password))
         self.createChooseFunctionalityWindow()
