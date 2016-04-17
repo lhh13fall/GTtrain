@@ -571,7 +571,6 @@ class GTTrain:
         self.selectDepartureTree.column("5", width = 150, anchor = "center")
         self.selectDepartureTree.column("6", width = 150, anchor = "center")
 
-                                   
         self.selectDepartureTree.heading("1", text = "Train (Train Number)")
         self.selectDepartureTree.heading("2", text = "Departure Time")
         self.selectDepartureTree.heading("3", text = "Arrival Time")
@@ -626,7 +625,7 @@ class GTTrain:
         fstClassRadioButton.grid(row=3, column=3)
         sndClassRadioButton = Radiobutton(selectDepartureWindow, text="Choose Second Class", variable=self.trainClassIV, value=2)
         sndClassRadioButton.grid(row=3, column=4)
-        
+
         # Buttons
         backButton = Button(selectDepartureWindow, text="Back", command=self.selectDepartureBackButtonClicked)
         backButton.grid(row=4, column=1)
