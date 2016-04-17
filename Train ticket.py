@@ -786,9 +786,9 @@ class GTTrain:
 
 
         self.cursor.execute("SELECT IsStudent FROM Customer WHERE Username = %s",self.username)
-        studentStatus = self.cursor.fetchall()
+        self.studentStatus = self.cursor.fetchall()
 
-        if studentStatus[0][0]:
+        if self.studentStatus[0][0]:
             studentDiscountAppliedLabel= Label(makeReservationWindow,text = "Student Discount Applied")
         else:
             studentDiscountAppliedLabel= Label(makeReservationWindow,text = "Student Discount Not Applied")
@@ -803,7 +803,7 @@ class GTTrain:
 
         totalCost = float(totalCost)
 
-        if studentStatus[0][0]:
+        if self.studentStatus[0][0]:
             totalCost = totalCost * 0.8
 
         # Cost display Entry
@@ -1048,6 +1048,7 @@ class GTTrain:
 
         reservationIdEntry = Label(confirmationWindow, text = self.reservationId)
         # reservationIdEntry = Entry(confirmationWindow, textvariable=self.reservationId,width=20)
+        self.cursor.execute("INSERT INTO Reservation (IsCancelled, Username, CardNum) VALUES (%s, %s, %s)", (self.studentStatus, self.username, self.usingCard))
         reservationIdEntry.grid(row=2,column=2,sticky=W)
 
         # Thank you Labels
