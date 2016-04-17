@@ -559,22 +559,23 @@ class GTTrain:
 
         # Build the form
         # Need to add radio button
-        selectDepartureTree = ttk.Treeview(selectDepartureWindow, column=("1", "2", "3", "4","5","6"))
-        selectDepartureTree['show'] = "headings"
-        selectDepartureTree.column("1", width = 150, anchor = "center")
-        selectDepartureTree.column("2", width = 150, anchor = "center")
-        selectDepartureTree.column("3", width = 150, anchor = "center")
-        selectDepartureTree.column("4", width = 150, anchor = "center")
-        selectDepartureTree.column("5", width = 150, anchor = "center")
-        selectDepartureTree.column("6", width = 150, anchor = "center")
+
+        self.selectDepartureTree = ttk.Treeview(selectDepartureWindow, column=("1", "2", "3", "4","5","6"))
+        self.selectDepartureTree['show'] = "headings"
+        self.selectDepartureTree.column("1", width = 150, anchor = "center")
+        self.selectDepartureTree.column("2", width = 150, anchor = "center")
+        self.selectDepartureTree.column("3", width = 150, anchor = "center")
+        self.selectDepartureTree.column("4", width = 150, anchor = "center")
+        self.selectDepartureTree.column("5", width = 150, anchor = "center")
+        self.selectDepartureTree.column("6", width = 150, anchor = "center")
 
                                    
-        selectDepartureTree.heading("1", text = "Train (Train Number)")
-        selectDepartureTree.heading("2", text = "Departure Time")
-        selectDepartureTree.heading("3", text = "Arrival Time")
-        selectDepartureTree.heading("4", text = "Duration")
-        selectDepartureTree.heading("5", text = "1st Class Price")
-        selectDepartureTree.heading("6", text = "2nd Class Price")
+        self.selectDepartureTree.heading("1", text = "Train (Train Number)")
+        self.selectDepartureTree.heading("2", text = "Departure Time")
+        self.selectDepartureTree.heading("3", text = "Arrival Time")
+        self.selectDepartureTree.heading("4", text = "Duration")
+        self.selectDepartureTree.heading("5", text = "1st Class Price")
+        self.selectDepartureTree.heading("6", text = "2nd Class Price")
 
         self.cursor.execute("SELECT tr.TrainNum, s.DepartureTime, s.ArrivalTime, tr.FstClassPrice, tr.SndClassPrice FROM\
                             (SELECT departure.TrainNum, departure.DepartureTime, arrival.ArrivalTime  FROM\
@@ -591,46 +592,45 @@ class GTTrain:
                             JOIN TrainRoute tr\
                             ON tr.TrainNum = s.TrainNum",(self.departsFrom, self.arrivesAt))
 
-        selectDepartureTuple = self.cursor.fetchall()
-        trainNumList = []
-        departureTimeList = []
-        arrivalTimeList = []
-        durationList = []
-        fstClassPriceList = []
-        sndClassPriceList = []
+        self.selectDepartureTuple = self.cursor.fetchall()
+        self.trainNumList = []
+        self.departureTimeList = []
+        self.arrivalTimeList = []
+        self.durationList = []
+        self.fstClassPriceList = []
+        self.sndClassPriceList = []
 
-        for i in selectDepartureTuple:
-            trainNumList.append(i[0])
-            departureTimeList.append(i[1])
-            arrivalTimeList.append(i[2])
-            durationList.append(i[2]-i[1])
-            fstClassPriceList.append(i[3])
-            sndClassPriceList.append(i[4])
+        for i in self.selectDepartureTuple:
+            self.trainNumList.append(i[0])
+            self.departureTimeList.append(i[1])
+            self.arrivalTimeList.append(i[2])
+            self.durationList.append(i[2]-i[1])
+            self.fstClassPriceList.append(i[3])
+            self.sndClassPriceList.append(i[4])
 
 
 
 
         # Insert data into the treeview
-        for i in range(len(selectDepartureTuple)):
-            selectDepartureTree.insert('',i,values=(trainNumList[i],departureTimeList[i],arrivalTimeList[i],durationList[i],fstClassPriceList[i],sndClassPriceList[i]))
+        for i in range(len(self.selectDepartureTuple)):
+            self.selectDepartureTree.insert('',i,values=(self.trainNumList[i],self.departureTimeList[i],self.arrivalTimeList[i],self.durationList[i],self.fstClassPriceList[i],self.sndClassPriceList[i]))
 
-        selectDepartureTree.grid(row=2,column=1, columnspan=4)
+        self.selectDepartureTree.grid(row=2,column=1, columnspan=4)
 
 
         #Radio button
-        self.trainClassSV = StringVar()
+        self.trainClassSV = IntVar()
         fstClassRadioButton = Radiobutton(selectDepartureWindow, text="Choose First Class", variable=self.trainClassSV, value=1)
         fstClassRadioButton.grid(row=3, column=3)
         sndClassRadioButton = Radiobutton(selectDepartureWindow, text="Choose Second Class", variable=self.trainClassSV, value=2)
         sndClassRadioButton.grid(row=3, column=4)
         
-
         # Buttons
         backButton = Button(selectDepartureWindow, text="Back", command=self.selectDepartureBackButtonClicked)
-        backButton.grid(row=3, column=1)
+        backButton.grid(row=4, column=1)
 
         nextButton = Button(selectDepartureWindow, text="Next", command=self.selectDepartureNextButtonClicked)
-        nextButton.grid(row=3, column=2)
+        nextButton.grid(row=4, column=2)
 
 
     def selectDepartureBackButtonClicked(self):
@@ -639,6 +639,19 @@ class GTTrain:
 
 
     def selectDepartureNextButtonClicked(self):
+        if not self.selectDepartureTree.focus():
+            messagebox.showwarning("Error","You haven't selected any train.")
+            return False
+
+        if not self.trainClassSV.get():
+            messagebox.showwarning("Error","You haven't selected any class.")
+            return False
+        
+        treeIndexString = self.selectDepartureTree.focus()
+        treeIndex = int(treeIndexString[1:])
+        self.selectedTrainNum = self.trainNumList[treeIndex-1]
+        self.selectedClass = self.trainClassSV.get()
+                
         self.selectDepartureWindow.destroy()
         self.createTravelExtrasPassengerInfoWindow()
         self.buildTravelExtrasPassengerInfoWindow(self.travelExtrasPassengerInfoWindow)
