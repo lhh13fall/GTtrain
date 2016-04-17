@@ -13,7 +13,7 @@ class GTTrain:
         self.createLoginWindow()
         self.buildLoginWindow(self.loginWindow)
         self.loginWindow.mainloop()
-
+        sys.exit()
 
 ##  =======Login Window=======
 
@@ -647,7 +647,7 @@ class GTTrain:
         if not self.trainClassIV.get():
             messagebox.showwarning("Error","You haven't selected any class.")
             return False
-        
+
         treeIndexString = self.selectDepartureTree.focus()
         treeIndex = int(treeIndexString[1:])
         self.selectedTrainNum = self.trainNumList[treeIndex-1]
@@ -661,7 +661,7 @@ class GTTrain:
         elif self.trainClassIV.get() == 2:
             self.selectedClass = "2nd Class"
             self.selectedPrice = self.sndClassPriceList[treeIndex-1]
-    
+
 
 
         self.selectDepartureWindow.destroy()
@@ -1679,10 +1679,49 @@ class GTTrain:
         viewPopularRouteReportTree.heading("2", text="Train Number")
         viewPopularRouteReportTree.heading("3", text="# of Reservations")
 
-        for i in range(2):
-            viewPopularRouteReportTree.insert('', i, values=('a'+str(i),'b'+str(i),'c'+str(i)))
+        self.cursor.execute("SELECT MONTH(DepartureDate) AS Month, TrainNum, COUNT(ReserveID) AS ReserveNum FROM Reservation NATURAL JOIN Reserve WHERE isCancelled = 0 GROUP BY TrainNum, Month ORDER BY Month ASC, ReserveNum DESC")
+        viewPopularRouteReportTuple = self.cursor.fetchall()
+
+        temp = []
+        viewPopularRouteReportMonthList = []
+        viewPopularRouteReportTrainNumberList = []
+        viewPopularRouteReportNumberOfReservationList = []
+        for i in viewPopularRouteReportTuple:
+            temp.append(i[0])
+            viewPopularRouteReportTrainNumberList.append(i[1])
+            viewPopularRouteReportNumberOfReservationList.append(i[2])
+
+
+        monthList = ["January", "February","March", "April", "May", "June", "July",
+                          "August", "September", "October", "November", "December"]
+
+        # Change month from number to name, e.g 3 => March
+        for month in temp:
+            i = int(month)
+            viewPopularRouteReportMonthList.append(monthList[i-1])
+
+        # Limit 3 records will be displayed only
+        monthCol = []
+        trainNumCol = []
+        reserveNumCol = []
+        uniqueMonth = list(set(viewPopularRouteReportMonthList))
+        for month in uniqueMonth:
+            for i in range(3):
+                if viewPopularRouteReportMonthList[i] is month:
+                    monthCol.append(viewPopularRouteReportMonthList[i])
+                    trainNumCol.append(viewPopularRouteReportTrainNumberList[i])
+                    reserveNumCol.append(viewPopularRouteReportNumberOfReservationList[i])
+            print(monthCol)
+            print(trainNumCol)
+            print(reserveNumCol)
+
+        print(uniqueMonth)
+
+        # for row in range(len(viewPopularRouteReportMonthList)):
+        #      viewPopularRouteReportTree.insert('',row, values=(monthCol[row], trainNumCol[row], reserveNumCol[row]))
 
         viewPopularRouteReportTree.grid(row=2, column=1, columnspan=3)
+
 
 
 
