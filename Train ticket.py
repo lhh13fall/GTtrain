@@ -201,7 +201,7 @@ class GTTrain:
            messagebox.showwarning("Password does not match the confirm password.",
                                   "Please reconfirm the password.")
            return False
-        messagebox.showinfo("info","Register successfully!")      
+        messagebox.showinfo("info","Register successfully!")
         self.cursor.execute("INSERT INTO Customer VALUES (%s, %s, 0)", (self.username, self.emailAddress))
         self.cursor.execute("INSERT INTO User VALUES (%s, %s)", (self.username, self.password))
         self.createChooseFunctionalityWindow()
@@ -1440,26 +1440,6 @@ class GTTrain:
         viewReviewLabel = Label(viewReviewWindow2,text="View Review")
         viewReviewLabel.grid(row=1, column=1, sticky=W+E, columnspan=3)
 
-        # self.cursor.execute("SELECT Rating, Comment FROM Review WHERE TrainNum = %s", self.viewReviewTrainNumber)
-        # reviewTuple = self.cursor.fetchall()
-
-        # ratingLabel = Label(viewReviewWindow2, text = "Rate")
-        # ratingLabel.grid(row=2, column=1, sticky=W)
-        # commentLabel = Label(viewReviewWindow2, text = "Comment")
-        # commentLabel.grid(row=2, column=2, sticky=W)
-        # i = 2
-
-        # for review in reviewTuple:
-        #     print(review)
-        #     print(review[0])
-        #     print(review[1])
-        #     i = i+1
-        #     rating = Label(viewReviewWindow2, text = review[0])
-        #     rating.grid(row=i, column=1)
-        #     comment = Label(viewReviewWindow2, text = review[1])
-        #     comment.grid(row=i, column=2)
-
-
         # #View Review Treeview
         viewReviewTree = ttk.Treeview(viewReviewWindow2, column=("1", "2"))
         viewReviewTree['show'] = 'headings'
@@ -1636,6 +1616,7 @@ class GTTrain:
 
         # Build the form
         viewRevenueReportTree = ttk.Treeview(viewRevenueReportWindow, column=("1", "2"))
+        viewRevenueReportTree['show'] = 'headings'
         viewRevenueReportTree.column("1", width=150, anchor="center")
         viewRevenueReportTree.column("2", width=150, anchor="center")
         viewRevenueReportTree.heading("1", text="Month")
@@ -1778,3 +1759,7 @@ class GTTrain:
 
 a=GTTrain()
 a.db.close()
+
+
+self.cursor.execute("SELECT ReserveID, TrainNum, Class, DepartureDate, IsCancelled, FstClassPrice, SndClassPrice FROM Reservation NATURAL JOIN Reserve NATURAL JOIN TrainRoute")
+self.cursor.fetchall()
