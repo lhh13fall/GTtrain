@@ -472,7 +472,7 @@ class GTTrain:
 
 #=========Search Train Window============
 
-    def createSearchTrainWindow(self):
+ def createSearchTrainWindow(self):
         # Create blank Search Train Window
         self.searchTrainWindow=Toplevel()
         self.searchTrainWindow.title("Train Sales System")
@@ -494,6 +494,9 @@ class GTTrain:
         # Button
         findTrainsButton = Button(searchTrainWindow, text="Find Trains", command=self.searchTrainWindowFindTrainsButtonClicked)
         findTrainsButton.grid(row=5,column=3)
+
+        backButton = Button(searchTrainWindow, text="Back", command=self.searchTrainWindowBackButtonClicked)
+        backButton.grid(row=5,column=1)
 
         # Get stops informatin from the database. Below names are for demos only.
 
@@ -545,6 +548,10 @@ class GTTrain:
         self.searchTrainWindow.destroy()
         self.createSelectDepartureWindow()
         self.buildSelectDepartureWindow(self.selectDepartureWindow)
+
+    def  searchTrainWindowBackButtonClicked(self):
+        self.searchTrainWindow.destroy()
+        self.chooseFunctionalityWindow.deiconify()
 
   #=========Select Departure Window============
 
@@ -636,7 +643,8 @@ class GTTrain:
 
     def selectDepartureBackButtonClicked(self):
         self.selectDepartureWindow.destroy()
-        self.chooseFunctionalityWindow.deiconify()
+        self.createSearchTrainWindow()
+        self.buildSearchTrainWindow(self.searchTrainWindow)
 
 
     def selectDepartureNextButtonClicked(self):
@@ -1041,13 +1049,16 @@ class GTTrain:
         reservationIDLabel.grid(row=2,column=1,sticky=W)
 
         # Reservation ID Entrys
-        # self.reservationIdVS = StringVar()
+        
         self.cursor.execute("SELECT ReserveID FROM Reservation ORDER BY ReserveID DESC LIMIT 1")
         self.reservationId = self.cursor.fetchone()[0] + 1
-
-        reservationIdEntry = Label(confirmationWindow, text = self.reservationId)
-        # reservationIdEntry = Entry(confirmationWindow, textvariable=self.reservationId,width=20)
+        self.reservationIdSV = StringVar()
+        self.reservationIdSV.set(self.reservationId)
+        #reservationIdEntry = Label(confirmationWindow, text = self.reservationId)
+        reservationIdEntry = Entry(confirmationWindow, textvariable=self.reservationIdSV,width=20,state="readonly")
         self.cursor.execute("INSERT INTO Reservation (IsCancelled, Username, CardNum) VALUES (%s, %s, %s)", (self.studentStatus, self.username, self.usingCard))
+        for i in self.informationList:
+            self.cursor.execute("INSERT INTO Reserve VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)", (self.reservationId,i[0],i[7],i[1],i[10],i[9],i[5],i[6],i[9]))
         reservationIdEntry.grid(row=2,column=2,sticky=W)
 
         # Thank you Labels
@@ -1081,8 +1092,8 @@ class GTTrain:
         reservationIDLabel.grid(row=2, column=1, sticky=W)
 
         # Reservation ID Entry
-        self.reservationID = StringVar()
-        reservationIDEntry = Entry(updateReservationWindow, textvariable=self.reservationID, width=10)
+        self.updateReservationIDSV = StringVar()
+        reservationIDEntry = Entry(updateReservationWindow, textvariable=self.updateReservationIDSV, width=10)
         reservationIDEntry.grid(row=2, column=2, sticky=W+E)
 
         # Search Button
@@ -1094,6 +1105,17 @@ class GTTrain:
         backButton.grid(row=3, column=2, sticky=W)
 
     def updateReservationWindowSearchButtonClicked(self):
+        self.updateReservationID = self.updateReservationIDSV.get()
+        if not self.updateReservationID:
+            messagebox.showwarning("Error","Please type in the reserationID you want to update.")
+            return False
+
+        haveSuchID = self.cursor.execute("SELECT ReserveID FROM Reservation WHERE ReserveID = %s and Username = %s",(self.updateReservationID,self.username))
+        if not haveSuchID:
+            messagebox.showwarning("Error","There is no such reservationID or this reservation is not created by you.")
+            return False
+        
+
         self.updateReservationWindow.destroy()
         self.createUpdateReservationWindow2()
         self.buildUpdateReservationWindow2(self.updateReservationWindow2)
