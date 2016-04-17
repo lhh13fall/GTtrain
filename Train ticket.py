@@ -278,6 +278,7 @@ class GTTrain:
         # Click MakeANewReservation Label on Choose Functionality Window:
         # Invoke createSearchTrainWindow(); Invoke buildSearchTrainWindow()；
         # Hide Choose Functionality Window
+        self.informationList = []
         self.createSearchTrainWindow()
         self.buildSearchTrainWindow(self.searchTrainWindow)
         self.chooseFunctionalityWindow.withdraw()
