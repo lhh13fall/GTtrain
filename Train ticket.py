@@ -559,24 +559,71 @@ class GTTrain:
 
         # Build the form
         # Need to add radio button
-        #价格从高到低排列
+        selectDepartureTree = ttk.Treeview(selectDepartureWindow, column=("1", "2", "3", "4","5","6"))
+        selectDepartureTree['show'] = "headings"
+        selectDepartureTree.column("1", width = 150, anchor = "center")
+        selectDepartureTree.column("2", width = 150, anchor = "center")
+        selectDepartureTree.column("3", width = 150, anchor = "center")
+        selectDepartureTree.column("4", width = 150, anchor = "center")
+        selectDepartureTree.column("5", width = 150, anchor = "center")
+        selectDepartureTree.column("6", width = 150, anchor = "center")
 
-        tree = ttk.Treeview(selectDepartureWindow, column=("First", "Second", "Third", "Fourth"))
-        tree['show'] = "headings"
-        tree.column("First", width = 150, anchor = "center")
-        tree.column("Second", width = 150, anchor = "center")
-        tree.column("Third", width = 150, anchor = "center")
-        tree.column("Fourth", width = 150, anchor = "center")
-        tree.heading("First", text = "Train (Train Number)")
-        tree.heading("Second", text = "Time (Duration)")
-        tree.heading("Third", text = "1st Class Price")
-        tree.heading("Fourth", text = "2nd Class Price")
+                                   
+        selectDepartureTree.heading("1", text = "Train (Train Number)")
+        selectDepartureTree.heading("2", text = "Departure Time")
+        selectDepartureTree.heading("3", text = "Arrival Time")
+        selectDepartureTree.heading("4", text = "Duration")
+        selectDepartureTree.heading("5", text = "1st Class Price")
+        selectDepartureTree.heading("6", text = "2nd Class Price")
 
-        # Insert data into the form
-        for i in range(10):
-            tree.insert('',i,values=('a'+str(i),'b'+str(i),'c'+str(i),'d'+str(i)))
+        self.cursor.execute("SELECT tr.TrainNum, s.DepartureTime, s.ArrivalTime, tr.FstClassPrice, tr.SndClassPrice FROM\
+                            (SELECT departure.TrainNum, departure.DepartureTime, arrival.ArrivalTime  FROM\
+                            (SELECT TrainNum, DepartureTime\
+                            FROM Stop\
+                            WHERE StationName = %s\
+                            AND DepartureTime IS NOT NULL) departure\
+                            JOIN\
+                            (SELECT TrainNum, ArrivalTime\
+                            FROM Stop\
+                            WHERE StationName = %s\
+                            AND ArrivalTime IS NOT NULL) arrival\
+                            ON departure.TrainNum = arrival.TrainNum AND departure.DepartureTime < arrival.ArrivalTime) s\
+                            JOIN TrainRoute tr\
+                            ON tr.TrainNum = s.TrainNum",(self.departsFrom, self.arrivesAt))
 
-        tree.grid(row=2,column=1)
+        selectDepartureTuple = self.cursor.fetchall()
+        trainNumList = []
+        departureTimeList = []
+        arrivalTimeList = []
+        durationList = []
+        fstClassPriceList = []
+        sndClassPriceList = []
+
+        for i in selectDepartureTuple:
+            trainNumList.append(i[0])
+            departureTimeList.append(i[1])
+            arrivalTimeList.append(i[2])
+            durationList.append(i[2]-i[1])
+            fstClassPriceList.append(i[3])
+            sndClassPriceList.append(i[4])
+
+
+
+
+        # Insert data into the treeview
+        for i in range(len(selectDepartureTuple)):
+            selectDepartureTree.insert('',i,values=(trainNumList[i],departureTimeList[i],arrivalTimeList[i],durationList[i],fstClassPriceList[i],sndClassPriceList[i]))
+
+        selectDepartureTree.grid(row=2,column=1, columnspan=4)
+
+
+        #Radio button
+        self.trainClassSV = StringVar()
+        fstClassRadioButton = Radiobutton(selectDepartureWindow, text="Choose First Class", variable=self.trainClassSV, value=1)
+        fstClassRadioButton.grid(row=3, column=3)
+        sndClassRadioButton = Radiobutton(selectDepartureWindow, text="Choose Second Class", variable=self.trainClassSV, value=2)
+        sndClassRadioButton.grid(row=3, column=4)
+        
 
         # Buttons
         backButton = Button(selectDepartureWindow, text="Back", command=self.selectDepartureBackButtonClicked)
