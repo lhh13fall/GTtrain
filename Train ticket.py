@@ -472,7 +472,7 @@ class GTTrain:
 
 #=========Search Train Window============
 
- def createSearchTrainWindow(self):
+    def createSearchTrainWindow(self):
         # Create blank Search Train Window
         self.searchTrainWindow=Toplevel()
         self.searchTrainWindow.title("Train Sales System")
@@ -865,19 +865,18 @@ class GTTrain:
 
         makeReservationWindowSumbitButton = Button(makeReservationWindow, text="Submit", command=self.makeReservationWindowSubmitButtonClicked)
         makeReservationWindowSumbitButton.grid(row=8, column=2,sticky=W)
-     
+
         makeReservationWindowRemoveButton = Button(makeReservationWindow, text="Remove", command=self.makeReservationWindowRemoveButtonClicked)
         makeReservationWindowRemoveButton.grid(row=5, column=3,sticky=W)
-        
+
     def makeReservationWindowRemoveButtonClicked(self):
         if not self.currentlySelectedTree.focus():
             messagebox.showwarning("Error","You haven't selected any train.")
             return False
-        
+
         #remove button 有个bug
         #只能从下往上删除，不然就说del self.informationList[treeIndex-1] 的index out of range.
-        
-        
+
         treeIndexString = self.currentlySelectedTree.focus()
         treeIndex = int(treeIndexString[1:])
         selected_reservation = self.currentlySelectedTree.selection()[0]
@@ -885,10 +884,7 @@ class GTTrain:
         #print(self.informationList)
         del self.informationList[treeIndex-1]
         #print("deleted")
-           
-        
-        
-        
+
 
     def makeReservationWindowAddCardLabelClicked(self,event):
         self.createPaymentInfoWindow()
@@ -1072,7 +1068,7 @@ class GTTrain:
         reservationIDLabel.grid(row=2,column=1,sticky=W)
 
         # Reservation ID Entrys
-        
+
         self.cursor.execute("SELECT ReserveID FROM Reservation ORDER BY ReserveID DESC LIMIT 1")
         self.reservationId = self.cursor.fetchone()[0] + 1
         self.reservationIdSV = StringVar()
@@ -1137,7 +1133,7 @@ class GTTrain:
         if not haveSuchID:
             messagebox.showwarning("Error","There is no such reservationID or this reservation is not created by you.")
             return False
-        
+
 
         self.updateReservationWindow.destroy()
         self.createUpdateReservationWindow2()
@@ -1746,47 +1742,74 @@ class GTTrain:
         viewPopularRouteReportTree.heading("2", text="Train Number")
         viewPopularRouteReportTree.heading("3", text="# of Reservations")
 
-        self.cursor.execute("SELECT MONTH(DepartureDate) AS Month, TrainNum, COUNT(ReserveID) AS ReserveNum FROM Reservation NATURAL JOIN Reserve WHERE isCancelled = 0 GROUP BY TrainNum, Month ORDER BY Month ASC, ReserveNum DESC")
-        viewPopularRouteReportTuple = self.cursor.fetchall()
+        # self.cursor.execute("SELECT MONTHNAME(DepartureDate) AS Month, TrainNum, COUNT(ReserveID) AS ReserveNum FROM Reservation NATURAL JOIN Reserve WHERE isCancelled = 0 GROUP BY TrainNum, Month ORDER BY MONTH(DepartureDate) ASC, ReserveNum DESC")
+        # viewPopularRouteReportTuple = self.cursor.fetchall()
 
-        viewPopularRouteReportMonthList = []
-        viewPopularRouteReportTrainNumberList = []
-        viewPopularRouteReportNumberOfReservationList = []
-        for i in viewPopularRouteReportTuple:
-            viewPopularRouteReportMonthList.append(i[0])
-            viewPopularRouteReportTrainNumberList.append(i[1])
-            viewPopularRouteReportNumberOfReservationList.append(i[2])
+        # viewPopularRouteReportMonthList = []
+        # viewPopularRouteReportTrainNumberList = []
+        # viewPopularRouteReportNumberOfReservationList = []
+        # for i in viewPopularRouteReportTuple:
+        #     viewPopularRouteReportMonthList.append(i[0])
+        #     viewPopularRouteReportTrainNumberList.append(i[1])
+        #     viewPopularRouteReportNumberOfReservationList.append(i[2])
 
 
-        # monthList = ["January", "February","March", "April", "May", "June", "July",
-        #                   "August", "September", "October", "November", "December"]
+        # # monthList = ["January", "February","March", "April", "May", "June", "July",
+        # #                   "August", "September", "October", "November", "December"]
 
-        # # Change month from number to name, e.g 3 => March
-        # for month in temp:
-        #     i = int(month)
-        #     viewPopularRouteReportMonthList.append(monthList[i-1])
+        # # # Change month from number to name, e.g 3 => March
+        # # for month in temp:
+        # #     i = int(month)
+        # #     viewPopularRouteReportMonthList.append(monthList[i-1])
 
-        # # Limit 3 records will be displayed only
-        # monthCol = []
-        # trainNumCol = []
-        # reserveNumCol = []
-        # uniqueMonth = list(set(viewPopularRouteReportMonthList))
+        # # # Limit 3 records will be displayed only
+        # # monthCol = []
+        # # trainNumCol = []
+        # # reserveNumCol = []
+        # # uniqueMonth = list(set(viewPopularRouteReportMonthList))
 
-        # for i in range(1):
-        #     for count in range(3):
-        #     # if any(viewPopularRouteReportMonthList[i] in s for s in monthList):
-        #         if viewPopularRouteReportMonthList[i] in monthList:
-        #             # print(viewPopularRouteReportMonthList[0])
-        #             monthCol.append(viewPopularRouteReportMonthList[i])
-        #             trainNumCol.append(viewPopularRouteReportTrainNumberList[i])
-        #             reserveNumCol.append(viewPopularRouteReportNumberOfReservationList[i])
-        # print(monthCol)
-        # print(trainNumCol)
-        # print(reserveNumCol)
-        # # print(uniqueMonth)
+        # # for i in range(1):
+        # #     for count in range(3):
+        # #     # if any(viewPopularRouteReportMonthList[i] in s for s in monthList):
+        # #         if viewPopularRouteReportMonthList[i] in monthList:
+        # #             # print(viewPopularRouteReportMonthList[0])
+        # #             monthCol.append(viewPopularRouteReportMonthList[i])
+        # #             trainNumCol.append(viewPopularRouteReportTrainNumberList[i])
+        # #             reserveNumCol.append(viewPopularRouteReportNumberOfReservationList[i])
+        # # print(monthCol)
+        # # print(trainNumCol)
+        # # print(reserveNumCol)
+        # # # print(uniqueMonth)
 
-        for row in range(len(viewPopularRouteReportMonthList)):
-             viewPopularRouteReportTree.insert('',row, values=(viewPopularRouteReportMonthList[row], viewPopularRouteReportTrainNumberList[row], viewPopularRouteReportNumberOfReservationList[row]))
+        # for row in range(len(viewPopularRouteReportMonthList)):
+        #      viewPopularRouteReportTree.insert('',row, values=(viewPopularRouteReportMonthList[row], viewPopularRouteReportTrainNumberList[row], viewPopularRouteReportNumberOfReservationList[row]))
+
+############################################################################################################################
+        self.cursor.execute("CREATE VIEW PopularRouteReport (Date, TrainNum, NumOfReservation) AS SELECT DepartureDate, TrainNum, COUNT(ReserveID) AS ReserveNum FROM Reservation NATURAL JOIN Reserve WHERE isCancelled = 0 GROUP BY TrainNum, MONTH(DepartureDate) ORDER BY MONTH(DepartureDate) ASC, ReserveNum DESC")
+        popularRouteReportMonthList = []
+        popularRouteReportTrainNumList = []
+        popularRouteReportNumOfReservationList = []
+        for i in range(1,13):
+            if (i < 10):
+                month = '0' + str(i)
+            else:
+                month = str(i)
+            self.cursor.execute("SELECT MONTHNAME(Date), TrainNum, NumOfReservation FROM PopularRouteReport WHERE STRCMP(substring(Date,1,4),%s) = 0 AND STRCMP(substring(Date,6,2),%s)= 0 LIMIT 3", ('2016', month))
+            result = self.cursor.fetchall()
+
+            print(len(result))
+            for i in result:
+                popularRouteReportMonthList.append(i[0])
+                popularRouteReportTrainNumList.append(i[1])
+                popularRouteReportNumOfReservationList.append(i[2])
+
+        self.cursor.execute('DROP VIEW PopularRouteReport')
+        for row in range(len(popularRouteReportMonthList)):
+             viewPopularRouteReportTree.insert('',row, values=(popularRouteReportMonthList[row], popularRouteReportTrainNumList[row], popularRouteReportNumOfReservationList[row]))
+
+
+
+
 
         viewPopularRouteReportTree.grid(row=2, column=1, columnspan=3)
 
@@ -1846,5 +1869,27 @@ a=GTTrain()
 a.db.close()
 
 
-self.cursor.execute("SELECT ReserveID, TrainNum, Class, DepartureDate, IsCancelled, FstClassPrice, SndClassPrice FROM Reservation NATURAL JOIN Reserve NATURAL JOIN TrainRoute")
-self.cursor.fetchall()
+# self.cursor.execute("CREATE VIEW RevenueReport (ReserveID, TrainNum, Class, Date, IsCancelled, FstClassPrice, SndClassPrice) AS SELECT ReserveID, TrainNum, Class, DepartureDate AS Month, IsCancelled, FstClassPrice, SndClassPrice FROM Reservation NATURAL JOIN Reserve NATURAL JOIN TrainRoute")
+
+# self.cursor.fetchall()
+
+# "SELECT MONTHNAME(DepartureDate) AS Month, TrainNum, COUNT(ReserveID) AS ReserveNum FROM Reservation NATURAL JOIN Reserve WHERE MONTHNAME(DepartureDate) IN (SELECT MONTHNAME(DepartureDate) FROM Reservation) GROUP BY TrainNum, Month ORDER BY MONTH(DepartureDate) ASC, ReserveNum DESC"
+# self.cursor.execute("SELECT DATEDIFF(SELECT ,'2014-11-30') AS DiffDate")
+
+# self.cursor.excute("CREATE VIEW PopluarRouteReport (Month, TrainNum, NumOfReservation) AS SELECT MONTH(DepartureDate) AS Month, TrainNum, COUNT(ReserveID) AS ReserveNum FROM Reservation NATURAL JOIN Reserve WHERE isCancelled = 0 GROUP BY TrainNum, Month ORDER BY MONTH(DepartureDate) ASC, ReserveNum DESC")
+# popularRouteReportMonthList = []
+# popularRouteReportTrainNumList = []
+# popularRouteReportNumOfReservationList = []
+# for i in range(1,13):
+#     if (i < 10):
+#         month = '0' + str(i)
+#     else:
+#         month = str(i)
+#     self.cursor.execute("SELECT MONTHNAME(Month), TrainNum, NumOfReservation FROM PopluarRouteReport WHERE STRCMP(substring(Month,1,4),%s) = 0 AND STRCMP(substring(Month,6,2),%s)= 0", (year, month))
+#     result = self.cursor.fetchall()
+#     for i in result:
+#         popularRouteReportMonthList.append(str(result[0][0]))
+#         popularRouteReportTrainNumList.append(str(result[0][0]))
+#         popularRouteReportNumOfReservationList.append(result[0][0])
+# "SELECT MONTH(DepartureDate) AS Month, TrainNum, COUNT(ReserveID) AS ReserveNum FROM Reservation NATURAL JOIN Reserve WHERE (isCancelled = 0 AND STRCMP(substring(Month,1,4),%s) = 0 AND STRCMP(substring(Month,6,2),%s)= 0) GROUP BY TrainNum, Month ORDER BY MONTH(DepartureDate) ASC, ReserveNum DESC"
+# SELECT DepartureDate, TrainNum, COUNT(ReserveID) AS ReserveNum FROM Reservation NATURAL JOIN Reserve WHERE isCancelled = 0 GROUP BY TrainNum, MONTH(DepartureDate) ORDER BY MONTH(DepartureDate) ASC, ReserveNum DESC
