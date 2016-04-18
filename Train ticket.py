@@ -1703,6 +1703,32 @@ class GTTrain:
         viewRevenueReportTree.heading("1", text="Month")
         viewRevenueReportTree.heading("2", text="Revenue")
 
+
+        self.cursor.execute("CREATE VIEW RevenueReport (ReserveID, TrainNum, Class, Date, IsCancelled, FstClassPrice, SndClassPrice) AS SELECT ReserveID, TrainNum, Class, DepartureDate AS Month, IsCancelled, FstClassPrice, SndClassPrice FROM Reservation NATURAL JOIN Reserve NATURAL JOIN TrainRoute")
+        viewRevenueReportMonthList = []
+        viewRevenueReportRevenueList = []
+
+        for i in range(1,13):
+            if (i < 10):
+                month = '0' + str(i)
+            else:
+                month = str(i)
+            self.cursor.execute("SELECT MONTHNAME(Date), TrainNum, NumOfReservation FROM PopularRouteReport WHERE STRCMP(substring(Date,1,4),%s) = 0 AND STRCMP(substring(Date,6,2),%s)= 0 LIMIT 3", ('2016', month))
+            result = self.cursor.fetchall()
+
+            print(len(result))
+            for i in result:
+                viewPopularRouteReportMonthList.append(i[0])
+                viewPopularRouteReportTrainNumList.append(i[1])
+                viewPopularRouteReportNumOfReservationList.append(i[2])
+
+        self.cursor.execute('DROP VIEW PopularRouteReport')
+        for row in range(len(viewPopularRouteReportMonthList)):
+             viewPopularRouteReportTree.insert('',row, values=(viewPopularRouteReportMonthList[row], viewPopularRouteReportTrainNumList[row], viewPopularRouteReportNumOfReservationList[row]))
+
+
+
+
         for i in range(2):
             viewRevenueReportTree.insert('', i, values=('a'+str(i),'b'+str(i)))
 
@@ -1786,9 +1812,9 @@ class GTTrain:
 
 ############################################################################################################################
         self.cursor.execute("CREATE VIEW PopularRouteReport (Date, TrainNum, NumOfReservation) AS SELECT DepartureDate, TrainNum, COUNT(ReserveID) AS ReserveNum FROM Reservation NATURAL JOIN Reserve WHERE isCancelled = 0 GROUP BY TrainNum, MONTH(DepartureDate) ORDER BY MONTH(DepartureDate) ASC, ReserveNum DESC")
-        popularRouteReportMonthList = []
-        popularRouteReportTrainNumList = []
-        popularRouteReportNumOfReservationList = []
+        viewPopularRouteReportMonthList = []
+        viewPopularRouteReportTrainNumList = []
+        viewPopularRouteReportNumOfReservationList = []
         for i in range(1,13):
             if (i < 10):
                 month = '0' + str(i)
@@ -1799,13 +1825,13 @@ class GTTrain:
 
             print(len(result))
             for i in result:
-                popularRouteReportMonthList.append(i[0])
-                popularRouteReportTrainNumList.append(i[1])
-                popularRouteReportNumOfReservationList.append(i[2])
+                viewPopularRouteReportMonthList.append(i[0])
+                viewPopularRouteReportTrainNumList.append(i[1])
+                viewPopularRouteReportNumOfReservationList.append(i[2])
 
         self.cursor.execute('DROP VIEW PopularRouteReport')
-        for row in range(len(popularRouteReportMonthList)):
-             viewPopularRouteReportTree.insert('',row, values=(popularRouteReportMonthList[row], popularRouteReportTrainNumList[row], popularRouteReportNumOfReservationList[row]))
+        for row in range(len(viewPopularRouteReportMonthList)):
+             viewPopularRouteReportTree.insert('',row, values=(viewPopularRouteReportMonthList[row], viewPopularRouteReportTrainNumList[row], viewPopularRouteReportNumOfReservationList[row]))
 
 
 
