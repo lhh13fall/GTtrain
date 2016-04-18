@@ -1704,27 +1704,27 @@ class GTTrain:
         viewRevenueReportTree.heading("2", text="Revenue")
 
 
-        self.cursor.execute("CREATE VIEW RevenueReport (ReserveID, TrainNum, Class, Date, IsCancelled, FstClassPrice, SndClassPrice) AS SELECT ReserveID, TrainNum, Class, DepartureDate AS Month, IsCancelled, FstClassPrice, SndClassPrice FROM Reservation NATURAL JOIN Reserve NATURAL JOIN TrainRoute")
-        viewRevenueReportMonthList = []
-        viewRevenueReportRevenueList = []
+        # self.cursor.execute("CREATE VIEW RevenueReport (ReserveID, TrainNum, Class, Date, IsCancelled, FstClassPrice, SndClassPrice) AS SELECT ReserveID, TrainNum, Class, DepartureDate AS Month, IsCancelled, FstClassPrice, SndClassPrice FROM Reservation NATURAL JOIN Reserve NATURAL JOIN TrainRoute")
+        # viewRevenueReportMonthList = []
+        # viewRevenueReportRevenueList = []
 
-        for i in range(1,13):
-            if (i < 10):
-                month = '0' + str(i)
-            else:
-                month = str(i)
-            self.cursor.execute("SELECT MONTHNAME(Date), TrainNum, NumOfReservation FROM PopularRouteReport WHERE STRCMP(substring(Date,1,4),%s) = 0 AND STRCMP(substring(Date,6,2),%s)= 0 LIMIT 3", ('2016', month))
-            result = self.cursor.fetchall()
+        # for i in range(1,13):
+        #     if (i < 10):
+        #         month = '0' + str(i)
+        #     else:
+        #         month = str(i)
+        #     self.cursor.execute("SELECT MONTHNAME(Date), TrainNum, NumOfReservation FROM PopularRouteReport WHERE STRCMP(substring(Date,1,4),%s) = 0 AND STRCMP(substring(Date,6,2),%s)= 0 LIMIT 3", ('2016', month))
+        #     result = self.cursor.fetchall()
 
-            print(len(result))
-            for i in result:
-                viewPopularRouteReportMonthList.append(i[0])
-                viewPopularRouteReportTrainNumList.append(i[1])
-                viewPopularRouteReportNumOfReservationList.append(i[2])
+        #     print(len(result))
+        #     for i in result:
+        #         viewPopularRouteReportMonthList.append(i[0])
+        #         viewPopularRouteReportTrainNumList.append(i[1])
+        #         viewPopularRouteReportNumOfReservationList.append(i[2])
 
-        self.cursor.execute('DROP VIEW PopularRouteReport')
-        for row in range(len(viewPopularRouteReportMonthList)):
-             viewPopularRouteReportTree.insert('',row, values=(viewPopularRouteReportMonthList[row], viewPopularRouteReportTrainNumList[row], viewPopularRouteReportNumOfReservationList[row]))
+        # self.cursor.execute('DROP VIEW PopularRouteReport')
+        # for row in range(len(viewPopularRouteReportMonthList)):
+        #      viewPopularRouteReportTree.insert('',row, values=(viewPopularRouteReportMonthList[row], viewPopularRouteReportTrainNumList[row], viewPopularRouteReportNumOfReservationList[row]))
 
 
 
