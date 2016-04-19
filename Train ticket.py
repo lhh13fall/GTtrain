@@ -1849,29 +1849,3 @@ class GTTrain:
 
 a=GTTrain()
 a.db.close()
-
-
-# self.cursor.execute("CREATE VIEW RevenueReport (ReserveID, TrainNum, Class, Date, IsCancelled, FstClassPrice, SndClassPrice) AS SELECT ReserveID, TrainNum, Class, DepartureDate AS Month, IsCancelled, FstClassPrice, SndClassPrice FROM Reservation NATURAL JOIN Reserve NATURAL JOIN TrainRoute")
-
-# self.cursor.fetchall()
-
-# "SELECT MONTHNAME(DepartureDate) AS Month, TrainNum, COUNT(ReserveID) AS ReserveNum FROM Reservation NATURAL JOIN Reserve WHERE MONTHNAME(DepartureDate) IN (SELECT MONTHNAME(DepartureDate) FROM Reservation) GROUP BY TrainNum, Month ORDER BY MONTH(DepartureDate) ASC, ReserveNum DESC"
-# self.cursor.execute("SELECT DATEDIFF(SELECT ,'2014-11-30') AS DiffDate")
-
-# self.cursor.excute("CREATE VIEW PopluarRouteReport (Month, TrainNum, NumOfReservation) AS SELECT MONTH(DepartureDate) AS Month, TrainNum, COUNT(ReserveID) AS ReserveNum FROM Reservation NATURAL JOIN Reserve WHERE isCancelled = 0 GROUP BY TrainNum, Month ORDER BY MONTH(DepartureDate) ASC, ReserveNum DESC")
-# popularRouteReportMonthList = []
-# popularRouteReportTrainNumList = []
-# popularRouteReportNumOfReservationList = []
-# for i in range(1,13):
-#     if (i < 10):
-#         month = '0' + str(i)
-#     else:
-#         month = str(i)
-#     self.cursor.execute("SELECT MONTHNAME(Month), TrainNum, NumOfReservation FROM PopluarRouteReport WHERE STRCMP(substring(Month,1,4),%s) = 0 AND STRCMP(substring(Month,6,2),%s)= 0", (year, month))
-#     result = self.cursor.fetchall()
-#     for i in result:
-#         popularRouteReportMonthList.append(str(result[0][0]))
-#         popularRouteReportTrainNumList.append(str(result[0][0]))
-#         popularRouteReportNumOfReservationList.append(result[0][0])
-# "SELECT MONTH(DepartureDate) AS Month, TrainNum, COUNT(ReserveID) AS ReserveNum FROM Reservation NATURAL JOIN Reserve WHERE (isCancelled = 0 AND STRCMP(substring(Month,1,4),%s) = 0 AND STRCMP(substring(Month,6,2),%s)= 0) GROUP BY TrainNum, Month ORDER BY MONTH(DepartureDate) ASC, ReserveNum DESC"
-# SELECT DepartureDate, TrainNum, COUNT(ReserveID) AS ReserveNum FROM Reservation NATURAL JOIN Reserve WHERE isCancelled = 0 GROUP BY TrainNum, MONTH(DepartureDate) ORDER BY MONTH(DepartureDate) ASC, ReserveNum DESC
