@@ -1848,12 +1848,9 @@ class GTTrain:
                 viewPopularRouteReportNumOfReservationList.append(i[2])
 
         self.cursor.execute('DROP VIEW PopularRouteReport')
+
         for row in range(len(viewPopularRouteReportMonthList)):
              viewPopularRouteReportTree.insert('',row, values=(viewPopularRouteReportMonthList[row], viewPopularRouteReportTrainNumList[row], viewPopularRouteReportNumOfReservationList[row]))
-
-
-
-
 
         viewPopularRouteReportTree.grid(row=2, column=1, columnspan=3)
 
