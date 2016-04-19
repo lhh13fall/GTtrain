@@ -2,7 +2,7 @@ from tkinter import *
 import pymysql
 from tkinter import messagebox
 from tkinter import ttk
-import datetime
+from datetime import datetime
 class GTTrain:
     def __init__(self):
         # Invoke createLoginWindow; Invoke buildLoginWindow, Set loginWindow as mainloop
@@ -1703,36 +1703,52 @@ class GTTrain:
         viewRevenueReportTree.heading("1", text="Month")
         viewRevenueReportTree.heading("2", text="Revenue")
 
+        viewRevenueReportMonthList = []
+        viewRevenueReportRevenueList = []
 
-        # self.cursor.execute("CREATE VIEW RevenueReport (ReserveID, TrainNum, Class, Date, IsCancelled, FstClassPrice, SndClassPrice) AS SELECT ReserveID, TrainNum, Class, DepartureDate AS Month, IsCancelled, FstClassPrice, SndClassPrice FROM Reservation NATURAL JOIN Reserve NATURAL JOIN TrainRoute")
-        # viewRevenueReportMonthList = []
-        # viewRevenueReportRevenueList = []
+        NotCancelledRevenueReportQuery = "CREATE VIEW NotCancelledRevenueReport (Month, EarliestDate, TotalPrice) AS SELECT MONTHNAME(DepartureDate), MIN(DepartureDate), SUM((50 * IsCancelled + IF(IsStudent = 0,(IF(Class = '1st Class', FstClassPrice, SndClassPrice) + IF(NumOfBaggage > 2, 30 * NumOfBaggage, 0)), 0.8 * (IF(Class = '1st Class', FstClassPrice, SndClassPrice) + IF(NumOfBaggage > 2, 30 * NumOfBaggage, 0))))) AS TotalPrice FROM Reservation NATURAL JOIN Customer NATURAL JOIN Reserve NATURAL JOIN TrainRoute WHERE IsCancelled = 0 GROUP BY ReserveID"
+        CancelledRevenueReportQuery = "CREATE VIEW CancelledRevenueReport (Month, Refund) AS SELECT Month, (CASE WHEN DATEDIFF(CURDATE(), EarliestDate) > 7 THEN 0.8 * TotalPrice - 50 WHEN (DATEDIFF(CURDATE(), EarliestDate) <= 7) AND DATEDIFF(CURDATE(), EarliestDate) >= 1 THEN 0.5 * TotalPrice -50 ELSE 0 END) AS Refund FROM NotCancelledRevenueReport"
+        self.cursor.execute(NotCancelledRevenueReportQuery)
+        self.cursor.execute(CancelledRevenueReportQuery)
+        self.cursor.execute("SELECT T.Month, SUM(T.Revenue) FROM (SELECT Month AS Month, TotalPrice AS Revenue FROM NotCancelledRevenueReport UNION ALL SELECT Month AS Month, (-1) * Refund AS Revenue FROM CancelledRevenueReport) AS T GROUP BY T.Month ORDER BY T.Month LIMIT 3")
 
-        # for i in range(1,13):
-        #     if (i < 10):
-        #         month = '0' + str(i)
-        #     else:
-        #         month = str(i)
-        #     self.cursor.execute("SELECT MONTHNAME(Date), TrainNum, NumOfReservation FROM PopularRouteReport WHERE STRCMP(substring(Date,1,4),%s) = 0 AND STRCMP(substring(Date,6,2),%s)= 0 LIMIT 3", ('2016', month))
-        #     result = self.cursor.fetchall()
+        totalRevenue = self.cursor.fetchall()
+        for i in totalRevenue:
+            viewRevenueReportMonthList.append(i[0])
+            viewRevenueReportRevenueList.append(i[1])
 
-        #     print(len(result))
-        #     for i in result:
-        #         viewPopularRouteReportMonthList.append(i[0])
-        #         viewPopularRouteReportTrainNumList.append(i[1])
-        #         viewPopularRouteReportNumOfReservationList.append(i[2])
+        self.cursor.execute('DROP VIEW NotCancelledRevenueReport')
+        self.cursor.execute('DROP VIEW CancelledRevenueReport')
 
-        # self.cursor.execute('DROP VIEW PopularRouteReport')
-        # for row in range(len(viewPopularRouteReportMonthList)):
-        #      viewPopularRouteReportTree.insert('',row, values=(viewPopularRouteReportMonthList[row], viewPopularRouteReportTrainNumList[row], viewPopularRouteReportNumOfReservationList[row]))
-
-
-
-
-        for i in range(2):
-            viewRevenueReportTree.insert('', i, values=('a'+str(i),'b'+str(i)))
-
+        for row in range(len(totalRevenue)):
+            viewRevenueReportTree.insert('', row, values=(viewRevenueReportMonthList[row], viewRevenueReportRevenueList[row]))
         viewRevenueReportTree.grid(row=2,column=1,columnspan=3)
+
+# ### Final SQL code
+# CREATE VIEW NotCancelledRevenueReport (Month, EarliestDate, TotalPrice) AS SELECT
+#     MONTHNAME(DepartureDate),
+#     MIN(DepartureDate),
+#     SUM((50 * IsUpdated + IF(IsStudent = 0,(IF(Class = '1st Class', FstClassPrice, SndClassPrice) + IF(NumOfBaggage > 2, 30 * NumOfBaggage, 0)), 0.8 * (IF(Class = '1st Class', FstClassPrice, SndClassPrice) + IF(NumOfBaggage > 2, 30 * NumOfBaggage, 0))))) AS TotalPrice
+# FROM Reservation NATURAL JOIN Customer NATURAL JOIN Reserve NATURAL JOIN TrainRoute WHERE IsCancelled = 0
+# GROUP BY ReserveID
+
+# ### Final SQL code
+# CREATE VIEW CancelledRevenueReport (Month, Refund) AS SELECT
+#     Month,
+#     (
+#     CASE
+#         WHEN DATEDIFF(CURDATE(), EarliestDate) > 7 THEN 0.8 * TotalPrice - 50
+#         WHEN (DATEDIFF(CURDATE(), EarliestDate) <= 7) AND DATEDIFF(CURDATE(), EarliestDate) >= 1 THEN 0.5 * TotalPrice -50
+#         ELSE 0
+#     END) AS Refund
+# FROM NotCancelledRevenueReport
+
+# Example:
+# 100+115+30=245 30 per baggage
+# 245*0.8=196 student
+# 196+50=246 update fee
+# 246*0.8-50=146.8 refund T > 7 days
+# 246*0.5-50=73 refund 1 day < T < 7 days
 
         # Back Button
         backButton = Button(viewRevenueReportWindow, text="Back", command=self.viewRevenueReportWindowBackButtonClicked)
@@ -1815,15 +1831,17 @@ class GTTrain:
         viewPopularRouteReportMonthList = []
         viewPopularRouteReportTrainNumList = []
         viewPopularRouteReportNumOfReservationList = []
+
+        currentYear = datetime.today().year
+
         for i in range(1,13):
             if (i < 10):
                 month = '0' + str(i)
             else:
                 month = str(i)
-            self.cursor.execute("SELECT MONTHNAME(Date), TrainNum, NumOfReservation FROM PopularRouteReport WHERE STRCMP(substring(Date,1,4),%s) = 0 AND STRCMP(substring(Date,6,2),%s)= 0 LIMIT 3", ('2016', month))
+            self.cursor.execute("SELECT MONTHNAME(Date), TrainNum, NumOfReservation FROM PopularRouteReport WHERE STRCMP(substring(Date,1,4),%s) = 0 AND STRCMP(substring(Date,6,2),%s)= 0 LIMIT 3", (currentYear, month))
             result = self.cursor.fetchall()
 
-            print(len(result))
             for i in result:
                 viewPopularRouteReportMonthList.append(i[0])
                 viewPopularRouteReportTrainNumList.append(i[1])
