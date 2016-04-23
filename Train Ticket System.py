@@ -540,7 +540,7 @@ class GTTrain:
             return False
 
         try:
-            datetime.datetime.strptime(self.departureDate, '%Y-%m-%d')
+            datetime.strptime(self.departureDate, '%Y-%m-%d')
         except ValueError:
             messagebox.showwarning("Error", "Departure date is not valid. (yyyy-mm-dd)")
             return False
@@ -747,7 +747,7 @@ class GTTrain:
     def buildMakeReservationWindow(self, makeReservationWindow):
         # Title Label
         makeReservationLabel= Label(makeReservationWindow,text = "Make Reservation")
-        makeReservationLabel.grid(row=1,column=1,sticky=W+E)
+        makeReservationLabel.grid(row=1,column=2,sticky=W+E)
 
         # Labels
         currentlySelectedLabel= Label(makeReservationWindow,text = "Currently Selected")
@@ -828,7 +828,7 @@ class GTTrain:
 
         self.cursor.execute("SELECT CardNum FROM PaymentInfo WHERE Username = %s",self.username)
         cardNumTuple = self.cursor.fetchall()
-        print(cardNumTuple)
+        # print(cardNumTuple)
 
         self.cardNumList = []
 
@@ -836,7 +836,7 @@ class GTTrain:
             for i in cardNumTuple:
                 self.cardNumList.append(i[0])
 
-        print(self.cardNumList)
+        # print(self.cardNumList)
 
         self.usingCardSV = StringVar()
         if self.cardNumList:
@@ -874,16 +874,13 @@ class GTTrain:
             messagebox.showwarning("Error","You haven't selected any train.")
             return False
 
-        #remove button 有个bug
-        #只能从下往上删除，不然就说del self.informationList[treeIndex-1] 的index out of range.
-
         treeIndexString = self.currentlySelectedTree.focus()
         treeIndex = int(treeIndexString[1:])
-        selected_reservation = self.currentlySelectedTree.selection()[0]
-        self.currentlySelectedTree.delete(selected_reservation)
-        #print(self.informationList)
+
         del self.informationList[treeIndex-1]
-        #print("deleted")
+        self.makeReservationWindow.destroy()
+        self.createMakeReservationWindow()
+        self.buildMakeReservationWindow(self.makeReservationWindow)
 
 
     def makeReservationWindowAddCardLabelClicked(self,event):
@@ -897,6 +894,7 @@ class GTTrain:
         self.buildSearchTrainWindow(self.searchTrainWindow)
 
     def makeReservationWindowBackButtonClicked(self):
+        del self.informationList[-1]
         self.makeReservationWindow.destroy()
         self.createTravelExtrasPassengerInfoWindow()
         self.buildTravelExtrasPassengerInfoWindow(self.travelExtrasPassengerInfoWindow)
