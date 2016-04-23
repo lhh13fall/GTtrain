@@ -1692,18 +1692,19 @@ class GTTrain:
         viewRevenueReportMonthList = []
         viewRevenueReportRevenueList = []
 
-        NotCancelledRevenueReportQuery = "CREATE VIEW NotCancelledRevenueReport (Month, EarliestDate, TotalPrice) AS SELECT MONTH(DepartureDate), MIN(DepartureDate), SUM((50 * IsCancelled + IF(IsStudent = 0,(IF(Class = '1st Class', FstClassPrice, SndClassPrice) + IF(NumOfBaggage > 2, 30 * NumOfBaggage, 0)), 0.8 * (IF(Class = '1st Class', FstClassPrice, SndClassPrice) + IF(NumOfBaggage > 2, 30 * NumOfBaggage, 0))))) AS TotalPrice FROM Reservation NATURAL JOIN Customer NATURAL JOIN Reserve NATURAL JOIN TrainRoute WHERE IsCancelled = 0 GROUP BY ReserveID"
-        CancelledRevenueReportQuery = "CREATE VIEW CancelledRevenueReport (Month, Refund) AS SELECT Month, (CASE WHEN DATEDIFF(CURDATE(), EarliestDate) > 7 THEN 0.8 * TotalPrice - 50 WHEN (DATEDIFF(CURDATE(), EarliestDate) <= 7) AND DATEDIFF(CURDATE(), EarliestDate) >= 1 THEN 0.5 * TotalPrice -50 ELSE 0 END) AS Refund FROM NotCancelledRevenueReport"
-        self.cursor.execute(NotCancelledRevenueReportQuery)
+        TotalRevenueReportQuery = "CREATE VIEW TotalRevenueReport (Month, EarliestDate, TotalPrice, IsCancelled) AS SELECT MONTH(DepartureDate), MIN(DepartureDate), SUM((50 * UpdateTimes + IF(IsStudent = 0,(IF(Class = '1st Class', FstClassPrice, SndClassPrice) + IF(NumOfBaggage > 2, 30 * NumOfBaggage, 0)), 0.8 * (IF(Class = '1st Class', FstClassPrice, SndClassPrice) + IF(NumOfBaggage > 2, 30 * NumOfBaggage, 0))))) AS TotalPrice, IsCancelled FROM Reservation NATURAL JOIN Customer NATURAL JOIN Reserve NATURAL JOIN TrainRoute GROUP BY ReserveID"
+        CancelledRevenueReportQuery = "CREATE VIEW CancelledRevenueReport (Month, Refund) AS SELECT Month, (CASE WHEN DATEDIFF(CURDATE(), EarliestDate) > 7 THEN 0.8 * TotalPrice - 50 WHEN (DATEDIFF(CURDATE(), EarliestDate) <= 7) AND DATEDIFF(CURDATE(), EarliestDate) >= 1 THEN 0.5 * TotalPrice -50 ELSE 0 END) AS Refund FROM TotalRevenueReport WHERE IsCancelled = 1"
+
+        self.cursor.execute(TotalRevenueReportQuery)
         self.cursor.execute(CancelledRevenueReportQuery)
-        self.cursor.execute("SELECT MONTHNAME(STR_TO_DATE(T.Month, '%m')), SUM(T.Revenue) FROM (SELECT Month AS Month, TotalPrice AS Revenue FROM NotCancelledRevenueReport UNION ALL SELECT Month AS Month, (-1) * Refund AS Revenue FROM CancelledRevenueReport) AS T GROUP BY T.Month ORDER BY T.Month LIMIT 3")
+        self.cursor.execute("SELECT MONTHNAME(STR_TO_DATE(T.Month, '%m')), SUM(T.Revenue) FROM (SELECT Month AS Month,TotalPrice AS Revenue FROM TotalRevenueReport UNION ALL SELECT Month AS Month, (-1) * Refund AS Revenue FROM CancelledRevenueReport) AS T GROUP BY T.Month ORDER BY T.Month LIMIT 3")
 
         totalRevenue = self.cursor.fetchall()
         for i in totalRevenue:
             viewRevenueReportMonthList.append(i[0])
             viewRevenueReportRevenueList.append(i[1])
 
-        self.cursor.execute('DROP VIEW NotCancelledRevenueReport')
+        self.cursor.execute('DROP VIEW TotalRevenueReport')
         self.cursor.execute('DROP VIEW CancelledRevenueReport')
 
         for row in range(len(totalRevenue)):
