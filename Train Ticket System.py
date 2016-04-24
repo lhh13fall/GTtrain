@@ -744,7 +744,7 @@ class GTTrain:
 
         self.selectedNumberOfBaggage = self.numberOfBaggageIV.get()
         self.passengerName = self.passengerNameSV.get()
-        self.selectedPrice = self.selectedPrice + max(0,(self.selectedNumberOfBaggage - 2)*30)
+        self.selectedPrice = self.selectedPrice
         self.informationList.append((self.selectedTrainNum,self.departureDate, self.selectedDepartureTime,self.selectedArrivalTime, self.selectedDuration,self.departsFrom,self.arrivesAt,self.selectedClass,self.selectedPrice,self.selectedNumberOfBaggage,self.passengerName))
 
 
@@ -822,7 +822,7 @@ class GTTrain:
 
         totalCost = 0
         for i in self.informationList:
-            totalCost = totalCost + i[8]
+            totalCost = totalCost + i[8] + max(0,(i[9] - 2)*30)
 
         totalCost = float(totalCost)
 
@@ -881,6 +881,7 @@ class GTTrain:
 
         makeReservationWindowRemoveButton = Button(makeReservationWindow, text="Remove", command=self.makeReservationWindowRemoveButtonClicked)
         makeReservationWindowRemoveButton.grid(row=5, column=3,sticky=W)
+
 
     def makeReservationWindowRemoveButtonClicked(self):
         if not self.currentlySelectedTree.focus():
@@ -1031,7 +1032,7 @@ class GTTrain:
             return False
         # Verify if expiration date valid or not
         try:
-            datetime.datetime.strptime(expirationDate, '%Y-%m-%d')
+            datetime.strptime(expirationDate, '%Y-%m-%d')
         except ValueError:
             messagebox.showwarning("Error", "Expiration date is not valid. (yyyy-mm-dd)")
             return False
@@ -1652,7 +1653,7 @@ class GTTrain:
         totalCostOfReservationLabel.grid(row=3, column=1, sticky=W+E)
 
         # Date Of Cancellation Label
-        dateOfCancellationLabel = Label(cancelReservationWindow2,text="Date of Cancellation")
+        dateOfCancellationLabel = Label(cancelReservationWindow2,text="Dare of Cancellation")
         dateOfCancellationLabel.grid(row=4, column=1, sticky=W+E)
 
         # Amount to be Refunded Label
