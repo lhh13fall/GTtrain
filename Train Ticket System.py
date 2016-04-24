@@ -26,7 +26,7 @@ class GTTrain:
     def buildLoginWindow(self, loginWindow):
         # Add component for Login Window
         # Login Label
-        loginLabel = Label(loginWindow, text="Login")
+        loginLabel = Label(loginWindow, text="Login",font = "Verdana 13 bold ")
         loginLabel.grid(row=1, column=3, sticky=W)
 
         # Username Label
@@ -118,7 +118,7 @@ class GTTrain:
         # Add components for newUserRegistrationWindow
 
         # New User Rigestration Label
-        newUserRegistrationLabel = Label(newUserRegistrationWindow, text="New User Registration")
+        newUserRegistrationLabel = Label(newUserRegistrationWindow, text="New User Registration",font = "Verdana 13 bold ")
         newUserRegistrationLabel.grid(row=1, column=3, sticky=W)
 
 
@@ -219,7 +219,7 @@ class GTTrain:
         # Add component to chooseFunctionalityWindow
 
         #Choose Functionality Label
-        chooseFunctionalityLabel = Label(chooseFunctionalityWindow, text="Choose Functionality")
+        chooseFunctionalityLabel = Label(chooseFunctionalityWindow, text="Choose Functionality",font = "Verdana 10 bold ")
         chooseFunctionalityLabel.grid(row=1, column=1, sticky=W+E)
 
         # View Train Schedule Label
@@ -328,7 +328,7 @@ class GTTrain:
 
     def buildViewTrainScheduleWindow(self,viewTrainScheduleWindow):
         # Title Label
-        viewTrainScheduleLabel = Label(viewTrainScheduleWindow, text="View Train Schedule")
+        viewTrainScheduleLabel = Label(viewTrainScheduleWindow, text="View Train Schedule",font = "Verdana 10 bold ")
         viewTrainScheduleLabel.grid(row=1, column=1, sticky=W+E)
         # Train Number Label
         trainNumberLabel = Label(viewTrainScheduleWindow, text="Train Number")
@@ -366,7 +366,7 @@ class GTTrain:
 
     def bulidViewTrainScheduleWindow2(self,viewTrainScheduleWindow2):
         # Label
-        viewTrainScheduleLabel = Label(viewTrainScheduleWindow2, text= "View Train Schedule")
+        viewTrainScheduleLabel = Label(viewTrainScheduleWindow2, text= "View Train Schedule",font = "Verdana 10 bold ")
         viewTrainScheduleLabel.grid(row=1, column=1, sticky=W+E)
 
         # Build the form
@@ -848,13 +848,13 @@ class GTTrain:
 
 
         # Add Card Label
-        addCardLabel = Label(makeReservationWindow, text="Add Card")
+        addCardLabel = Label(makeReservationWindow, text="Add Card",font = "Verdana 13 bold ")
         addCardLabel.grid(row = 6, column = 3,sticky=W)
         addCardLabel.bind("<ButtonPress-1>", self.makeReservationWindowAddCardLabelClicked)
 
 
         # Continue adding a train Label
-        continueAddingATrainLabel = Label(makeReservationWindow, text="Continue adding a train")
+        continueAddingATrainLabel = Label(makeReservationWindow, text="Continue adding a train",font = "Verdana 13 bold ")
         continueAddingATrainLabel.grid(row = 7, column = 1,sticky=W)
         continueAddingATrainLabel.bind("<ButtonPress-1>", self.makeReservationWindowContinueAddingATrainLabelClicked)
 
