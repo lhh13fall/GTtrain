@@ -538,6 +538,9 @@ class GTTrain:
         if self.departsFrom == self.arrivesAt:
             messagebox.showwarning("Error", "Your departure station and destination are the same.")
             return False
+        if datetime.strptime(self.departureDate, '%Y-%m-%d').date() < datetime.today().date():
+            messagebox.showwarning("Error", "Departure date cannot be earlier than today")
+            return False
 
         try:
             datetime.strptime(self.departureDate, '%Y-%m-%d')
