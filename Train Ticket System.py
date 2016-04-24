@@ -3,7 +3,7 @@ from tkinter import *
 import pymysql
 from tkinter import messagebox
 from tkinter import ttk
-from datetime import datetime
+from datetime import datetime, timedelta
 import decimal
 class GTTrain:
     def __init__(self):
