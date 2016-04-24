@@ -9,11 +9,11 @@ This project is our team project for CS4400 in Spring semester, 2016 at Georgia 
 
 This repository includes all the file that are required for the finals. And this project is a three phase project. Each phase has different tasks which are described as follow.
 
-0.Project Description v1.0.pdf: This is our project assignment, you can find out the specific requirement in it.
-1.EER.png & IFD.png: These two files are the main task for phase I.
-2.Relational Schema.pdf & Create table statement.pdf: These two files are the main task for phase II.
-3.Train Ticket System.py & SQL statements: These two files are the main task for phase III(heavy option). If you prefer light option, then you just need to submit the SQL statement, however, you must take the final exam too.
-4.localhost.sql: This is the database that we create which is compatible to MySQL 5.1.
+0. Project Description v1.0.pdf: This is our project assignment, you can find out the specific requirement in it.
+1. EER.png & IFD.png: These two files are the main task for phase I.
+2. Relational Schema.pdf & Create table statement.pdf: These two files are the main task for phase II.
+3. Train Ticket System.py & SQL statements: These two files are the main task for phase III(heavy option). If you prefer light option, then you just need to submit the SQL statement, however, you must take the final exam too.
+4. localhost.sql: This is the database that we create which is compatible to MySQL 5.1.
 
 ## How to Run?
 
