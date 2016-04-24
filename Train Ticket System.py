@@ -1104,7 +1104,7 @@ class GTTrain:
 #======Update Reservation Window======
 
 
-        def createUpdateReservationWindow(self):
+    def createUpdateReservationWindow(self):
         self.updateReservationWindow =Toplevel()
         self.updateReservationWindow.title("Train Sales System")
 
