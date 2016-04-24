@@ -1037,6 +1037,10 @@ class GTTrain:
             messagebox.showwarning("Error", "Expiration date is not valid. (yyyy-mm-dd)")
             return False
 
+        #Verify if the card has expired or not
+        if datetime.striptime(expirationDate, '%Y-%m-%d') < datetime.date().today():
+            messagebox.showwarning("Error", "This card has already expired.")
+
         isCardNumber = self.cursor.execute("SELECT * FROM PaymentInfo WHERE CardNum = %s", (addCardNumber))
         if isCardNumber:
             messagebox.showwarning("Error", "This card has been added.")
@@ -1047,11 +1051,23 @@ class GTTrain:
         self.createMakeReservationWindow()
         self.buildMakeReservationWindow(self.makeReservationWindow)
 
+
     def paymentInfoWindowDeleteSumbitButtonClicked(self):
         deleteCardNumber = self.deleteLastDigitOfCard.get()
         if not deleteCardNumber:
             messagebox.showwarning("Error","You don't have any card to delete.")
             return False
+
+
+        self.cursor.execute("SELECT max(Reserve.DepartureDate) FROM\
+                            (Reservation JOIN Reserve ON Reservation.ReserveID = Reserve.ReserveID)\
+                            WHERE Reservation.CardNum = %s AND Reservation.IsCancelled = 0",deleteCardNumber)
+        latestDepartureDate = self.cursor.fetchone()
+        if latestDepartureDate[0] is not None:
+            if datetime.today().date() < latestDepartureDate[0]:
+                messagebox.showwarning("Error","There is at least one trip in the future paid by this card.")
+                return False
+        
 
         self.cursor.execute("DELETE FROM PaymentInfo WHERE CardNum = %s", deleteCardNumber)
         self.paymentInfoWindow.destroy()
