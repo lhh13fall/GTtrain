@@ -27,7 +27,7 @@ class GTTrain:
         # Add component for Login Window
         # Login Label
         loginLabel = Label(loginWindow, text="Login",font = "Verdana 13 bold ")
-        loginLabel.grid(row=1, column=3, sticky=W)
+        loginLabel.grid(row=1, column=3, sticky=W+E)
 
         # Username Label
         usernameLabel = Label(loginWindow, text="Username")
