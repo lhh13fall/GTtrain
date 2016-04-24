@@ -1067,7 +1067,7 @@ class GTTrain:
             if datetime.today().date() < latestDepartureDate[0]:
                 messagebox.showwarning("Error","There is at least one trip in the future paid by this card.")
                 return False
-        
+
 
         self.cursor.execute("DELETE FROM PaymentInfo WHERE CardNum = %s", deleteCardNumber)
         self.paymentInfoWindow.destroy()
@@ -2082,6 +2082,7 @@ class GTTrain:
 
         currentYear = datetime.today().year
 
+        count = 0
         for i in range(1,13):
             if (i < 10):
                 month = '0' + str(i)
@@ -2089,11 +2090,16 @@ class GTTrain:
                 month = str(i)
             self.cursor.execute("SELECT MONTHNAME(Date), TrainNum, NumOfReservation FROM PopularRouteReport WHERE STRCMP(substring(Date,1,4),%s) = 0 AND STRCMP(substring(Date,6,2),%s)= 0 LIMIT 3", (currentYear, month))
             result = self.cursor.fetchall()
-
+            if(len(result)!=0):
+                count = count + 1
+                print(count)
+                if(count == 4):
+                    break
             for i in result:
                 viewPopularRouteReportMonthList.append(i[0])
                 viewPopularRouteReportTrainNumList.append(i[1])
                 viewPopularRouteReportNumOfReservationList.append(i[2])
+
 
         self.cursor.execute('DROP VIEW PopularRouteReport')
 
