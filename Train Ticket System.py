@@ -1,5 +1,5 @@
 from tkinter import *
-# from PIL import ImageTk, Image
+from PIL import ImageTk, Image
 import pymysql
 from tkinter import messagebox
 from tkinter import ttk
@@ -45,12 +45,12 @@ class GTTrain:
         passwordLabel.grid(row=4, column=2, sticky=W)
 
         # # Image
-        # image = Image.open("buzzImage.jpg")
-        # image = image.resize((60, 60), Image.ANTIALIAS)
-        # buzzImage = ImageTk.PhotoImage(image)
-        # imageLabel = Label(loginWindow, image=buzzImage)
-        # imageLabel.image = buzzImage
-        # imageLabel.grid(row=2, column=4, rowspan=3, sticky=E)
+        image = Image.open("buzzImage.jpg")
+        image = image.resize((60, 60), Image.ANTIALIAS)
+        buzzImage = ImageTk.PhotoImage(image)
+        imageLabel = Label(loginWindow, image=buzzImage)
+        imageLabel.image = buzzImage
+        imageLabel.grid(row=2, column=4, rowspan=3, sticky=E)
 
 
         # Username Entry
