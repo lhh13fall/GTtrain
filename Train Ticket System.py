@@ -1090,7 +1090,7 @@ class GTTrain:
         reservationIdEntry = Entry(confirmationWindow, textvariable=self.reservationIdSV,width=20,state="readonly")
         self.cursor.execute("INSERT INTO Reservation (IsCancelled, Username, CardNum) VALUES (%s, %s, %s)", (self.studentStatus, self.username, self.usingCard))
         for i in self.informationList:
-            self.cursor.execute("INSERT INTO Reserve VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)", (self.reservationId,i[0],i[7],i[1],i[10],i[9],i[5],i[6],i[9]))
+            self.cursor.execute("INSERT INTO Reserve VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)", (self.reservationId,i[0],i[7],i[1],i[10],i[9],i[5],i[6],0))
         reservationIdEntry.grid(row=2,column=2,sticky=W)
 
         # Thank you Labels
