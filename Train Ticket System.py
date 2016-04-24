@@ -1669,7 +1669,7 @@ class GTTrain:
 
         # Total Cost of Reservation Entry
 
-       
+
         self.cancelTotalCost = 0
         for i in range(len(self.cancelReserveListFull)):
             self.cancelTotalCost = self.cancelTotalCost + self.cancelReserveListFull[i+1][8] + max(0,self.cancelReserveListFull[i+1][9]-2)*30+self.cancelReserveListFull[i+1][11]*50
@@ -1680,7 +1680,6 @@ class GTTrain:
 
 
         if studentStatus[0] == 1:
-            
             self.cancelTotalCost = self.cancelTotalCost*decimal.Decimal(0.8)
             self.cancelTotalCost = round(self.cancelTotalCost,2)
 
@@ -1699,11 +1698,6 @@ class GTTrain:
 
         self.dateOfCancellation.set(datetime.today().date())
 
-        
-
-
-        
-
         # Amount to be Refunded Entry
         self.amountToBeRefunded = StringVar()
         amountToBeRefundedEntry = Entry(cancelReservationWindow2, textvariable=self.amountToBeRefunded, state="readonly",width=10)
@@ -1712,7 +1706,6 @@ class GTTrain:
 
         cancelDepartureDates = []
 
-        
         for i in range(len(self.cancelReserveListFull)):
             cancelDepartureDates.append(self.cancelReserveListFull[i+1][1])
         earliestDepartureDate = min(cancelDepartureDates)
@@ -1724,7 +1717,7 @@ class GTTrain:
             refund = round(self.cancelTotalCost*decimal.Decimal(0.5)-decimal.Decimal(50),2)
             self.amountToBeRefunded.set(refund)
         else:
-            self.amountToBeRefunded.set("Too late to cancel")   
+            self.amountToBeRefunded.set("Too late to cancel")
 
 
 
@@ -1747,14 +1740,14 @@ class GTTrain:
         if isCancelled[0] == 1:
             messagebox.showwarning("Error","This reservation is already cancelled.")
             return False
-        
+
         refund = self.amountToBeRefunded.get()
         if refund == "Too late to cancel":
             messagebox.showwarning("Error","You can no longer cancel this reservation.")
             return False
 
         self.cursor.execute("UPDATE Reservation SET IsCancelled = 1 WHERE ReserveID = %s", self.cancelReservationID)
-            
+
         self.cancelReservationWindow2.destroy()
         self.createChooseFunctionalityWindow()
         self.buildChooseFunctionalityWindow(self.chooseFunctionalityWindow)
