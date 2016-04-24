@@ -17,12 +17,17 @@ class GTTrain:
         sys.exit()
 
 ##  =======Login Window=======
-
-
     def createLoginWindow(self):
         # Create blank Login Window
         self.loginWindow = Tk()
         self.loginWindow.title("Train Sales System")
+
+        self.loginWindow.withdraw()
+        self.loginWindow.update_idletasks()  # Update "requested size" from geometry manager
+        x = (self.loginWindow.winfo_screenwidth() - self.loginWindow.winfo_reqwidth()) / 2
+        y = (self.loginWindow.winfo_screenheight() - self.loginWindow.winfo_reqheight()) / 2
+        self.loginWindow.geometry("+%d+%d" % (x, y))
+        self.loginWindow.deiconify()
 
     def buildLoginWindow(self, loginWindow):
         # Add component for Login Window
@@ -38,13 +43,13 @@ class GTTrain:
         passwordLabel = Label(loginWindow, text="Password")
         passwordLabel.grid(row=4, column=2, sticky=W)
 
-        # Image
-        image = Image.open("buzzImage.jpg")
-        image = image.resize((60, 60), Image.ANTIALIAS)
-        buzzImage = ImageTk.PhotoImage(image)
-        imageLabel = Label(loginWindow, image=buzzImage)
-        imageLabel.image = buzzImage
-        imageLabel.grid(row=2, column=4, rowspan=3, sticky=E)
+        # # Image
+        # image = Image.open("buzzImage.jpg")
+        # image = image.resize((60, 60), Image.ANTIALIAS)
+        # buzzImage = ImageTk.PhotoImage(image)
+        # imageLabel = Label(loginWindow, image=buzzImage)
+        # imageLabel.image = buzzImage
+        # imageLabel.grid(row=2, column=4, rowspan=3, sticky=E)
 
 
         # Username Entry
