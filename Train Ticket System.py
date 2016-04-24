@@ -1985,7 +1985,7 @@ class GTTrain:
 
         self.cursor.execute(TotalRevenueReportQuery)
         self.cursor.execute(CancelledRevenueReportQuery)
-        self.cursor.execute("SELECT MONTHNAME(STR_TO_DATE(T.Month, '%m')), SUM(T.Revenue) FROM (SELECT Month AS Month,TotalPrice AS Revenue FROM TotalRevenueReport UNION ALL SELECT Month AS Month, (-1) * Refund AS Revenue FROM CancelledRevenueReport) AS T GROUP BY T.Month ORDER BY T.Month LIMIT 5")
+        self.cursor.execute("SELECT MONTHNAME(STR_TO_DATE(T.Month, '%m')), SUM(T.Revenue) FROM (SELECT Month AS Month,TotalPrice AS Revenue FROM TotalRevenueReport UNION ALL SELECT Month AS Month, (-1) * Refund AS Revenue FROM CancelledRevenueReport) AS T GROUP BY T.Month ORDER BY T.Month LIMIT 3")
 
         totalRevenue = self.cursor.fetchall()
         for i in totalRevenue:
