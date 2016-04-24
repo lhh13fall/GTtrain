@@ -1038,7 +1038,7 @@ class GTTrain:
             return False
 
         #Verify if the card has expired or not
-        if datetime.striptime(expirationDate, '%Y-%m-%d') < datetime.date().today():
+        if datetime.strptime(expirationDate, '%Y-%m-%d') < datetime.date().today():
             messagebox.showwarning("Error", "This card has already expired.")
 
         isCardNumber = self.cursor.execute("SELECT * FROM PaymentInfo WHERE CardNum = %s", (addCardNumber))
