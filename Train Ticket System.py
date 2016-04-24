@@ -1458,7 +1458,7 @@ class GTTrain:
 
         self.updatedTotalCost = 0
         for i in range(len(self.updateReserveListFull)):
-            self.updatedTotalCost = self.updatedTotalCost + self.updateReserveListFull[i+1][8] + max(0,self.updateReserveListFull[i+1][9]-2)*30+self.updateReserveListFull[i+1][11]*50
+            self.updatedTotalCost = self.updatedTotalCost + self.updateReserveListFull[i+1][8] + max(0,self.updateReserveListFull[i+1][9]-2)*30+(self.updateReserveListFull[i+1][11]*50+50)
 
 
         self.cursor.execute("SELECT Customer.IsStudent FROM (Customer JOIN Reservation ON Customer.Username = Reservation.Username) WHERE Reservation.ReserveID = %s",self.updateReservationID)
