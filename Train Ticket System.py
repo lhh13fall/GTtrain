@@ -1109,6 +1109,7 @@ class GTTrain:
 #======Update Reservation Window======
 
 
+
     def createUpdateReservationWindow(self):
         self.updateReservationWindow =Toplevel()
         self.updateReservationWindow.title("Train Sales System")
@@ -1489,6 +1490,11 @@ class GTTrain:
         self.buildUpdateReservationWindow2(self.updateReservationWindow2)
 
     def updateReservationWindow3SubmitButtonClicked(self):
+        self.cursor.execute("SELECT IsCancelled FROM Reservation WHERE ReserveID = %s",self.cancelReservationID)
+        isCancelled = self.cursor.fetchone()
+        if isCancelled[0] == 1:
+            messagebox.showwarning("Error","This reservation is already cancelled.")
+            return False
 
         self.cursor.execute("UPDATE Reserve SET DepartureDate = %s, UpdateTimes = %s WHERE ReserveID = %s AND TrainNum = %s",(self.updateReserveListNew[1],self.updateReserveListNew[11],self.updateReservationID,self.updateReserveListNew[0]))
         
@@ -1515,8 +1521,8 @@ class GTTrain:
         reservationIDLabel.grid(row=1, column=1, sticky=W+E)
 
         # Reservation ID Entry
-        self.reservationID = StringVar()
-        reservationIDEntry = Entry(cancelReservationWindow1, textvariable=self.reservationID, width=10)
+        self.cancelReservationIDSV = StringVar()
+        reservationIDEntry = Entry(cancelReservationWindow1, textvariable=self.cancelReservationIDSV, width=10)
         reservationIDEntry.grid(row=1, column=2, sticky=W+E)
 
         # Search Button
@@ -1528,10 +1534,10 @@ class GTTrain:
         backButton.grid(row=2, column=2)
 
     def cancelReservationWindow1SearchButtonClicked(self):
-        self.reservationID = self.reservationID.get()
-        if not reservationID:
+        self.cancelReservationID = self.cancelReservationIDSV.get()
+        if not self.cancelReservationID:
             messagebox.showwarning("Error", "Reservation ID input is empty. Please enter reservation ID.")
-        isReservationID = self.cursor.execute("SELECT ReserveID FROM Reservation WHERE ReserveID = %s", reservationID)
+        isReservationID = self.cursor.execute("SELECT ReserveID FROM Reservation WHERE ReserveID = %s", self.cancelReservationID)
         if not isReservationID:
             messagebox.showwarning("Error", "The reservation ID is not valid.")
             return False
@@ -1559,28 +1565,101 @@ class GTTrain:
         cancelReservationLabel.grid(row=1, column=2, sticky=W+E)
 
         # Cancel Reservation Treeview
-        cancelReservationTree = ttk.Treeview(cancelReservationWindow2, column=("1", "2", "3", "4","5","6","7","8"))
-        cancelReservationTree.column("1", width = 150, anchor = "center")
-        cancelReservationTree.column("2", width = 150, anchor = "center")
-        cancelReservationTree.column("3", width = 150, anchor = "center")
-        cancelReservationTree.column("4", width = 150, anchor = "center")
-        cancelReservationTree.column("5", width = 150, anchor = "center")
-        cancelReservationTree.column("6", width = 150, anchor = "center")
-        cancelReservationTree.column("7", width = 150, anchor = "center")
-        cancelReservationTree.column("8", width = 150, anchor = "center")
-        cancelReservationTree.heading("1", text = "Train(Train Number)")
-        cancelReservationTree.heading("2", text = "Time(Duration)")
-        cancelReservationTree.heading("3", text = "Departs From")
-        cancelReservationTree.heading("4", text = "Arrives At")
-        cancelReservationTree.heading("5", text = "Class")
-        cancelReservationTree.heading("6", text = "Price")
-        cancelReservationTree.heading("7", text = "# of Baggage")
-        cancelReservationTree.heading("8", text = "Passenger Name")
+#==============
+        self.cancelReservationTree = ttk.Treeview(cancelReservationWindow2, column=("1", "2", "3", "4", "5", "6" ,"7", "8","9","10","11","12"))
+        self.cancelReservationTree['show'] = "headings"
+        self.cancelReservationTree.column("1", width = 100, anchor = "center")
+        self.cancelReservationTree.column("2", width = 100, anchor = "center")
+        self.cancelReservationTree.column("3", width = 100, anchor = "center")
+        self.cancelReservationTree.column("4", width = 100, anchor = "center")
+        self.cancelReservationTree.column("5", width = 100, anchor = "center")
+        self.cancelReservationTree.column("6", width = 100, anchor = "center")
+        self.cancelReservationTree.column("7", width = 100, anchor = "center")
+        self.cancelReservationTree.column("8", width = 100, anchor = "center")
+        self.cancelReservationTree.column("9", width = 100, anchor = "center")
+        self.cancelReservationTree.column("10", width = 100, anchor = "center")
+        self.cancelReservationTree.column("11", width = 100, anchor = "center")
+        self.cancelReservationTree.column("12", width = 100, anchor = "center")
 
-        for i in range(2):
-            cancelReservationTree.insert('',i,values=('a'+str(i),'b'+str(i),'c'+str(i),'d'+str(i),'e'+str(i),'f'+str(i),'g'+str(i),'h'+str(i)))
+        self.cancelReservationTree.heading("1", text = "Train (Train Number)")
+        self.cancelReservationTree.heading("2", text = "Departure Date")
+        self.cancelReservationTree.heading("3", text = "Departure Time")
+        self.cancelReservationTree.heading("4", text = "Arrival Time")
+        self.cancelReservationTree.heading("5", text = "Duration")
+        self.cancelReservationTree.heading("6", text = "Departs From")
+        self.cancelReservationTree.heading("7", text = "Arrives At")
+        self.cancelReservationTree.heading("8", text = "Class")
+        self.cancelReservationTree.heading("9", text = "Price")
+        self.cancelReservationTree.heading("10", text = "Number of Baggages")
+        self.cancelReservationTree.heading("11", text = "Passenger Name")
+        self.cancelReservationTree.heading("12", text = "Times of Update")
 
-        cancelReservationTree.grid(row=2,column=1,columnspan=3)
+
+        # Insert data into the form
+        self.cursor.execute("SELECT * FROM Reserve WHERE ReserveID = %s", self.cancelReservationID)
+        self.cancelReserveList = self.cursor.fetchall()
+        self.cancelReserveListFull = {}
+
+        k = 0
+
+        for i in self.cancelReserveList:
+
+            k = k+1
+            
+            TrainNum = i[1]
+            Class = i[2]
+            DepartureDate = i[3]
+            PassengerName = i[4]
+            NumOfBaggage = i[5]
+            DepartFrom = i[6]
+            ArriveAt = i[7]
+            UpdateTimes = i[8]
+
+
+            self.cursor.execute("SELECT departure.DepartureTime, arrival.ArrivalTime FROM\
+                                (SELECT TrainNum, DepartureTime\
+                                FROM Stop\
+                                WHERE TrainNum = %s AND StationName = %s) departure\
+                                JOIN\
+                                (SELECT TrainNum, ArrivalTime\
+                                FROM Stop\
+                                WHERE TrainNum = %s AND StationName = %s) arrival\
+                                ON departure.TrainNum = arrival.TrainNum",(TrainNum, DepartFrom, TrainNum, ArriveAt))
+
+
+
+            row = self.cursor.fetchone()
+            if not row:
+                    messagebox.showwarning("Error","Reservation ID and tickets not match")
+
+
+
+            
+            DepartureTime = row[0]
+            ArrivalTime = row[1]
+
+
+
+            if Class == "1st Class":
+                self.cursor.execute("SELECT FstClassPrice FROM TrainRoute WHERE TrainNum = %s", TrainNum)
+                row = self.cursor.fetchone()
+                Price = row[0]
+            elif Class == "2nd Class":
+                self.cursor.execute("SELECT SndClassPrice FROM TrainRoute WHERE TrainNum = %s", TrainNum)
+                row = self.cursor.fetchone()
+                Price = row[0]
+
+            Duration = ArrivalTime - DepartureTime
+
+            thisReserve = [TrainNum, DepartureDate, DepartureTime, ArrivalTime, Duration, DepartFrom, ArriveAt, Class, Price, NumOfBaggage, PassengerName, UpdateTimes]
+            self.cancelReserveListFull[k] = thisReserve
+            self.cancelReservationTree.insert('',k, values = thisReserve)
+
+            self.cancelReservationTree.grid(row=2, column=1, columnspan=3)
+#============
+
+
+        
 
         # Total Cost of Reservation Label
         totalCostOfReservationLabel = Label(cancelReservationWindow2,text="Total Cost of Reservation")
@@ -1595,19 +1674,65 @@ class GTTrain:
         amountToBeRefundedLabel.grid(row=5, column=1, sticky=W+E)
 
         # Total Cost of Reservation Entry
-        self.totalCostOfReservation = StringVar()
-        totalCostOfReservationEntry = Entry(cancelReservationWindow2, textvariable=self.totalCostOfReservation, state="readonly", width=10)
-        totalCostOfReservationEntry.grid(row=3, column=2, sticky=W+E)
+
+       
+        self.cancelTotalCost = 0
+        for i in range(len(self.cancelReserveListFull)):
+            self.cancelTotalCost = self.cancelTotalCost + self.cancelReserveListFull[i+1][8] + max(0,self.cancelReserveListFull[i+1][9]-2)*30+self.cancelReserveListFull[i+1][11]*50
+
+
+        self.cursor.execute("SELECT Customer.IsStudent FROM (Customer JOIN Reservation ON Customer.Username = Reservation.Username) WHERE Reservation.ReserveID = %s",self.cancelReservationID)
+        studentStatus = self.cursor.fetchone()
+
+
+        if studentStatus[0] == 1:
+            
+            self.cancelTotalCost = self.cancelTotalCost*decimal.Decimal(0.8)
+            self.cancelTotalCost = round(self.cancelTotalCost,2)
+
+        self.cancelTotalCostSV = StringVar()
+        self.cancelTotalCostSV.set(self.cancelTotalCost)
+        cancelTotalCostEntry = Entry(cancelReservationWindow2, textvariable = self.cancelTotalCostSV, state="readonly", width=10)
+        cancelTotalCostEntry.grid(row=3,column=2,sticky=W+E)
+
+
+
 
         # Date of Cancellation Entry
         self.dateOfCancellation =StringVar()
         dateOfCancellationEntry = Entry(cancelReservationWindow2, textvariable=self.dateOfCancellation, state="readonly", width=10)
         dateOfCancellationEntry.grid(row=4, column=2, sticky=W+E)
 
+        self.dateOfCancellation.set(datetime.today().date())
+
+        
+
+
+        
+
         # Amount to be Refunded Entry
         self.amountToBeRefunded = StringVar()
         amountToBeRefundedEntry = Entry(cancelReservationWindow2, textvariable=self.amountToBeRefunded, state="readonly",width=10)
         amountToBeRefundedEntry.grid(row=5, column=2, sticky=W+E)
+
+
+        cancelDepartureDates = []
+
+        
+        for i in range(len(self.cancelReserveListFull)):
+            cancelDepartureDates.append(self.cancelReserveListFull[i+1][1])
+        earliestDepartureDate = min(cancelDepartureDates)
+
+        if datetime.today().date() < earliestDepartureDate - timedelta(days=7):
+            refund = round(self.cancelTotalCost*decimal.Decimal(0.8)-decimal.Decimal(50),2)
+            self.amountToBeRefunded.set(refund)
+        elif datetime.today().date() < earliestDepartureDate - timedelta(days=1):
+            refund = round(self.cancelTotalCost*decimal.Decimal(0.5)-decimal.Decimal(50),2)
+            self.amountToBeRefunded.set(refund)
+        else:
+            self.amountToBeRefunded.set("Too late to cancel")   
+
+
 
         # Back Button
         backButton = Button(cancelReservationWindow2, text="Back", command=self.cancelReservationWindow2BackButtonClicked)
@@ -1623,6 +1748,19 @@ class GTTrain:
         self.buildCancelReservationWindow1(self.cancelReservationWindow1)
 
     def cancelReservationWindow2SubmitButtonClicked(self):
+        self.cursor.execute("SELECT IsCancelled FROM Reservation WHERE ReserveID = %s",self.cancelReservationID)
+        isCancelled = self.cursor.fetchone()
+        if isCancelled[0] == 1:
+            messagebox.showwarning("Error","This reservation is already cancelled.")
+            return False
+        
+        refund = self.amountToBeRefunded.get()
+        if refund == "Too late to cancel":
+            messagebox.showwarning("Error","You can no longer cancel this reservation.")
+            return False
+
+        self.cursor.execute("UPDATE Reservation SET IsCancelled = 1 WHERE ReserveID = %s", self.cancelReservationID)
+            
         self.cancelReservationWindow2.destroy()
         self.createChooseFunctionalityWindow()
         self.buildChooseFunctionalityWindow(self.chooseFunctionalityWindow)
