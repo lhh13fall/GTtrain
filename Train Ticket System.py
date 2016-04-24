@@ -1456,23 +1456,18 @@ class GTTrain:
         self.updatedTrainTicketTree.insert('',1,values=(self.updateReserveListFull[self.updateReserveIndex][0],self.updateDate,self.updateReserveListFull[self.updateReserveIndex][2],self.updateReserveListFull[self.updateReserveIndex][3],self.updateReserveListFull[self.updateReserveIndex][4],self.updateReserveListFull[self.updateReserveIndex][5],self.updateReserveListFull[self.updateReserveIndex][6],self.updateReserveListFull[self.updateReserveIndex][7],self.updateReserveListFull[self.updateReserveIndex][8],self.updateReserveListFull[self.updateReserveIndex][9],self.updateReserveListFull[self.updateReserveIndex][10],self.updateReserveListFull[self.updateReserveIndex][11]+1))
         self.updateReserveListNew = [self.updateReserveListFull[self.updateReserveIndex][0],self.updateDate,self.updateReserveListFull[self.updateReserveIndex][2],self.updateReserveListFull[self.updateReserveIndex][3],self.updateReserveListFull[self.updateReserveIndex][4],self.updateReserveListFull[self.updateReserveIndex][5],self.updateReserveListFull[self.updateReserveIndex][6],self.updateReserveListFull[self.updateReserveIndex][7],self.updateReserveListFull[self.updateReserveIndex][8],self.updateReserveListFull[self.updateReserveIndex][9],self.updateReserveListFull[self.updateReserveIndex][10],(self.updateReserveListFull[self.updateReserveIndex][11]+1)]
 
-
         self.updatedTotalCost = 0
         for i in range(len(self.updateReserveListFull)):
-            self.updatedTotalCost = self.updatedTotalCost + self.updateReserveListFull[i+1][8] + max(0,self.updateReserveListFull[i+1][9]-2)*30+(self.updateReserveListFull[i+1][11]*50+50)
+            self.updatedTotalCost = self.updatedTotalCost + self.updateReserveListFull[i+1][8] + max(0,self.updateReserveListFull[i+1][9]-2)*30
 
-
+        #Apply student discount
         self.cursor.execute("SELECT Customer.IsStudent FROM (Customer JOIN Reservation ON Customer.Username = Reservation.Username) WHERE Reservation.ReserveID = %s",self.updateReservationID)
-
-
         studentStatus = self.cursor.fetchone()
-
-
-
         if studentStatus[0] == 1:
-
             self.updatedTotalCost = self.updatedTotalCost*decimal.Decimal(0.8)
             self.updatedTotalCost = round(self.updatedTotalCost,2)
+
+        self.updatedTotalCost = self.updatedTotalCost+self.updateReserveListFull[i+1][11]*50+50
 
 
         self.updatedTotalCostSV.set(self.updatedTotalCost)
@@ -1669,7 +1664,7 @@ class GTTrain:
 
         self.cancelTotalCost = 0
         for i in range(len(self.cancelReserveListFull)):
-            self.cancelTotalCost = self.cancelTotalCost + self.cancelReserveListFull[i+1][8] + max(0,self.cancelReserveListFull[i+1][9]-2)*30+self.cancelReserveListFull[i+1][11]*50
+            self.cancelTotalCost = self.cancelTotalCost + self.cancelReserveListFull[i+1][8] + max(0,self.cancelReserveListFull[i+1][9]-2)*30
 
 
         self.cursor.execute("SELECT Customer.IsStudent FROM (Customer JOIN Reservation ON Customer.Username = Reservation.Username) WHERE Reservation.ReserveID = %s",self.cancelReservationID)
@@ -1679,6 +1674,9 @@ class GTTrain:
         if studentStatus[0] == 1:
             self.cancelTotalCost = self.cancelTotalCost*decimal.Decimal(0.8)
             self.cancelTotalCost = round(self.cancelTotalCost,2)
+
+        self.cancelTotalCost = self.cancelTotalCost+self.cancelReserveListFull[i+1][11]*50
+            
 
         self.cancelTotalCostSV = StringVar()
         self.cancelTotalCostSV.set(self.cancelTotalCost)
