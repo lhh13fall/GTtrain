@@ -335,8 +335,6 @@ class GTTrain:
 
 #=========View Train Schedule Window============
 
-#这个应该叫createViewTrainScheduleWindow1来着……不过后面应该用不上所以暂时不管了
-
     def createViewTrainScheduleWindow(self):
         self.viewTrainScheduleWindow = Toplevel()
         self.viewTrainScheduleWindow.title("Train Sales System")
@@ -513,7 +511,7 @@ class GTTrain:
         backButton = Button(searchTrainWindow, text="Back", command=self.searchTrainWindowBackButtonClicked)
         backButton.grid(row=5,column=1)
 
-        # Get stops informatin from the database. Below names are for demos only.
+        # Get stops informatin from the database.
 
         self.cursor.execute("SELECT StationName From Stop GROUP BY StationName")
         stationNameTuple = self.cursor.fetchall()
@@ -1137,7 +1135,7 @@ class GTTrain:
         backButton.grid(row=3, column=2, sticky=W)
 
     def updateReservationWindowSearchButtonClicked(self):
-        
+
         self.updateReservationID = self.updateReservationIDSV.get()
         if not self.updateReservationID:
             messagebox.showwarning("Error","Please type in the reserationID you want to update.")
@@ -1147,7 +1145,6 @@ class GTTrain:
         if not haveSuchID:
             messagebox.showwarning("Error","There is no such reservationID or this reservation is not created by you.")
             return False
-        
 
         self.updateReservationWindow.destroy()
         self.createUpdateReservationWindow2()
@@ -1213,7 +1210,6 @@ class GTTrain:
         for i in self.updateReserveList:
 
             k = k+1
-            
             TrainNum = i[1]
             Class = i[2]
             DepartureDate = i[3]
@@ -1242,7 +1238,7 @@ class GTTrain:
 
 
 
-            
+
             DepartureTime = row[0]
             ArrivalTime = row[1]
 
@@ -1263,14 +1259,12 @@ class GTTrain:
 
             self.updateReservationTree.insert('',k, values = thisReserve)
             self.updateReserveListFull[k] = thisReserve
-            
-            
-        
+
         self.updateReservationTree.grid(row = 3,column =1,columnspan=3)
 
 
 #============
-        # Next Button  
+        # Next Button
         nextButton = Button(updateReservationWindow2, text = "Next", command = self.updateReservationWindow2NextButtonClicked)
         nextButton.grid(row=4, column=2, sticky=W+E)
 
@@ -1283,10 +1277,10 @@ class GTTrain:
         if not treeIndexString:
                 messagebox.showwarning("Error", "You haven't selected the ticket you want to update.")
                 return False
-            
+
         treeIndex = int(treeIndexString[1:])
         self.updateReserveIndex = treeIndex
-        
+
         self.updateReservationWindow2.destroy()
         self.createUpdateReservationWindow3()
         self.buildUpdateReservationWindow3(self.updateReservationWindow3)
@@ -1398,7 +1392,7 @@ class GTTrain:
 
 
         self.updatedTrainTicketTree.grid(row=5,column=1,columnspan=3)
-        
+
         # Change Fee Label
         changeFeeLabel = Label(updateReservationWindow3,text="Change Fee")
         changeFeeLabel.grid(row=6, column=1, sticky=W+E)
@@ -1430,20 +1424,20 @@ class GTTrain:
         self.updateReservationWindow3searchAvailabilityButtonClickedOrNot = 0
 
     def updateReservationWindow3searchAvailabilityButtonClicked(self):
-        
-       
+
+
         if self.updateReservationWindow3searchAvailabilityButtonClickedOrNot == 1:
             self.updatedTrainTicketTree.delete(*self.updatedTrainTicketTree.get_children())
 
         self.updateReservationWindow3searchAvailabilityButtonClickedOrNot = 1
-         
-        
+
+
         # Click Find Train Button on Search Train Window:
         # Destroy Search Train Window
         # Display Select Departure Window
 
         self.updateDate = self.updateDateSV.get()
-        
+
         try:
             datetime.strptime(self.updateDate, '%Y-%m-%d')
         except ValueError:
@@ -1460,7 +1454,7 @@ class GTTrain:
 
         self.updatedTrainTicketTree.insert('',1,values=(self.updateReserveListFull[self.updateReserveIndex][0],self.updateDate,self.updateReserveListFull[self.updateReserveIndex][2],self.updateReserveListFull[self.updateReserveIndex][3],self.updateReserveListFull[self.updateReserveIndex][4],self.updateReserveListFull[self.updateReserveIndex][5],self.updateReserveListFull[self.updateReserveIndex][6],self.updateReserveListFull[self.updateReserveIndex][7],self.updateReserveListFull[self.updateReserveIndex][8],self.updateReserveListFull[self.updateReserveIndex][9],self.updateReserveListFull[self.updateReserveIndex][10],self.updateReserveListFull[self.updateReserveIndex][11]))
         self.updateReserveListNew = [self.updateReserveListFull[self.updateReserveIndex][0],self.updateDate,self.updateReserveListFull[self.updateReserveIndex][2],self.updateReserveListFull[self.updateReserveIndex][3],self.updateReserveListFull[self.updateReserveIndex][4],self.updateReserveListFull[self.updateReserveIndex][5],self.updateReserveListFull[self.updateReserveIndex][6],self.updateReserveListFull[self.updateReserveIndex][7],self.updateReserveListFull[self.updateReserveIndex][8],self.updateReserveListFull[self.updateReserveIndex][9],self.updateReserveListFull[self.updateReserveIndex][10],(self.updateReserveListFull[self.updateReserveIndex][11]+1)]
-            
+
 
         self.updatedTotalCost = 0
         for i in range(len(self.updateReserveListFull)):
@@ -1475,7 +1469,7 @@ class GTTrain:
 
 
         if studentStatus[0] == 1:
-            
+
             self.updatedTotalCost = self.updatedTotalCost*decimal.Decimal(0.8)
             self.updatedTotalCost = round(self.updatedTotalCost,2)
 
@@ -1491,7 +1485,7 @@ class GTTrain:
     def updateReservationWindow3SubmitButtonClicked(self):
 
         self.cursor.execute("UPDATE Reserve SET DepartureDate = %s, UpdateTimes = %s WHERE ReserveID = %s AND TrainNum = %s",(self.updateReserveListNew[1],self.updateReserveListNew[11],self.updateReservationID,self.updateReserveListNew[0]))
-        
+
         self.updateReservationWindow3.destroy()
         self.chooseFunctionalityWindow.deiconify()
 
