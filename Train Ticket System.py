@@ -1594,7 +1594,7 @@ class GTTrain:
         for i in self.cancelReserveList:
 
             k = k+1
-            
+
             TrainNum = i[1]
             Class = i[2]
             DepartureDate = i[3]
@@ -1676,7 +1676,7 @@ class GTTrain:
             self.cancelTotalCost = round(self.cancelTotalCost,2)
 
         self.cancelTotalCost = self.cancelTotalCost+self.cancelReserveListFull[i+1][11]*50
-            
+
 
         self.cancelTotalCostSV = StringVar()
         self.cancelTotalCostSV.set(self.cancelTotalCost)
