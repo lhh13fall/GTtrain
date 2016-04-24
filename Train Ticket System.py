@@ -1627,8 +1627,6 @@ class GTTrain:
                     messagebox.showwarning("Error","Reservation ID and tickets not match")
 
 
-
-            
             DepartureTime = row[0]
             ArrivalTime = row[1]
 
@@ -1653,7 +1651,6 @@ class GTTrain:
 #============
 
 
-        
 
         # Total Cost of Reservation Label
         totalCostOfReservationLabel = Label(cancelReservationWindow2,text="Total Cost of Reservation")
@@ -1983,12 +1980,12 @@ class GTTrain:
         viewRevenueReportMonthList = []
         viewRevenueReportRevenueList = []
 
-        TotalRevenueReportQuery = "CREATE VIEW TotalRevenueReport (Month, EarliestDate, TotalPrice, IsCancelled) AS SELECT MONTH(DepartureDate), MIN(DepartureDate), SUM((50 * UpdateTimes + IF(IsStudent = 0,(IF(Class = '1st Class', FstClassPrice, SndClassPrice) + IF(NumOfBaggage > 2, 30 * NumOfBaggage, 0)), 0.8 * (IF(Class = '1st Class', FstClassPrice, SndClassPrice) + IF(NumOfBaggage > 2, 30 * NumOfBaggage, 0))))) AS TotalPrice, IsCancelled FROM Reservation NATURAL JOIN Customer NATURAL JOIN Reserve NATURAL JOIN TrainRoute GROUP BY ReserveID"
-        CancelledRevenueReportQuery = "CREATE VIEW CancelledRevenueReport (Month, Refund) AS SELECT Month, (CASE WHEN DATEDIFF(CURDATE(), EarliestDate) > 7 THEN 0.8 * TotalPrice - 50 WHEN (DATEDIFF(CURDATE(), EarliestDate) <= 7) AND DATEDIFF(CURDATE(), EarliestDate) >= 1 THEN 0.5 * TotalPrice -50 ELSE 0 END) AS Refund FROM TotalRevenueReport WHERE IsCancelled = 1"
+        TotalRevenueReportQuery = "CREATE VIEW TotalRevenueReport (Month, EarliestDate, TotalPrice, IsCancelled) AS SELECT MONTH(DepartureDate), MIN(DepartureDate), SUM((50 * UpdateTimes + IF(IsStudent = 0,(IF(Class = '1st Class', FstClassPrice, SndClassPrice) + IF(NumOfBaggage > 2, 30 * (NumOfBaggage-2), 0)), 0.8 * (IF(Class = '1st Class', FstClassPrice, SndClassPrice) + IF(NumOfBaggage > 2, 30 * (NumOfBaggage-2), 0))))) AS TotalPrice, IsCancelled FROM Reservation NATURAL JOIN Customer NATURAL JOIN Reserve NATURAL JOIN TrainRoute GROUP BY ReserveID"
+        CancelledRevenueReportQuery = "CREATE VIEW CancelledRevenueReport (Month, Refund) AS SELECT Month, (CASE WHEN DATEDIFF(EarliestDate, CURDATE()) > 7 THEN 0.8 * TotalPrice - 50 WHEN (DATEDIFF(EarliestDate, CURDATE()) <= 7) AND DATEDIFF(EarliestDate, CURDATE()) >= 1 THEN 0.5 * TotalPrice -50 ELSE 0 END) AS Refund FROM TotalRevenueReport WHERE IsCancelled = 1"
 
         self.cursor.execute(TotalRevenueReportQuery)
         self.cursor.execute(CancelledRevenueReportQuery)
-        self.cursor.execute("SELECT MONTHNAME(STR_TO_DATE(T.Month, '%m')), SUM(T.Revenue) FROM (SELECT Month AS Month,TotalPrice AS Revenue FROM TotalRevenueReport UNION ALL SELECT Month AS Month, (-1) * Refund AS Revenue FROM CancelledRevenueReport) AS T GROUP BY T.Month ORDER BY T.Month LIMIT 3")
+        self.cursor.execute("SELECT MONTHNAME(STR_TO_DATE(T.Month, '%m')), SUM(T.Revenue) FROM (SELECT Month AS Month,TotalPrice AS Revenue FROM TotalRevenueReport UNION ALL SELECT Month AS Month, (-1) * Refund AS Revenue FROM CancelledRevenueReport) AS T GROUP BY T.Month ORDER BY T.Month LIMIT 5")
 
         totalRevenue = self.cursor.fetchall()
         for i in totalRevenue:
@@ -2003,23 +2000,24 @@ class GTTrain:
         viewRevenueReportTree.grid(row=2,column=1,columnspan=3)
 
 # ### Final SQL code
-# CREATE VIEW NotCancelledRevenueReport (Month, EarliestDate, TotalPrice) AS SELECT
+# CREATE VIEW TotalRevenueReport (Month, EarliestDate, TotalPrice, IsCancelled, ReserveID) AS SELECT
 #     MONTHNAME(DepartureDate),
 #     MIN(DepartureDate),
-#     SUM((50 * IsUpdated + IF(IsStudent = 0,(IF(Class = '1st Class', FstClassPrice, SndClassPrice) + IF(NumOfBaggage > 2, 30 * NumOfBaggage, 0)), 0.8 * (IF(Class = '1st Class', FstClassPrice, SndClassPrice) + IF(NumOfBaggage > 2, 30 * NumOfBaggage, 0))))) AS TotalPrice
-# FROM Reservation NATURAL JOIN Customer NATURAL JOIN Reserve NATURAL JOIN TrainRoute WHERE IsCancelled = 0
+#     SUM((50 * UpdateTimes + IF(IsStudent = 0,(IF(Class = '1st Class', FstClassPrice, SndClassPrice) + IF(NumOfBaggage > 2, 30 * (NumOfBaggage-2), 0)), 0.8 * (IF(Class = '1st Class', FstClassPrice, SndClassPrice) + IF(NumOfBaggage > 2, 30 * (NumOfBaggage-2), 0))))) AS TotalPrice, IsCancelled, ReserveID
+# FROM Reservation NATURAL JOIN Customer NATURAL JOIN Reserve NATURAL JOIN TrainRoute
 # GROUP BY ReserveID
 
 # ### Final SQL code
-# CREATE VIEW CancelledRevenueReport (Month, Refund) AS SELECT
+# CREATE VIEW CancelledRevenueReport (Month, Refund, ReserveID) AS SELECT
 #     Month,
 #     (
 #     CASE
-#         WHEN DATEDIFF(CURDATE(), EarliestDate) > 7 THEN 0.8 * TotalPrice - 50
-#         WHEN (DATEDIFF(CURDATE(), EarliestDate) <= 7) AND DATEDIFF(CURDATE(), EarliestDate) >= 1 THEN 0.5 * TotalPrice -50
+#         WHEN DATEDIFF(EarliestDate, CURDATE()) > 7 THEN 0.8 * TotalPrice - 50
+#         WHEN (DATEDIFF(EarliestDate, CURDATE()) <= 7) AND DATEDIFF(EarliestDate, CURDATE()) >= 1 THEN 0.5 * TotalPrice -50
 #         ELSE 0
-#     END) AS Refund
-# FROM NotCancelledRevenueReport
+#     END) AS Refund, ReserveID
+# FROM TotalRevenueReport
+# WHERE IsCancelled = 1
 
 # Example:
 # 100+115+30=245 30 per baggage
