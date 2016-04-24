@@ -2083,7 +2083,7 @@ class GTTrain:
 
         currentYear = datetime.today().year
 
-        count = 0
+        monthCount = 0
         for i in range(1,13):
             if (i < 10):
                 month = '0' + str(i)
@@ -2092,9 +2092,8 @@ class GTTrain:
             self.cursor.execute("SELECT MONTHNAME(Date), TrainNum, NumOfReservation FROM PopularRouteReport WHERE STRCMP(substring(Date,1,4),%s) = 0 AND STRCMP(substring(Date,6,2),%s)= 0 LIMIT 3", (currentYear, month))
             result = self.cursor.fetchall()
             if(len(result)!=0):
-                count = count + 1
-                print(count)
-                if(count == 4):
+                monthCount = monthCount + 1
+                if(monthCount == 4): # show 4-1=3 month only
                     break
             for i in result:
                 viewPopularRouteReportMonthList.append(i[0])
