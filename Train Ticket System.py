@@ -26,7 +26,7 @@ class GTTrain:
     def buildLoginWindow(self, loginWindow):
         # Add component for Login Window
         # Login Label
-        loginLabel = Label(loginWindow, text="Login")
+        loginLabel = Label(loginWindow, text="Login",font = "Verdana 13 bold ")
         loginLabel.grid(row=1, column=3, sticky=W)
 
         # Username Label
@@ -118,7 +118,7 @@ class GTTrain:
         # Add components for newUserRegistrationWindow
 
         # New User Rigestration Label
-        newUserRegistrationLabel = Label(newUserRegistrationWindow, text="New User Registration")
+        newUserRegistrationLabel = Label(newUserRegistrationWindow, text="New User Registration",font = "Verdana 13 bold ")
         newUserRegistrationLabel.grid(row=1, column=3, sticky=W)
 
 
@@ -219,7 +219,7 @@ class GTTrain:
         # Add component to chooseFunctionalityWindow
 
         #Choose Functionality Label
-        chooseFunctionalityLabel = Label(chooseFunctionalityWindow, text="Choose Functionality")
+        chooseFunctionalityLabel = Label(chooseFunctionalityWindow, text="Choose Functionality",font = "Verdana 10 bold ")
         chooseFunctionalityLabel.grid(row=1, column=1, sticky=W+E)
 
         # View Train Schedule Label
@@ -328,7 +328,7 @@ class GTTrain:
 
     def buildViewTrainScheduleWindow(self,viewTrainScheduleWindow):
         # Title Label
-        viewTrainScheduleLabel = Label(viewTrainScheduleWindow, text="View Train Schedule")
+        viewTrainScheduleLabel = Label(viewTrainScheduleWindow, text="View Train Schedule",font = "Verdana 10 bold ")
         viewTrainScheduleLabel.grid(row=1, column=1, sticky=W+E)
         # Train Number Label
         trainNumberLabel = Label(viewTrainScheduleWindow, text="Train Number")
@@ -366,7 +366,7 @@ class GTTrain:
 
     def bulidViewTrainScheduleWindow2(self,viewTrainScheduleWindow2):
         # Label
-        viewTrainScheduleLabel = Label(viewTrainScheduleWindow2, text= "View Train Schedule")
+        viewTrainScheduleLabel = Label(viewTrainScheduleWindow2, text= "View Train Schedule",font = "Verdana 10 bold ")
         viewTrainScheduleLabel.grid(row=1, column=1, sticky=W+E)
 
         # Build the form
@@ -848,13 +848,13 @@ class GTTrain:
 
 
         # Add Card Label
-        addCardLabel = Label(makeReservationWindow, text="Add Card")
+        addCardLabel = Label(makeReservationWindow, text="Add Card",font = "Verdana 13 bold ")
         addCardLabel.grid(row = 6, column = 3,sticky=W)
         addCardLabel.bind("<ButtonPress-1>", self.makeReservationWindowAddCardLabelClicked)
 
 
         # Continue adding a train Label
-        continueAddingATrainLabel = Label(makeReservationWindow, text="Continue adding a train")
+        continueAddingATrainLabel = Label(makeReservationWindow, text="Continue adding a train",font = "Verdana 13 bold ")
         continueAddingATrainLabel.grid(row = 7, column = 1,sticky=W)
         continueAddingATrainLabel.bind("<ButtonPress-1>", self.makeReservationWindowContinueAddingATrainLabelClicked)
 
@@ -1122,6 +1122,7 @@ class GTTrain:
         backButton.grid(row=3, column=2, sticky=W)
 
     def updateReservationWindowSearchButtonClicked(self):
+        
         self.updateReservationID = self.updateReservationIDSV.get()
         if not self.updateReservationID:
             messagebox.showwarning("Error","Please type in the reserationID you want to update.")
@@ -1131,7 +1132,7 @@ class GTTrain:
         if not haveSuchID:
             messagebox.showwarning("Error","There is no such reservationID or this reservation is not created by you.")
             return False
-
+        
 
         self.updateReservationWindow.destroy()
         self.createUpdateReservationWindow2()
@@ -1154,43 +1155,116 @@ class GTTrain:
         updateReservationLabel = Label(updateReservationWindow2,text="Update Reservation")
         updateReservationLabel.grid(row=1, column=2, sticky=W+E)
 
-
+#==========
         # Update Reservation Tree view
-        updateReservationTree = ttk.Treeview(updateReservationWindow2, column=("1", "2", "3", "4","5","6","7","8","9"))
-        updateReservationTree.column("1", width = 150, anchor = "center")
-        updateReservationTree.column("2", width = 150, anchor = "center")
-        updateReservationTree.column("3", width = 150, anchor = "center")
-        updateReservationTree.column("4", width = 150, anchor = "center")
-        updateReservationTree.column("5", width = 150, anchor = "center")
-        updateReservationTree.column("6", width = 150, anchor = "center")
-        updateReservationTree.column("7", width = 150, anchor = "center")
-        updateReservationTree.column("8", width = 150, anchor = "center")
-        updateReservationTree.column("9", width = 150, anchor = "center")
-        updateReservationTree.heading("1", text = "Select")
-        updateReservationTree.heading("2", text = "Train(Train Number)")
-        updateReservationTree.heading("3", text = "Time(Duration)")
-        updateReservationTree.heading("4", text = "Departs From")
-        updateReservationTree.heading("5", text = "Arrives At")
-        updateReservationTree.heading("6", text = "Class")
-        updateReservationTree.heading("7", text = "Price")
-        updateReservationTree.heading("8", text = "# of Baggage")
-        updateReservationTree.heading("9", text = "Passenger Name")
+        # Build the form
 
-        #insert data into the form
-        for i in range(10):
-            updateReservationTree.insert('',i,values=('a'+str(i),'b'+str(i),'c'+str(i),'d'+str(i),'e'+str(i),'f'+str(i),'g'+str(i),'h'+str(i),'j'+str(i)))
+        self.updateReservationTree = ttk.Treeview(updateReservationWindow2, column=("1", "2", "3", "4", "5", "6" ,"7", "8","9","10","11","12"))
+        self.updateReservationTree['show'] = "headings"
+        self.updateReservationTree.column("1", width = 100, anchor = "center")
+        self.updateReservationTree.column("2", width = 100, anchor = "center")
+        self.updateReservationTree.column("3", width = 100, anchor = "center")
+        self.updateReservationTree.column("4", width = 100, anchor = "center")
+        self.updateReservationTree.column("5", width = 100, anchor = "center")
+        self.updateReservationTree.column("6", width = 100, anchor = "center")
+        self.updateReservationTree.column("7", width = 100, anchor = "center")
+        self.updateReservationTree.column("8", width = 100, anchor = "center")
+        self.updateReservationTree.column("9", width = 100, anchor = "center")
+        self.updateReservationTree.column("10", width = 100, anchor = "center")
+        self.updateReservationTree.column("11", width = 100, anchor = "center")
+        self.updateReservationTree.column("12", width = 100, anchor = "center")
 
-        updateReservationTree.grid(row=2,column=1,columnspan=3)
+        self.updateReservationTree.heading("1", text = "Train (Train Number)")
+        self.updateReservationTree.heading("2", text = "Departure Date")
+        self.updateReservationTree.heading("3", text = "Departure Time")
+        self.updateReservationTree.heading("4", text = "Arrival Time")
+        self.updateReservationTree.heading("5", text = "Duration")
+        self.updateReservationTree.heading("6", text = "Departs From")
+        self.updateReservationTree.heading("7", text = "Arrives At")
+        self.updateReservationTree.heading("8", text = "Class")
+        self.updateReservationTree.heading("9", text = "Price")
+        self.updateReservationTree.heading("10", text = "Number of Baggages")
+        self.updateReservationTree.heading("11", text = "Passenger Name")
+        self.updateReservationTree.heading("12", text = "Times of Update")
 
-        # Next Button
+
+        # Insert data into the form
+        self.cursor.execute("SELECT * FROM Reserve WHERE ReserveID = %s", self.updateReservationID)
+        self.updateReserveList = self.cursor.fetchall()
+        self.updateReserveListFull = {}
+
+        k = 0
+
+        for i in self.updateReserveList:
+
+            k = k+1
+            
+            TrainNum = i[1]
+            Class = i[2]
+            DepartureDate = i[3]
+            PassengerName = i[4]
+            NumOfBaggage = i[5]
+            DepartFrom = i[6]
+            ArriveAt = i[7]
+            UpdateTimes = i[8]
+
+            self.cursor.execute("SELECT departure.DepartureTime, arrival.ArrivalTime FROM\
+                                (SELECT TrainNum, DepartureTime\
+                                FROM Stop\
+                                WHERE TrainNum = %s AND StationName = %s) departure\
+                                JOIN\
+                                (SELECT TrainNum, ArrivalTime\
+                                FROM Stop\
+                                WHERE TrainNum = %s AND StationName = %s) arrival\
+                                ON departure.TrainNum = arrival.TrainNum",(TrainNum, DepartFrom, TrainNum, ArriveAt))
+
+            row = self.cursor.fetchone()
+            DepartureTime = row[0]
+            ArrivalTime = row[1]
+
+
+
+            if Class == "1st Class":
+                self.cursor.execute("SELECT FstClassPrice FROM TrainRoute WHERE TrainNum = %s", TrainNum)
+                row = self.cursor.fetchone()
+                Price = row[0]
+            elif Class == "2nd Class":
+                self.cursor.execute("SELECT SndClassPrice FROM TrainRoute WHERE TrainNum = %s", TrainNum)
+                row = self.cursor.fetchone()
+                Price = row[0]
+
+            Duration = ArrivalTime - DepartureTime
+
+            thisReserve = [TrainNum, DepartureDate, DepartureTime, ArrivalTime, Duration, DepartFrom, ArriveAt, Class, Price, NumOfBaggage, PassengerName, UpdateTimes]
+
+            self.updateReservationTree.insert('',k, values = thisReserve)
+            self.updateReserveListFull[k] = thisReserve
+            
+            
+        
+        self.updateReservationTree.grid(row = 3,column =1,columnspan=3)
+
+
+#============
+        # Next Button  
         nextButton = Button(updateReservationWindow2, text = "Next", command = self.updateReservationWindow2NextButtonClicked)
-        nextButton.grid(row=3, column=2, sticky=W+E)
+        nextButton.grid(row=4, column=2, sticky=W+E)
 
         # Back Button
         backButton = Button(updateReservationWindow2, text = "Back", command = self.updateReservationWindow2BackButtonClicked)
-        backButton.grid(row=3, column=1, sticky=W+E)
+        backButton.grid(row=4, column=1, sticky=W+E)
 
     def updateReservationWindow2NextButtonClicked(self):
+        treeIndexString = self.updateReservationTree.focus()
+        if not treeIndexString:
+                messagebox.warning("Error", "You haven't selected the ticket you want to update.")
+                return False
+            
+        treeIndex = int(treeIndexString[1:])
+        self.updateReserveIndex = treeIndex
+        print(self.updateReserveIndex)
+        print(self.updateReserveListFull[self.updateReserveIndex])
+        
         self.updateReservationWindow2.destroy()
         self.createUpdateReservationWindow3()
         self.buildUpdateReservationWindow3(self.updateReservationWindow3)
