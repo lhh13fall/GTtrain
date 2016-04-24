@@ -908,7 +908,8 @@ class GTTrain:
         self.buildSearchTrainWindow(self.searchTrainWindow)
 
     def makeReservationWindowBackButtonClicked(self):
-        del self.informationList[-1]
+        if len(self.informationList) != 0:
+            del self.informationList[-1]
         self.makeReservationWindow.destroy()
         self.createTravelExtrasPassengerInfoWindow()
         self.buildTravelExtrasPassengerInfoWindow(self.travelExtrasPassengerInfoWindow)
