@@ -4,6 +4,7 @@ import pymysql
 from tkinter import messagebox
 from tkinter import ttk
 from datetime import datetime
+import decimal
 class GTTrain:
     def __init__(self):
         # Invoke createLoginWindow; Invoke buildLoginWindow, Set loginWindow as mainloop
