@@ -1614,7 +1614,7 @@ class GTTrain:
 
 
 
-#========Manager starting from here===========
+#========Manager Start From Here===========
 ##  =======Choose Functionality Window=======
 
     def createChooseFunctionalityWindowManager(self):
@@ -1674,7 +1674,6 @@ class GTTrain:
 
     def buildViewRevenueReportWindow(self, viewRevenueReportWindow):
         # Add components to window
-
         # View Revenue Report Label
         viewRevenueReportLabel = Label(viewRevenueReportWindow, text="View Revenue Report")
         viewRevenueReportLabel.grid(row=1, column=1, sticky=W+E)
@@ -1809,34 +1808,7 @@ class GTTrain:
         self.chooseFunctionalityWindowManager.deiconify()
 
 
-#---------------------------------BACK BUTTON ASSOCIATED METHODS------------------------
-    def backFromDisplayReportWindowToManagerMenu(self):
-        self.displayReportWindow.withdraw()
-        self.ManagerMenuWindow.deiconify()
-
-    def backToSearchCriteriaWindow(self):
-        self.generateReportWindow.withdraw()
-        self.displayReportWindow.deiconify()
-
-#------------------------HELPER METHODS----------------------------------------------
-
-    def restaurantNameSelected(self, event):
-        self.restaurantNameChoice.get()
-
-    def generateRestaurantID(self):
-        restaurantID = random.getrandbits(9);
-        result = self.cursor.execute("SELECT rid FROM restaurant WHERE rid = %s", restaurantID)
-
-        while result:
-            restaurantID = random.getrandbits(9);
-        return restaurantID
-
-    def createAnEntry(self, rowNumber, columnNumber, widthNumber, window):
-        aStringVar = StringVar()
-        anEntry = Entry(window, textvariable = aStringVar, width = widthNumber)
-        anEntry.grid(row = rowNumber, column = columnNumber, sticky = W + E)
-        return aStringVar, anEntry
-
+#--------------------Database Connection-----------------
     def connect(self):
         try:
             db = pymysql.connect(host = 'academic-mysql.cc.gatech.edu',
