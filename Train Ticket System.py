@@ -828,15 +828,12 @@ class GTTrain:
 
         self.cursor.execute("SELECT CardNum FROM PaymentInfo WHERE Username = %s",self.username)
         cardNumTuple = self.cursor.fetchall()
-        # print(cardNumTuple)
 
         self.cardNumList = []
 
         if cardNumTuple:
             for i in cardNumTuple:
                 self.cardNumList.append(i[0])
-
-        # print(self.cardNumList)
 
         self.usingCardSV = StringVar()
         if self.cardNumList:
@@ -1239,14 +1236,12 @@ class GTTrain:
 
             self.updateReservationTree.insert('',k, values = thisReserve)
             self.updateReserveListFull[k] = thisReserve
-            
-            
-        
+
         self.updateReservationTree.grid(row = 3,column =1,columnspan=3)
 
 
 #============
-        # Next Button  
+        # Next Button
         nextButton = Button(updateReservationWindow2, text = "Next", command = self.updateReservationWindow2NextButtonClicked)
         nextButton.grid(row=4, column=2, sticky=W+E)
 
@@ -1259,12 +1254,10 @@ class GTTrain:
         if not treeIndexString:
                 messagebox.warning("Error", "You haven't selected the ticket you want to update.")
                 return False
-            
+
         treeIndex = int(treeIndexString[1:])
         self.updateReserveIndex = treeIndex
-        print(self.updateReserveIndex)
-        print(self.updateReserveListFull[self.updateReserveIndex])
-        
+
         self.updateReservationWindow2.destroy()
         self.createUpdateReservationWindow3()
         self.buildUpdateReservationWindow3(self.updateReservationWindow3)
