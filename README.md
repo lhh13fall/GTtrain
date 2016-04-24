@@ -5,7 +5,7 @@
 
 This project is our team project for CS4400 in Spring semester, 2016 at Georgia Tech. Our goal is to Analyze, specify, design, implement, document and demonstrate an application for buying train tickets at GTTrain.com. Basically this project involves the usage of classical methodology for database development. The system is using a relational DBMS(MySQL) that supports standard SQL queries.
 
-## What does it include?
+## What Does It Include?
 
 This repository includes all the file that are required for the finals. And this project is a three phase project. Each phase has different tasks which are described as follow.
 
