@@ -15,7 +15,7 @@ This repository includes all the file that are required for the finals. And this
 
 2. Relational Schema.pdf & Create table statement.pdf: These two files are the main task for phase II.
 
-3. Train Ticket System.py & SQL statements: These two files are the main task for phase III(heavy option). If you prefer light option, then you just need to submit the SQL statement, however, you must take the final exam too.
+3. Train Ticket System.py & SQL task statements: These two files are the main task for phase III(heavy option). If you prefer light option, then you just need to submit the SQL statement, however, you must take the final exam too.
 
 4. localhost.sql: This is the database that we create which is compatible to MySQL 5.1.
 
