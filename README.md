@@ -1,6 +1,6 @@
 # GT train
 #### CS4400 Database Project - Spring Semester 2016
-![](https://github.com/jluo80/niartTG/raw/master/buzzImage.jpg)
+![](https://github.com/jluo80/niartTG/raw/master/buzzImage.jpg =100x20)
 ## Synopsis
 
 At the top of the file there should be a short introduction and/ or overview that explains **what** the project is. This description should match descriptions added for package managers (Gemspec, package.json, etc.)
