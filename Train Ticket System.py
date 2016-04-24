@@ -853,7 +853,7 @@ class GTTrain:
             usingCardOptionMenu = OptionMenu(makeReservationWindow, self.usingCardSV, *self.cardNumList)
         else:
             usingCardOptionMenu = OptionMenu(makeReservationWindow, self.usingCardSV, [])
-        usingCardOptionMenu.grid(row = 6, column = 2,sticky=W)
+        usingCardOptionMenu.grid(row = 6, column = 2,sticky=E+W)
 
 
         # Add Card Label
