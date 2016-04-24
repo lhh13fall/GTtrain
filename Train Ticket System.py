@@ -1652,7 +1652,7 @@ class GTTrain:
         totalCostOfReservationLabel.grid(row=3, column=1, sticky=W+E)
 
         # Date Of Cancellation Label
-        dateOfCancellationLabel = Label(cancelReservationWindow2,text="Dare of Cancellation")
+        dateOfCancellationLabel = Label(cancelReservationWindow2,text="Date of Cancellation")
         dateOfCancellationLabel.grid(row=4, column=1, sticky=W+E)
 
         # Amount to be Refunded Label
