@@ -21,4 +21,4 @@ This repository includes all the file that are required for the finals. And this
 
 ## How to Run?
 
-The techniques we use in this project are the Tinkter GUI library built-in Python3.5 and SQL language. We set up the database based on the relational schema and make up some data to test it. The database is setup in our school's server. If you want to run this code, just make sure you are using Python3 and the PIL and PyMySQL packages are installed. Then you can just download it and run it directly.
+The techniques we use in this project are the Tkinter GUI library built-in Python3.5 and SQL language. We set up the database based on the relational schema and make up some data to test it. The database is setup in our school's server. If you want to run this code, just make sure you are using Python3 and the PIL and PyMySQL packages are installed. Then you can just download it and run it directly.
