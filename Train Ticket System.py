@@ -1724,10 +1724,10 @@ class GTTrain:
         earliestDepartureDate = min(cancelDepartureDates)
 
         if datetime.today().date() < earliestDepartureDate - timedelta(days=7):
-            refund = round(self.cancelTotalCost*decimal.Decimal(0.8)-decimal.Decimal(50),2)
+            refund = max(0,round(self.cancelTotalCost*decimal.Decimal(0.8)-decimal.Decimal(50),2))
             self.amountToBeRefunded.set(refund)
         elif datetime.today().date() < earliestDepartureDate - timedelta(days=1):
-            refund = round(self.cancelTotalCost*decimal.Decimal(0.5)-decimal.Decimal(50),2)
+            refund = max(0,round(self.cancelTotalCost*decimal.Decimal(0.5)-decimal.Decimal(50),2)) #!?
             self.amountToBeRefunded.set(refund)
         else:
             self.amountToBeRefunded.set("Too late to cancel")
@@ -2125,7 +2125,7 @@ class GTTrain:
     def connect(self):
         try:
             db = pymysql.connect(host = 'academic-mysql.cc.gatech.edu',
-                                 db = 'cs4400_Team_20', user = 'cs4400_Team_20', passwd = 'rWL22HuB')
+                                 db = 'cs4400_Team_20', user = 'cs4400_Team_20', passwd = 'rWL22HuB20')
             return db
         except:
             messagebox.showwarning('Error!','Cannot connect. Please check your internet connection.')
