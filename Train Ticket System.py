@@ -1369,7 +1369,7 @@ class GTTrain:
         self.updateDateSV = StringVar()
         self.updateDateSV.set("yyyy-mm-dd")
         updateDateEntry = Entry(updateReservationWindow3, textvariable=self.updateDateSV,width=20)
-        updateDateEntry.grid(row=3, column=2,sticky=W) 
+        updateDateEntry.grid(row=3, column=2,sticky=W)
 
 
         # Search Availability Button
@@ -1467,7 +1467,7 @@ class GTTrain:
             messagebox.showwarning("Error","Cannot update your departure date to earlier than today.")
             return False
 
-        if self.updateReserveListFull[self.updateReserveIndex][1]<(datetime.today().date()+timedelta(days=1)):
+        if self.updateReserveListFull[self.updateReserveIndex][1]<=(datetime.today().date()+timedelta(days=1)):
             messagebox.showwarning("Error","Cannot update your depareture date one day before departure.")
             return False
 
