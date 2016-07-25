@@ -1,6 +1,6 @@
 # GT train
 #### CS4400 Database Project - Spring Semester 2016
-![](https://github.com/jluo80/niartTG/raw/master/buzzImage.jpg)
+![](https://github.com/jluo80/CS4400-GTtrain/raw/master/buzzImage.jpg)
 ## Abstract
 
 This project is our team project for CS4400 in Spring semester, 2016 at Georgia Tech. Our goal is to Analyze, specify, design, implement, document and demonstrate an application for buying train tickets at GTTrain.com. Basically this project involves the usage of classical methodology for database development. The system is using a relational DBMS(MySQL) that supports standard SQL queries.
